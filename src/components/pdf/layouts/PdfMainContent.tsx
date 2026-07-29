@@ -1,6 +1,6 @@
 import React from 'react';
-import { ResumeData } from '@/lib/types/resume';
-import { TemplateConfig } from '../../preview/templates/registry';
+import { ResumeData, hasProfilePhoto } from '@/lib/types/resume';
+import { TemplateConfig } from '../../studio/preview/templates/registry';
 import { PdfSummary } from '../PdfSummary';
 import { PdfExperience } from '../PdfExperience';
 import { PdfEducation } from '../PdfEducation';
@@ -15,12 +15,15 @@ interface PdfMainContentProps {
 }
 
 export const PdfMainContent = ({ data, config, sections = data.sectionOrder }: PdfMainContentProps) => {
+  const sectionsToRender = sections || ['experience', 'education', 'skills', 'projects', 'customSections'];
+
   return (
     <>
-      {sections.map((sectionId) => {
+      <PdfSummary summary={data.summary} config={config} formatting={data.formatting} />
+      {sectionsToRender.map((sectionId) => {
+        if ((data.sectionVisibility as Record<string, boolean>)?.[sectionId] === false) return null;
+        
         switch (sectionId) {
-          case 'summary':
-            return <PdfSummary key="summary" summary={data.summary} config={config} formatting={data.formatting} />;
           case 'experience':
             return <PdfExperience key="experience" experience={data.experience} config={config} formatting={data.formatting} />;
           case 'education':

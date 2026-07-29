@@ -53,7 +53,18 @@ export const useResumeStore = create<ResumeStore>((set) => ({
   hasUnsavedChanges: false,
   isSaving: false,
 
-  setInitialData: (data) => set({ data, hasUnsavedChanges: false }),
+  setInitialData: (data) => {
+    console.log("======================================================");
+    console.log("STAGE 4: Store (After setInitialData is called)");
+    console.log("Summary:", !!data.summary);
+    console.log("Experience Length:", data.experience?.length || 0);
+    console.log("Education Length:", data.education?.length || 0);
+    console.log("Skills Length:", data.skills?.length || 0);
+    console.log("Projects Length:", data.projects?.length || 0);
+    console.log("CustomSections Length:", data.customSections?.length || 0);
+    console.log("======================================================");
+    set({ data, hasUnsavedChanges: false });
+  },
   setSaving: (isSaving) => set({ isSaving }),
   markSaved: () => set({ hasUnsavedChanges: false }),
 

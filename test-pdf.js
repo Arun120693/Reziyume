@@ -1,13 +1,11 @@
-import fs from 'fs';
-import pdf from 'pdf-parse';
+const fs = require('fs');
+const PDFParser = require('pdf2json');
 
-async function test() {
-  const dataBuffer = fs.readFileSync('/tmp/test_resume.pdf');
-  try {
-    const data = await pdf(dataBuffer);
-    console.log("Success length:", data.text.length);
-  } catch(e) {
-    console.error("Error:", e);
-  }
-}
-test();
+let pdfParser = new PDFParser(this, 1);
+
+pdfParser.on("pdfParser_dataError", errData => console.error(errData.parserError) );
+pdfParser.on("pdfParser_dataReady", pdfData => {
+    console.log(pdfParser.getRawTextContent());
+});
+
+pdfParser.loadPDF("/tmp/test.pdf");

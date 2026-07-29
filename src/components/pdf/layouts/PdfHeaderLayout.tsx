@@ -1,7 +1,7 @@
 import React from 'react';
 import { Page, View, Image, Text, Link } from '@react-pdf/renderer';
-import { ResumeData } from '@/lib/types/resume';
-import { TemplateConfig } from '../../preview/templates/registry';
+import { ResumeData, hasProfilePhoto } from '@/lib/types/resume';
+import { TemplateConfig } from '../../studio/preview/templates/registry';
 import { createPdfStyles } from '../PdfShared';
 import { PdfMainContent } from './PdfMainContent';
 import { PdfHeader } from './PdfHeader';
@@ -39,7 +39,7 @@ export const PdfHeaderLayout = ({ data, config }: PdfHeaderLayoutProps) => {
           <View style={{ flex: 1 }}>
             <PdfHeader data={data} config={config} showPhoto={false} />
           </View>
-          {data.contact.photoBase64 && config.supportsPhoto !== false && (
+          {hasProfilePhoto(data) && (
             <Image src={data.contact.photoBase64} style={[styles.photo, { marginLeft: 20, marginRight: 0 }]} />
           )}
         </View>
@@ -50,7 +50,7 @@ export const PdfHeaderLayout = ({ data, config }: PdfHeaderLayoutProps) => {
     if (isPhotoBanner || isPhotoElegant) {
       return (
         <View style={{ padding: 40, paddingBottom: 20, alignItems: 'center' }}>
-          <PdfHeader data={data} config={config} align="center" showPhoto={true} />
+          <PdfHeader data={data} config={config} align="center" showPhoto={hasProfilePhoto(data)} />
         </View>
       );
     }
@@ -58,7 +58,7 @@ export const PdfHeaderLayout = ({ data, config }: PdfHeaderLayoutProps) => {
     // Default fallback to card style
     return (
       <View style={headerStyle}>
-        <PdfHeader data={data} config={config} align="left" showPhoto={true} />
+        <PdfHeader data={data} config={config} align="left" showPhoto={hasProfilePhoto(data)} />
       </View>
     );
   };

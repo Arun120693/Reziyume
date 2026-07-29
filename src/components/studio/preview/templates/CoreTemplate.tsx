@@ -1,5 +1,5 @@
 import React from "react";
-import { ResumeData } from "@/lib/types/resume";
+import { ResumeData, hasProfilePhoto } from "@/lib/types/resume";
 import { TemplateConfig } from "./registry";
 
 export function CoreTemplate({ data, config }: { data: ResumeData; config: TemplateConfig }) {
@@ -91,7 +91,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
 
   const renderHeader = () => (
     <div className={`flex items-center gap-6 ${layout === 'centered' ? 'flex-col text-center' : 'flex-row'}`}>
-      {data.contact.photoBase64 && (
+      {hasProfilePhoto(data) && (
         <img 
           src={data.contact.photoBase64} 
           alt={data.contact.fullName} 
@@ -317,7 +317,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
   };
 
   const renderSection = (sectionId: string) => {
-    if (!data.sectionVisibility?.[sectionId]) return null;
+    if (data.sectionVisibility?.[sectionId] === false) return null;
     
     switch (sectionId) {
       case 'experience': return renderExperience();
@@ -341,6 +341,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
           {renderSection('experience')}
           {renderSection('education')}
           {renderSection('skills')}
+          {renderSection('projects')}
           {renderSection('customSections')}
         </>
       )}
@@ -358,7 +359,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
     return (
       <div className={`min-h-[29.7cm] w-full bg-white shadow-xl flex ${fonts.body}`} style={containerStyle}>
         <div className="w-1/3 p-10 flex flex-col gap-6" style={{ backgroundColor: activeColors.border }}>
-          {data.contact.photoBase64 && (
+          {hasProfilePhoto(data) && (
             <div className="flex justify-center mb-2">
               <img 
                 src={data.contact.photoBase64} 
@@ -390,7 +391,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
       <div className={`min-h-[29.7cm] w-full bg-white shadow-xl flex ${fonts.body}`} style={containerStyle}>
         <div className="w-2/3 p-10">
           <div className="mb-6 flex items-center gap-4">
-            {data.contact.photoBase64 && (
+            {hasProfilePhoto(data) && (
               <img 
                 src={data.contact.photoBase64} 
                 alt={data.contact.fullName} 
@@ -427,7 +428,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
               {data.contact.jobTitle ? data.contact.jobTitle : <span className="opacity-60 italic print:hidden">Professional Title</span>}
             </h2>
           </div>
-          {data.contact.photoBase64 && (
+          {hasProfilePhoto(data) && (
             <div className="absolute right-10">
               <img 
                 src={data.contact.photoBase64} 
@@ -465,7 +466,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
         <div className="w-[35%] flex-shrink-0 flex flex-col items-center pt-10 pb-6 px-5 gap-5" style={{ backgroundColor: sidebarBg }}>
           {/* Photo */}
           <div className="flex justify-center">
-            {data.contact.photoBase64 ? (
+            {hasProfilePhoto(data) ? (
               <img
                 src={data.contact.photoBase64}
                 alt={data.contact.fullName}
@@ -512,7 +513,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
       <div className={`min-h-[29.7cm] w-full ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
         {/* Banner header */}
         <div className="flex items-center gap-6 px-10 pt-10 pb-6" style={{ borderBottom: `3px solid ${activeColors.primary}` }}>
-          {data.contact.photoBase64 ? (
+          {hasProfilePhoto(data) ? (
             <img
               src={data.contact.photoBase64}
               alt={data.contact.fullName}
@@ -567,7 +568,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
               </div>
             </div>
             {/* Photo top-right */}
-            {data.contact.photoBase64 ? (
+            {hasProfilePhoto(data) ? (
               <img
                 src={data.contact.photoBase64}
                 alt={data.contact.fullName}
@@ -595,7 +596,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
         {/* Card header with gradient background */}
         <div className="px-10 pt-10 pb-8" style={{ background: `linear-gradient(135deg, ${activeColors.primary}15 0%, ${activeColors.border} 100%)` }}>
           <div className="flex items-center gap-6">
-            {data.contact.photoBase64 ? (
+            {hasProfilePhoto(data) ? (
               <img
                 src={data.contact.photoBase64}
                 alt={data.contact.fullName}
@@ -635,7 +636,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
       <div className={`min-h-[29.7cm] w-full ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
         {/* Centered elegant header */}
         <div className="flex flex-col items-center px-10 pt-10 pb-8 text-center">
-          {data.contact.photoBase64 ? (
+          {hasProfilePhoto(data) ? (
             <img
               src={data.contact.photoBase64}
               alt={data.contact.fullName}

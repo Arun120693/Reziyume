@@ -63,6 +63,16 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
 
       const { parsed } = json;
 
+      console.log("======================================================");
+      console.log("STAGE 2: HTTP Response (Parsed JSON in frontend)");
+      console.log("Summary:", !!parsed.summary);
+      console.log("Experience Length:", (parsed.experience || []).length);
+      console.log("Education Length:", (parsed.education || []).length);
+      console.log("Skills Length:", (parsed.skills || []).length);
+      console.log("Projects Length:", (parsed.projects || []).length);
+      console.log("CustomSections Length:", 0);
+      console.log("======================================================");
+
       // Guard: must have existing data in store
       if (!data) throw new Error("No resume data loaded. Please reload the page.");
 
@@ -135,6 +145,16 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
         sectionVisibility: newVisibility,
         hasUnsavedChanges: true,
       };
+
+      console.log("======================================================");
+      console.log("STAGE 3: ResumeData Mapping (Before writing to store)");
+      console.log("Summary:", !!merged.summary);
+      console.log("Experience Length:", merged.experience.length);
+      console.log("Education Length:", merged.education.length);
+      console.log("Skills Length:", merged.skills.length);
+      console.log("Projects Length:", merged.projects.length);
+      console.log("CustomSections Length:", merged.customSections?.length || 0);
+      console.log("======================================================");
 
       console.log("[UploadResumeModal] Calling setInitialData with:", merged);
       setInitialData(merged);

@@ -16,6 +16,10 @@ export interface ContactInfo {
   photoBase64?: string;
 }
 
+export const hasProfilePhoto = (data?: ResumeData): boolean => {
+  return Boolean(data?.contact?.photoBase64);
+};
+
 export interface Experience {
   id: string;
   company: string;

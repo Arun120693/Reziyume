@@ -27,6 +27,19 @@ import { PdfDocument } from "../pdf/PdfDocument";
 export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
   const setInitialData = useResumeStore((s) => s.setInitialData);
   const data = useResumeStore((s) => s.data);
+
+  if (data) {
+    console.log("======================================================");
+    console.log("STAGE 5: ResumeStudio (Rendering with data from store)");
+    console.log("Summary:", !!data.summary);
+    console.log("Experience Length:", data.experience?.length || 0);
+    console.log("Education Length:", data.education?.length || 0);
+    console.log("Skills Length:", data.skills?.length || 0);
+    console.log("Projects Length:", data.projects?.length || 0);
+    console.log("CustomSections Length:", data.customSections?.length || 0);
+    console.log("======================================================");
+  }
+
   const updateSectionOrder = useResumeStore((s) => s.updateSectionOrder);
   const updateSectionVisibility = useResumeStore((s) => s.updateSectionVisibility);
   const updateName = useResumeStore((s) => s.updateName);
@@ -59,7 +72,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
     setIsDownloading(true);
 
     try {
-      const config = getTemplateConfig(data.formatting?.templateId || 'ruby');
+      const config = getTemplateConfig(data.templateId || 'ruby');
       const blob = await pdf(<PdfDocument data={data} config={config} />).toBlob();
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');

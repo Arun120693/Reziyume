@@ -187,6 +187,16 @@ ${rawText}
       projects: processItems(parsedData.projects),
     };
 
+    console.log("======================================================");
+    console.log("STAGE 1: Gemini Response (Raw JSON)");
+    console.log("Summary:", !!parsedData.summary);
+    console.log("Experience Length:", (parsedData.experience || []).length);
+    console.log("Education Length:", (parsedData.education || []).length);
+    console.log("Skills Length:", (parsedData.skills || []).length);
+    console.log("Projects Length:", (parsedData.projects || []).length);
+    console.log("CustomSections Length:", 0);
+    console.log("======================================================");
+
     return NextResponse.json({ success: true, parsed: finalParsed });
   } catch (err: any) {
     console.error("PDF parse error:", err);
