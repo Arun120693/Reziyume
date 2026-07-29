@@ -1,7 +1,7 @@
 import React from 'react';
 import { Page, View } from '@react-pdf/renderer';
-import { ResumeData } from '@/lib/types/resume';
-import { TemplateConfig } from '../../preview/templates/registry';
+import { ResumeData, hasProfilePhoto } from '@/lib/types/resume';
+import { TemplateConfig } from '../../studio/preview/templates/registry';
 import { createPdfStyles } from '../PdfShared';
 import { PdfHeader } from './PdfHeader';
 import { PdfMainContent } from './PdfMainContent';
@@ -17,7 +17,7 @@ export const PdfTwoColumnLayout = ({ data, config }: PdfTwoColumnLayoutProps) =>
 
   const Sidebar = () => (
     <View style={[styles.columnSidebar, { backgroundColor: config.colors.border }]}>
-      <PdfHeader data={data} config={config} align="center" showPhoto={config.supportsPhoto !== false} />
+      <PdfHeader data={data} config={config} align="center" showPhoto={hasProfilePhoto(data)} />
     </View>
   );
 

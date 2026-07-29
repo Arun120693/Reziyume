@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from '@react-pdf/renderer';
 import { ResumeData } from '@/lib/types/resume';
-import { TemplateConfig } from '../preview/templates/registry';
+import { TemplateConfig } from '../studio/preview/templates/registry';
 import { createPdfStyles } from './PdfShared';
 import { PdfSectionHeading } from './PdfSectionHeading';
 

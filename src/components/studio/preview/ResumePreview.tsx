@@ -7,6 +7,17 @@ import { getTemplateConfig } from "./templates/registry";
 
 export function ResumePreview() {
   const data = useResumeStore((state) => state.data);
+
+  console.log("======================================================");
+  console.log("STAGE 6: ResumePreview (Rendering with data from props)");
+  console.log("Summary:", !!data?.summary);
+  console.log("Experience Length:", data?.experience?.length || 0);
+  console.log("Education Length:", data?.education?.length || 0);
+  console.log("Skills Length:", data?.skills?.length || 0);
+  console.log("Projects Length:", data?.projects?.length || 0);
+  console.log("CustomSections Length:", data?.customSections?.length || 0);
+  console.log("======================================================");
+
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);

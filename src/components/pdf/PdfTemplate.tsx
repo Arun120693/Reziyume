@@ -1,6 +1,6 @@
 import React from 'react';
 import { ResumeData } from '@/lib/types/resume';
-import { TemplateConfig } from '../preview/templates/registry';
+import { TemplateConfig } from '../studio/preview/templates/registry';
 import { PdfSingleColumnLayout } from './layouts/PdfSingleColumnLayout';
 import { PdfTwoColumnLayout } from './layouts/PdfTwoColumnLayout';
 import { PdfSidebarLayout } from './layouts/PdfSidebarLayout';
@@ -21,7 +21,6 @@ export const PdfTemplate = ({ data, config }: PdfTemplateProps) => {
       return <PdfTwoColumnLayout data={data} config={config} />;
       
     case 'photo-sidebar':
-    case 'herald':
       return <PdfSidebarLayout data={data} config={config} />;
       
     case 'split-header':
