@@ -1,26 +1,167 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-base: #e8e6f0;
+  --neo-light: #ffffff;
+  --neo-dark: #c8c6d6;
+  --neo-shadow-light: rgba(255,255,255,0.85);
+  --neo-shadow-dark: rgba(180,178,195,0.7);
+  --glass-bg: rgba(255,255,255,0.25);
+  --glass-border: rgba(255,255,255,0.5);
+  --glass-blur: blur(20px);
+  --accent: #7c6ff7;
+  --accent-2: #e879a0;
+  --text-primary: #2d2b3d;
+  --text-secondary: #6b6880;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-background: var(--bg-base);
+  --color-foreground: var(--text-primary);
+  --font-sans: 'Inter', var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
+
+/* ── NEO-GLASS UTILITY CLASSES ─────────────────────────────────────── */
+
+/* Neomorphism surface — inset */
+.neo-inset {
+  background: var(--bg-base);
+  box-shadow:
+    inset 4px 4px 10px var(--neo-shadow-dark),
+    inset -4px -4px 10px var(--neo-shadow-light);
+  border-radius: 14px;
+}
+
+/* Neomorphism surface — raised */
+.neo-raised {
+  background: var(--bg-base);
+  box-shadow:
+    6px 6px 16px var(--neo-shadow-dark),
+    -6px -6px 16px var(--neo-shadow-light);
+  border-radius: 14px;
+}
+
+/* Glassmorphism card */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  box-shadow:
+    0 8px 32px rgba(100,90,180,0.12),
+    0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Glass nav/sidebar */
+.glass-nav {
+  background: rgba(235,233,245,0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid rgba(255,255,255,0.6);
+}
+
+/* Neo input */
+.neo-input {
+  background: var(--bg-base);
+  box-shadow:
+    inset 3px 3px 8px var(--neo-shadow-dark),
+    inset -3px -3px 8px var(--neo-shadow-light);
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 12px;
+  outline: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.neo-input:focus {
+  box-shadow:
+    inset 4px 4px 10px var(--neo-shadow-dark),
+    inset -4px -4px 10px var(--neo-shadow-light),
+    0 0 0 3px rgba(124,111,247,0.25);
+}
+
+/* Neo button (raised) */
+.neo-btn {
+  background: var(--bg-base);
+  box-shadow:
+    4px 4px 10px var(--neo-shadow-dark),
+    -4px -4px 10px var(--neo-shadow-light);
+  border-radius: 12px;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.neo-btn:hover {
+  box-shadow:
+    6px 6px 14px var(--neo-shadow-dark),
+    -6px -6px 14px var(--neo-shadow-light);
+  transform: translateY(-1px);
+}
+
+.neo-btn:active {
+  box-shadow:
+    inset 3px 3px 8px var(--neo-shadow-dark),
+    inset -3px -3px 8px var(--neo-shadow-light);
+  transform: translateY(0);
+}
+
+/* Accent gradient button */
+.accent-btn {
+  background: linear-gradient(135deg, #7c6ff7 0%, #e879a0 100%);
+  color: white;
+  border-radius: 12px;
+  border: none;
+  box-shadow:
+    0 4px 15px rgba(124,111,247,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.25);
+  transition: box-shadow 0.2s ease, transform 0.15s ease, opacity 0.2s;
+}
+
+.accent-btn:hover {
+  box-shadow:
+    0 6px 22px rgba(124,111,247,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+.accent-btn:active {
+  transform: translateY(0);
+  box-shadow:
+    0 2px 8px rgba(124,111,247,0.35);
+}
+
+/* Sidebar offset for main content */
+.sidebar-offset {
+  margin-left: 260px;
+}
+
+/* ── QUILL CONTENT STYLES (resume preview) ─────────────────────────── */
+.quill-content p { margin-bottom: 0.5em; }
+.quill-content p:last-child { margin-bottom: 0; }
+.quill-content ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 0.5em; }
+.quill-content ol { list-style-type: decimal; padding-left: 1.5em; margin-bottom: 0.5em; }
+.quill-content li { margin-bottom: 0.25em; }
+.quill-content strong { font-weight: bold; }
+.quill-content em { font-style: italic; }
+.quill-content u { text-decoration: underline; }
+
+/* ── SUBTLE ANIMATIONS ─────────────────────────────────────────────── */
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(20px, -30px) scale(1.05); }
+  66%       { transform: translate(-15px, 15px) scale(0.97); }
+}
+.animate-blob { animation: blob 9s infinite ease-in-out; }
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }

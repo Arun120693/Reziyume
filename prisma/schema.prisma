@@ -1,0 +1,45 @@
+generator client {
+  provider        = "prisma-client"
+  output          = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["resumeforge"]
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  resumes       Resume[]
+
+  @@schema("resumeforge")
+}
+
+model Resume {
+  id             String   @id @default(uuid())
+  userId         String
+  name           String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  // Stored as JSONB for efficient document-style reads/writes
+  contact        Json     // { fullName, title, email, phone, location, linkedin, website }
+  summary        String   @db.Text
+  experience     Json     // Array of experience objects
+  education      Json     // Array of education objects
+  skills         Json     // Array of skill objects
+  projects       Json     // Array of project objects
+  customSections Json     // Array of custom sections
+  sectionOrder   Json     // Array of strings denoting section order
+  sectionVisibility Json? // Object tracking visibility of sections
+  formatting     Json?    // Object tracking fonts, colors, margins
+  templateId     String   @default("modern")
+
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@schema("resumeforge")
+}
