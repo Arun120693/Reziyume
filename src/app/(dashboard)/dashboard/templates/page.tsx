@@ -47,7 +47,7 @@ function TemplateCard({ template, isCreating, selectedId, onSelect }: any) {
         style={{
           boxShadow: "6px 6px 18px rgba(180,178,195,0.5), -6px -6px 18px rgba(255,255,255,0.9)"
         }}
-        onMouseEnter={e => (e.currentTarget.style.boxShadow = "10px 10px 28px rgba(124,111,247,0.25), -6px -6px 18px rgba(255,255,255,0.95), 0 0 0 2px rgba(124,111,247,0.3)")}
+        onMouseEnter={e => (e.currentTarget.style.boxShadow = "10px 10px 28px rgba(0,0,0,0.1), -6px -6px 18px rgba(255,255,255,0.95), 0 0 0 2px rgba(124,111,247,0.3)")}
         onMouseLeave={e => (e.currentTarget.style.boxShadow = "6px 6px 18px rgba(180,178,195,0.5), -6px -6px 18px rgba(255,255,255,0.9)")}
       >
         <div
@@ -61,13 +61,13 @@ function TemplateCard({ template, isCreating, selectedId, onSelect }: any) {
           <div className="absolute inset-0 flex items-center justify-center"
             style={{ background: "rgba(232,230,240,0.75)", backdropFilter: "blur(10px)" }}
           >
-            <Loader2 className="w-7 h-7 animate-spin" style={{ color: "#7c6ff7" }} />
+            <Loader2 className="w-7 h-7 animate-spin" style={{ color: "#111111" }} />
           </div>
         )}
 
         {template.supportsPhoto && (
           <div className="absolute top-2 left-2 flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full"
-            style={{ background: "linear-gradient(135deg, #e879a0, #7c6ff7)", color: "white", boxShadow: "0 2px 8px rgba(232,121,160,0.4)" }}
+            style={{ background: "linear-gradient(135deg, #333333, #111111)", color: "white", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }}
           >
             <Camera className="w-3 h-3" />
             Photo
@@ -83,8 +83,8 @@ function TemplateCard({ template, isCreating, selectedId, onSelect }: any) {
               background: "rgba(235,233,245,0.9)",
               backdropFilter: "blur(12px)",
               border: "1px solid rgba(255,255,255,0.7)",
-              color: "#7c6ff7",
-              boxShadow: "0 4px 14px rgba(124,111,247,0.25)"
+              color: "#111111",
+              boxShadow: "0 4px 14px rgba(0,0,0,0.1)"
             }}
           >
             Use Template
@@ -98,7 +98,7 @@ function TemplateCard({ template, isCreating, selectedId, onSelect }: any) {
           {template.name}
         </p>
         {template.supportsPhoto && (
-          <Camera className="w-3 h-3 flex-shrink-0" style={{ color: "#e879a0" }} />
+          <Camera className="w-3 h-3 flex-shrink-0" style={{ color: "#666666" }} />
         )}
       </div>
     </div>
@@ -146,7 +146,7 @@ export default function TemplatesPage() {
       {/* Header */}
       <div className="flex items-start justify-between px-10 pt-10 pb-6">
         <div>
-          <h1 className="text-[28px] font-extrabold tracking-tight" style={{ color: "#2d2b3d" }}>
+          <h1 className="text-[28px] font-extrabold tracking-tight" style={{ color: "#111111" }}>
             Apply a design template
           </h1>
           <p className="text-[14px] mt-1" style={{ color: "#9490b0" }}>
@@ -174,9 +174,9 @@ export default function TemplatesPage() {
               style={
                 isActive
                   ? {
-                      background: "linear-gradient(135deg, #7c6ff7 0%, #e879a0 100%)",
+                      background: "linear-gradient(135deg, #333333 0%, #111111 100%)",
                       color: "white",
-                      boxShadow: "0 4px 14px rgba(124,111,247,0.4)"
+                      boxShadow: "0 4px 14px rgba(0,0,0,0.12)"
                     }
                   : {
                       background: "rgba(255,255,255,0.4)",

@@ -22,7 +22,7 @@ export function SkillsForm({ onClose }: { onClose?: () => void }) {
   return (
     <div className="flex flex-col h-full relative" style={{ background: "var(--bg-base)" }}>
       <div className="flex-1 overflow-y-auto p-8 pb-28">
-        <h2 className="text-2xl font-extrabold mb-8 tracking-tight" style={{ color: "#2d2b3d" }}>
+        <h2 className="text-2xl font-extrabold mb-8 tracking-tight" style={{ color: "#111111" }}>
           Skills
         </h2>
 
@@ -44,7 +44,7 @@ export function SkillsForm({ onClose }: { onClose?: () => void }) {
                   value={skill.name}
                   onChange={(e) => updateSkill(skill.id, { name: e.target.value })}
                   className={inputClass}
-                  style={{ color: "#2d2b3d" }}
+                  style={{ color: "#111111" }}
                   placeholder="e.g. JavaScript"
                 />
               </div>
@@ -54,7 +54,7 @@ export function SkillsForm({ onClose }: { onClose?: () => void }) {
                   value={skill.level}
                   onChange={(e) => updateSkill(skill.id, { level: e.target.value })}
                   className={inputClass}
-                  style={{ color: "#2d2b3d" }}
+                  style={{ color: "#111111" }}
                 >
                   <option value="">Level</option>
                   <option value="Beginner">Beginner</option>
@@ -108,7 +108,7 @@ export function SkillsForm({ onClose }: { onClose?: () => void }) {
         <button
           onClick={handleAdd}
           className="neo-btn flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2"
-          style={{ color: "#7c6ff7" }}
+          style={{ color: "#111111" }}
         >
           <Plus className="w-4 h-4" />
           Add Skill

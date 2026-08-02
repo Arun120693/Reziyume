@@ -32,7 +32,7 @@ export function EducationForm({ onClose }: { onClose?: () => void }) {
   return (
     <div className="flex flex-col h-full relative" style={{ background: "var(--bg-base)" }}>
       <div className="flex-1 overflow-y-auto p-8 pb-28">
-        <h2 className="text-2xl font-extrabold mb-8 tracking-tight" style={{ color: "#2d2b3d" }}>
+        <h2 className="text-2xl font-extrabold mb-8 tracking-tight" style={{ color: "#111111" }}>
           Education
         </h2>
 
@@ -65,7 +65,7 @@ export function EducationForm({ onClose }: { onClose?: () => void }) {
                     value={edu.school}
                     onChange={(e) => updateEducation(edu.id, { school: e.target.value })}
                     className={inputClass}
-                    style={{ color: "#2d2b3d" }}
+                    style={{ color: "#111111" }}
                     placeholder="e.g. Stanford University"
                   />
                 </div>
@@ -77,7 +77,7 @@ export function EducationForm({ onClose }: { onClose?: () => void }) {
                     value={edu.degree}
                     onChange={(e) => updateEducation(edu.id, { degree: e.target.value })}
                     className={inputClass}
-                    style={{ color: "#2d2b3d" }}
+                    style={{ color: "#111111" }}
                     placeholder="e.g. Bachelor of Science"
                   />
                 </div>
@@ -89,7 +89,7 @@ export function EducationForm({ onClose }: { onClose?: () => void }) {
                     value={edu.fieldOfStudy}
                     onChange={(e) => updateEducation(edu.id, { fieldOfStudy: e.target.value })}
                     className={inputClass}
-                    style={{ color: "#2d2b3d" }}
+                    style={{ color: "#111111" }}
                     placeholder="e.g. Computer Science"
                   />
                 </div>
@@ -101,7 +101,7 @@ export function EducationForm({ onClose }: { onClose?: () => void }) {
                     value={edu.location || ""}
                     onChange={(e) => updateEducation(edu.id, { location: e.target.value })}
                     className={inputClass}
-                    style={{ color: "#2d2b3d" }}
+                    style={{ color: "#111111" }}
                     placeholder="e.g. Stanford, CA"
                   />
                 </div>
@@ -127,7 +127,7 @@ export function EducationForm({ onClose }: { onClose?: () => void }) {
                       checked={edu.current}
                       onChange={(e) => updateEducation(edu.id, { current: e.target.checked, endDate: e.target.checked ? "Present" : "" })}
                       className="rounded"
-                      style={{ accentColor: "#7c6ff7" }}
+                      style={{ accentColor: "#111111" }}
                     />
                     I currently study here
                   </label>
@@ -178,7 +178,7 @@ export function EducationForm({ onClose }: { onClose?: () => void }) {
         <button
           onClick={handleAdd}
           className="neo-btn flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2"
-          style={{ color: "#7c6ff7" }}
+          style={{ color: "#111111" }}
         >
           <Plus className="w-4 h-4" />
           Add Education

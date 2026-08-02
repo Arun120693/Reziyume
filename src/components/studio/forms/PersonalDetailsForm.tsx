@@ -85,7 +85,7 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
     <div className="flex flex-col h-full relative" style={{ background: "var(--bg-base)" }}>
       <div className="flex-1 overflow-y-auto p-8 pb-28">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-extrabold tracking-tight" style={{ color: "#2d2b3d" }}>Personal Details</h2>
+          <h2 className="text-2xl font-extrabold tracking-tight" style={{ color: "#111111" }}>Personal Details</h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -98,7 +98,7 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
                 value={contact.fullName}
                 onChange={handleChange}
                 className={inputClass}
-                style={{ color: "#2d2b3d" }}
+                style={{ color: "#111111" }}
                 placeholder="Enter your first- and last name"
               />
             </div>
@@ -111,7 +111,7 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
                 value={contact.jobTitle}
                 onChange={handleChange}
                 className={inputClass}
-                style={{ color: "#2d2b3d" }}
+                style={{ color: "#111111" }}
                 placeholder="Target position or current role"
               />
             </div>
@@ -179,7 +179,7 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
               value={contact.email}
               onChange={handleChange}
               className={inputClass}
-              style={{ color: "#2d2b3d" }}
+              style={{ color: "#111111" }}
               placeholder="Enter email"
             />
           </div>
@@ -192,7 +192,7 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
               value={contact.phone}
               onChange={handleChange}
               className={inputClass}
-              style={{ color: "#2d2b3d" }}
+              style={{ color: "#111111" }}
               placeholder="Enter Phone"
             />
           </div>
@@ -205,7 +205,7 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
               value={contact.location}
               onChange={handleChange}
               className={inputClass}
-              style={{ color: "#2d2b3d" }}
+              style={{ color: "#111111" }}
               placeholder="City, State"
             />
           </div>
@@ -218,7 +218,7 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
               value={contact.linkedin}
               onChange={handleChange}
               className={inputClass}
-              style={{ color: "#2d2b3d" }}
+              style={{ color: "#111111" }}
               placeholder="linkedin.com/in/johndoe"
             />
           </div>
@@ -231,7 +231,7 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
               value={contact.website}
               onChange={handleChange}
               className={inputClass}
-              style={{ color: "#2d2b3d" }}
+              style={{ color: "#111111" }}
               placeholder="johndoe.com"
             />
           </div>

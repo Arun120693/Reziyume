@@ -19,22 +19,22 @@ export function Sidebar({ email }: { email: string }) {
           <div
             className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{
-              background: "linear-gradient(135deg, #7c6ff7 0%, #e879a0 100%)",
-              boxShadow: "0 4px 14px rgba(124,111,247,0.45), inset 0 1px 0 rgba(255,255,255,0.3)"
+              background: "linear-gradient(135deg, #333333 0%, #111111 100%)",
+              boxShadow: "0 4px 14px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.3)"
             }}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M4 6h16M4 10h10M4 14h12M4 18h8" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
             </svg>
           </div>
-          <span className="text-[17px] font-extrabold tracking-tight" style={{ color: "#2d2b3d" }}>
-            ResumeForge
+          <span className="text-[17px] font-extrabold tracking-tight" style={{ color: "#111111" }}>
+            Reziyume
           </span>
         </Link>
       </div>
 
       {/* Divider */}
-      <div className="mx-5 mb-4" style={{ height: "1px", background: "linear-gradient(90deg, transparent, rgba(124,111,247,0.25), transparent)" }} />
+      <div className="mx-5 mb-4" style={{ height: "1px", background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent)" }} />
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-2 space-y-1">
@@ -45,7 +45,7 @@ export function Sidebar({ email }: { email: string }) {
             pathname === "/dashboard"
               ? {
                   background: "rgba(255,255,255,0.6)",
-                  color: "#7c6ff7",
+                  color: "#111111",
                   boxShadow: "4px 4px 12px rgba(180,178,195,0.5), -4px -4px 12px rgba(255,255,255,0.8)"
                 }
               : { color: "#6b6880" }

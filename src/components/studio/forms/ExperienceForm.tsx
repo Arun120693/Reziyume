@@ -31,7 +31,7 @@ export function ExperienceForm({ onClose }: { onClose?: () => void }) {
   return (
     <div className="flex flex-col h-full relative" style={{ background: "var(--bg-base)" }}>
       <div className="flex-1 overflow-y-auto p-8 pb-28">
-        <h2 className="text-2xl font-extrabold mb-8 tracking-tight" style={{ color: "#2d2b3d" }}>
+        <h2 className="text-2xl font-extrabold mb-8 tracking-tight" style={{ color: "#111111" }}>
           Professional Experience
         </h2>
 
@@ -65,7 +65,7 @@ export function ExperienceForm({ onClose }: { onClose?: () => void }) {
                     value={exp.company}
                     onChange={(e) => updateExperience(exp.id, { company: e.target.value })}
                     className={inputClass}
-                    style={{ color: "#2d2b3d" }}
+                    style={{ color: "#111111" }}
                     placeholder="e.g. Acme Corp"
                   />
                 </div>
@@ -77,7 +77,7 @@ export function ExperienceForm({ onClose }: { onClose?: () => void }) {
                     value={exp.position}
                     onChange={(e) => updateExperience(exp.id, { position: e.target.value })}
                     className={inputClass}
-                    style={{ color: "#2d2b3d" }}
+                    style={{ color: "#111111" }}
                     placeholder="e.g. Software Engineer"
                   />
                 </div>
@@ -89,7 +89,7 @@ export function ExperienceForm({ onClose }: { onClose?: () => void }) {
                     value={exp.location || ""}
                     onChange={(e) => updateExperience(exp.id, { location: e.target.value })}
                     className={inputClass}
-                    style={{ color: "#2d2b3d" }}
+                    style={{ color: "#111111" }}
                     placeholder="e.g. New York, NY"
                   />
                 </div>
@@ -115,7 +115,7 @@ export function ExperienceForm({ onClose }: { onClose?: () => void }) {
                       checked={exp.current}
                       onChange={(e) => updateExperience(exp.id, { current: e.target.checked, endDate: e.target.checked ? "Present" : "" })}
                       className="rounded"
-                      style={{ accentColor: "#7c6ff7" }}
+                      style={{ accentColor: "#111111" }}
                     />
                     I currently work here
                   </label>
@@ -158,7 +158,7 @@ export function ExperienceForm({ onClose }: { onClose?: () => void }) {
               <button
                 onClick={handleAdd}
                 className="neo-btn inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold"
-                style={{ color: "#7c6ff7" }}
+                style={{ color: "#111111" }}
               >
                 <Plus className="h-4 w-4" />
                 Add another position

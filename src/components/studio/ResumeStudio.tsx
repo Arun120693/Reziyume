@@ -158,9 +158,9 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
             onClick={() => setIsUploadModalOpen(true)}
             className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-[13.5px] font-extrabold transition-all"
             style={{
-              background: "linear-gradient(135deg, rgba(124,111,247,0.12), rgba(232,121,160,0.10))",
-              color: "#7c6ff7",
-              border: "1.5px solid rgba(124,111,247,0.25)",
+              background: "linear-gradient(135deg, rgba(0,0,0,0.05), rgba(0,0,0,0.02))",
+              color: "#111111",
+              border: "1.5px solid rgba(0,0,0,0.1)",
               boxShadow: "3px 3px 8px rgba(180,178,195,0.4), -3px -3px 8px rgba(255,255,255,0.8)"
             }}
           >
@@ -180,9 +180,9 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
                 activeTab === tab.id
                   ? {
                       background: tab.id === "content"
-                        ? "linear-gradient(135deg, rgba(124,111,247,0.18), rgba(232,121,160,0.15))"
+                        ? "linear-gradient(135deg, rgba(0,0,0,0.08), rgba(0,0,0,0.04))"
                         : "rgba(255,255,255,0.75)",
-                      color: tab.id === "content" ? "#5a4ee8" : "#2d2b3d",
+                      color: tab.id === "content" ? "#111111" : "#111111",
                       boxShadow: "3px 3px 8px rgba(180,178,195,0.45), -3px -3px 8px rgba(255,255,255,0.8)",
                       border: "1px solid rgba(255,255,255,0.6)"
                     }
@@ -203,7 +203,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
             onChange={(e) => updateName(e.target.value)}
             placeholder="Untitled Resume"
             className="w-40 neo-input px-3 py-1.5 text-[13px] font-medium"
-            style={{ color: "#2d2b3d" }}
+            style={{ color: "#111111" }}
           />
           <button
             onClick={handleDownload}
@@ -241,12 +241,12 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
                       border: "1px solid rgba(255,255,255,0.75)",
                       boxShadow: "4px 4px 12px rgba(180,178,195,0.45), -4px -4px 12px rgba(255,255,255,0.85)"
                     }}
-                    onMouseEnter={e => ((e.currentTarget as HTMLDivElement).style.boxShadow = "6px 6px 18px rgba(124,111,247,0.2), -4px -4px 12px rgba(255,255,255,0.9), 0 0 0 1.5px rgba(124,111,247,0.25)")}
+                    onMouseEnter={e => ((e.currentTarget as HTMLDivElement).style.boxShadow = "6px 6px 18px rgba(124,111,247,0.2), -4px -4px 12px rgba(255,255,255,0.9), 0 0 0 1.5px rgba(0,0,0,0.1)")}
                     onMouseLeave={e => ((e.currentTarget as HTMLDivElement).style.boxShadow = "4px 4px 12px rgba(180,178,195,0.45), -4px -4px 12px rgba(255,255,255,0.85)")}
                   >
                     {/* gradient edit button top-right */}
                     <div className="absolute top-3 right-3 w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                      style={{ background: "linear-gradient(135deg, #7c6ff7 0%, #e879a0 100%)", boxShadow: "0 2px 8px rgba(124,111,247,0.4)" }}
+                      style={{ background: "linear-gradient(135deg, #333333 0%, #111111 100%)", boxShadow: "0 2px 8px rgba(0,0,0,0.12)" }}
                     >
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -302,7 +302,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
                                       backdropFilter: "blur(10px)",
                                       border: snapshot.isDragging ? "1.5px solid rgba(124,111,247,0.5)" : "1px solid rgba(255,255,255,0.75)",
                                       boxShadow: snapshot.isDragging
-                                        ? "10px 10px 28px rgba(124,111,247,0.25), -4px -4px 12px rgba(255,255,255,0.9)"
+                                        ? "10px 10px 28px rgba(0,0,0,0.1), -4px -4px 12px rgba(255,255,255,0.9)"
                                         : "4px 4px 12px rgba(180,178,195,0.4), -4px -4px 12px rgba(255,255,255,0.85)",
                                       transform: snapshot.isDragging ? `rotate(1deg) ${provided.draggableProps.style?.transform || ""}` : provided.draggableProps.style?.transform || ""
                                     }}
@@ -312,10 +312,10 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
                                       <div {...provided.dragHandleProps} className="cursor-grab active:cursor-grabbing -ml-1" style={{ color: "#c8c6d6" }}>
                                         <GripVertical className="h-4 w-4" />
                                       </div>
-                                      <Icon className="w-4 h-4" style={{ color: "#7c6ff7" }} />
+                                      <Icon className="w-4 h-4" style={{ color: "#111111" }} />
                                       <span
                                         className="flex-1 text-[14px] font-bold cursor-pointer"
-                                        style={{ color: "#2d2b3d" }}
+                                        style={{ color: "#111111" }}
                                         onClick={() => setActiveForm(sectionId)}
                                       >
                                         {meta.label}
@@ -364,7 +364,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
                   <button
                     onClick={() => setIsAddContentOpen(true)}
                     className="w-full py-3.5 rounded-xl text-white font-semibold text-[14px] flex items-center justify-center gap-2 shadow-sm hover:shadow-md transition-all"
-                    style={{ background: "linear-gradient(135deg, #e879a0 0%, #c0649a 100%)" }}
+                    style={{ background: "linear-gradient(135deg, #666666 0%, #333333 100%)" }}
                   >
                     <Plus className="w-4 h-4" />
                     Add Content

@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --bg-base: #e8e6f0;
+  --bg-base: #F8F8F8;
   --neo-light: #ffffff;
-  --neo-dark: #c8c6d6;
-  --neo-shadow-light: rgba(255,255,255,0.85);
-  --neo-shadow-dark: rgba(180,178,195,0.7);
-  --glass-bg: rgba(255,255,255,0.25);
-  --glass-border: rgba(255,255,255,0.5);
+  --neo-dark: #E8E8E8;
+  --neo-shadow-light: rgba(255,255,255,1);
+  --neo-shadow-dark: rgba(0,0,0,0.06);
+  --glass-bg: rgba(255,255,255,0.65);
+  --glass-border: rgba(0,0,0,0.08);
   --glass-blur: blur(20px);
-  --accent: #7c6ff7;
-  --accent-2: #e879a0;
-  --text-primary: #2d2b3d;
-  --text-secondary: #6b6880;
+  --accent: #111111;
+  --accent-2: #333333;
+  --text-primary: #111111;
+  --text-secondary: #666666;
 }
 
 @theme inline {
@@ -88,7 +88,7 @@ body {
   box-shadow:
     inset 4px 4px 10px var(--neo-shadow-dark),
     inset -4px -4px 10px var(--neo-shadow-light),
-    0 0 0 3px rgba(124,111,247,0.25);
+    0 0 0 3px rgba(0,0,0,0.08);
 }
 
 /* Neo button (raised) */
@@ -117,20 +117,20 @@ body {
 
 /* Accent gradient button */
 .accent-btn {
-  background: linear-gradient(135deg, #7c6ff7 0%, #e879a0 100%);
+  background: linear-gradient(135deg, #333333 0%, #111111 100%);
   color: white;
   border-radius: 12px;
   border: none;
   box-shadow:
-    0 4px 15px rgba(124,111,247,0.45),
-    inset 0 1px 0 rgba(255,255,255,0.25);
+    0 4px 15px rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.1);
   transition: box-shadow 0.2s ease, transform 0.15s ease, opacity 0.2s;
 }
 
 .accent-btn:hover {
   box-shadow:
-    0 6px 22px rgba(124,111,247,0.6),
-    inset 0 1px 0 rgba(255,255,255,0.3);
+    0 6px 22px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.15);
   transform: translateY(-1px);
   opacity: 0.95;
 }
@@ -138,7 +138,7 @@ body {
 .accent-btn:active {
   transform: translateY(0);
   box-shadow:
-    0 2px 8px rgba(124,111,247,0.35);
+    0 2px 8px rgba(0,0,0,0.1);
 }
 
 /* Sidebar offset for main content */

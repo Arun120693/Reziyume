@@ -36,16 +36,16 @@ export default function Home() {
           <div
             className="w-9 h-9 rounded-xl flex items-center justify-center"
             style={{
-              background: "linear-gradient(135deg, #7c6ff7 0%, #e879a0 100%)",
-              boxShadow: "0 4px 14px rgba(124,111,247,0.45), inset 0 1px 0 rgba(255,255,255,0.3)"
+              background: "linear-gradient(135deg, #333333 0%, #111111 100%)",
+              boxShadow: "0 4px 14px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.3)"
             }}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M4 6h16M4 10h10M4 14h12M4 18h8" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
             </svg>
           </div>
-          <span className="text-[17px] font-extrabold tracking-tight" style={{ color: "#2d2b3d" }}>
-            ResumeForge
+          <span className="text-[17px] font-extrabold tracking-tight" style={{ color: "#111111" }}>
+            Reziyume
           </span>
         </div>
 
@@ -76,7 +76,7 @@ export default function Home() {
             background: "rgba(255,255,255,0.45)",
             backdropFilter: "blur(10px)",
             border: "1px solid rgba(255,255,255,0.7)",
-            color: "#7c6ff7",
+            color: "#111111",
             boxShadow: "3px 3px 10px rgba(180,178,195,0.35), -3px -3px 10px rgba(255,255,255,0.8)"
           }}
         >
@@ -87,12 +87,12 @@ export default function Home() {
         {/* Headline */}
         <h1
           className="max-w-4xl text-5xl sm:text-7xl font-extrabold tracking-tight mb-8 leading-[1.1]"
-          style={{ color: "#2d2b3d" }}
+          style={{ color: "#111111" }}
         >
           Craft a professional resume in{" "}
           <span
             className="text-transparent bg-clip-text"
-            style={{ backgroundImage: "linear-gradient(135deg, #7c6ff7 0%, #e879a0 100%)" }}
+            style={{ backgroundImage: "linear-gradient(135deg, #333333 0%, #111111 100%)" }}
           >
             minutes
           </span>
@@ -100,7 +100,7 @@ export default function Home() {
 
         {/* Subtitle */}
         <p className="max-w-2xl text-lg sm:text-xl mb-12 leading-relaxed" style={{ color: "#6b6880" }}>
-          ResumeForge is a completely free online resume builder featuring modern templates, AI writing assistance, and an intuitive drag-and-drop editor. Everything is unlocked forever.
+          Reziyume is a completely free online resume builder featuring modern templates, AI writing assistance, and an intuitive drag-and-drop editor. Everything is unlocked forever.
         </p>
 
         {/* CTAs */}

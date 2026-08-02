@@ -27,7 +27,7 @@ export function ProjectsForm({ onClose }: { onClose?: () => void }) {
   return (
     <div className="flex flex-col h-full relative" style={{ background: "var(--bg-base)" }}>
       <div className="flex-1 overflow-y-auto p-8 pb-28">
-        <h2 className="text-2xl font-extrabold mb-8 tracking-tight" style={{ color: "#2d2b3d" }}>
+        <h2 className="text-2xl font-extrabold mb-8 tracking-tight" style={{ color: "#111111" }}>
           Projects
         </h2>
 
@@ -60,7 +60,7 @@ export function ProjectsForm({ onClose }: { onClose?: () => void }) {
                     value={proj.name}
                     onChange={(e) => updateProject(proj.id, { name: e.target.value })}
                     className={inputClass}
-                    style={{ color: "#2d2b3d" }}
+                    style={{ color: "#111111" }}
                     placeholder="e.g. E-Commerce Dashboard"
                   />
                 </div>
@@ -72,7 +72,7 @@ export function ProjectsForm({ onClose }: { onClose?: () => void }) {
                     value={proj.url}
                     onChange={(e) => updateProject(proj.id, { url: e.target.value })}
                     className={inputClass}
-                    style={{ color: "#2d2b3d" }}
+                    style={{ color: "#111111" }}
                     placeholder="e.g. https://github.com/my-project"
                   />
                 </div>
@@ -87,7 +87,7 @@ export function ProjectsForm({ onClose }: { onClose?: () => void }) {
                       updateProject(proj.id, { technologies: techArray.length ? techArray : e.target.value ? e.target.value.split(",") : [] });
                     }}
                     className={inputClass}
-                    style={{ color: "#2d2b3d" }}
+                    style={{ color: "#111111" }}
                     placeholder="e.g. React, Node.js, Tailwind CSS"
                   />
                 </div>
@@ -137,7 +137,7 @@ export function ProjectsForm({ onClose }: { onClose?: () => void }) {
         <button
           onClick={handleAdd}
           className="neo-btn flex-1 py-3 px-4 font-semibold text-sm flex items-center justify-center gap-2"
-          style={{ color: "#7c6ff7" }}
+          style={{ color: "#111111" }}
         >
           <Plus className="w-4 h-4" />
           Add Project

@@ -70,7 +70,7 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
           boxShadow: "6px 6px 18px rgba(180,178,195,0.55), -6px -6px 18px rgba(255,255,255,0.9)"
         }}
         onClick={() => router.push(`/dashboard/studio/${resume.id}`)}
-        onMouseEnter={e => (e.currentTarget.style.boxShadow = "10px 10px 26px rgba(180,178,195,0.65), -10px -10px 26px rgba(255,255,255,0.95), 0 0 0 2px rgba(124,111,247,0.25)")}
+        onMouseEnter={e => (e.currentTarget.style.boxShadow = "10px 10px 26px rgba(180,178,195,0.65), -10px -10px 26px rgba(255,255,255,0.95), 0 0 0 2px rgba(0,0,0,0.1)")}
         onMouseLeave={e => (e.currentTarget.style.boxShadow = "6px 6px 18px rgba(180,178,195,0.55), -6px -6px 18px rgba(255,255,255,0.9)")}
       >
         <div
@@ -83,7 +83,7 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
           <div className="absolute inset-0 flex items-center justify-center"
             style={{ background: "rgba(232,230,240,0.7)", backdropFilter: "blur(8px)" }}
           >
-            <Loader2 className="w-6 h-6 animate-spin" style={{ color: "#7c6ff7" }} />
+            <Loader2 className="w-6 h-6 animate-spin" style={{ color: "#111111" }} />
           </div>
         )}
       </div>
@@ -91,7 +91,7 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
       {/* Card footer */}
       <div className="mt-3 flex items-center justify-between px-1">
         <div>
-          <p className="text-[14px] font-bold leading-tight" style={{ color: "#2d2b3d" }}>{resume.title}</p>
+          <p className="text-[14px] font-bold leading-tight" style={{ color: "#111111" }}>{resume.title}</p>
           <p className="text-[12px] mt-0.5" style={{ color: "#9490b0" }}>edited {timeAgo(resume.updatedAt)} · A4</p>
         </div>
         <div className="relative" ref={menuRef}>
@@ -99,7 +99,7 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
             onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
             className="p-1.5 rounded-full transition-colors"
             style={{ color: "#9490b0" }}
-            onMouseEnter={e => (e.currentTarget.style.color = "#7c6ff7")}
+            onMouseEnter={e => (e.currentTarget.style.color = "#111111")}
             onMouseLeave={e => (e.currentTarget.style.color = "#9490b0")}
           >
             <MoreVertical className="w-4 h-4" />
@@ -117,17 +117,17 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
               <button
                 onClick={() => { setMenuOpen(false); router.push(`/dashboard/studio/${resume.id}`); }}
                 className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-[13px] font-medium transition-colors hover:bg-white/50"
-                style={{ color: "#2d2b3d" }}
+                style={{ color: "#111111" }}
               >
                 <Pencil className="w-3.5 h-3.5" /> Edit
               </button>
               <button className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-[13px] font-medium transition-colors hover:bg-white/50"
-                style={{ color: "#2d2b3d" }}
+                style={{ color: "#111111" }}
               >
                 <Copy className="w-3.5 h-3.5" /> Duplicate
               </button>
               <button className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-[13px] font-medium transition-colors hover:bg-white/50"
-                style={{ color: "#2d2b3d" }}
+                style={{ color: "#111111" }}
               >
                 <Download className="w-3.5 h-3.5" /> Download PDF
               </button>
@@ -166,7 +166,7 @@ export default function DashboardPage() {
     <div className="min-h-screen px-10 py-10">
       {/* Page header */}
       <div className="mb-8">
-        <h1 className="text-[26px] font-extrabold tracking-tight mb-1" style={{ color: "#2d2b3d" }}>
+        <h1 className="text-[26px] font-extrabold tracking-tight mb-1" style={{ color: "#111111" }}>
           My Resumes
         </h1>
         <p className="text-[14px]" style={{ color: "#9490b0" }}>
@@ -177,7 +177,7 @@ export default function DashboardPage() {
       {loading ? (
         <div className="flex items-center justify-center h-64">
           <div className="neo-raised flex items-center justify-center w-16 h-16 rounded-2xl">
-            <Loader2 className="w-8 h-8 animate-spin" style={{ color: "#7c6ff7" }} />
+            <Loader2 className="w-8 h-8 animate-spin" style={{ color: "#111111" }} />
           </div>
         </div>
       ) : (
@@ -192,7 +192,7 @@ export default function DashboardPage() {
                 backdropFilter: "blur(8px)"
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLDivElement).style.border = "2px dashed rgba(124,111,247,0.6)";
+                (e.currentTarget as HTMLDivElement).style.border = "2px dashed rgba(0,0,0,0.2)";
                 (e.currentTarget as HTMLDivElement).style.background = "rgba(124,111,247,0.08)";
               }}
               onMouseLeave={e => {
@@ -203,9 +203,9 @@ export default function DashboardPage() {
               <div
                 className="w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 neo-raised"
               >
-                <Plus className="w-6 h-6" style={{ color: "#7c6ff7" }} />
+                <Plus className="w-6 h-6" style={{ color: "#111111" }} />
               </div>
-              <span className="text-[13px] font-semibold" style={{ color: "#7c6ff7" }}>New resume</span>
+              <span className="text-[13px] font-semibold" style={{ color: "#111111" }}>New resume</span>
             </div>
             <div className="h-10 mt-3" />
           </Link>

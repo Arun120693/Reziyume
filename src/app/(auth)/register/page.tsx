@@ -51,7 +51,7 @@ export default function RegisterPage() {
 
   return (
     <div>
-      <h3 className="text-xl font-bold mb-6 text-center" style={{ color: "#2d2b3d" }}>Create your account</h3>
+      <h3 className="text-xl font-bold mb-6 text-center" style={{ color: "#111111" }}>Create your account</h3>
 
       <form className="space-y-5" onSubmit={handleSubmit}>
         <div>
@@ -68,7 +68,7 @@ export default function RegisterPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="neo-input w-full pl-10 pr-4 py-3 text-sm"
-              style={{ color: "#2d2b3d" }}
+              style={{ color: "#111111" }}
               placeholder="you@example.com"
             />
           </div>
@@ -89,7 +89,7 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="neo-input w-full pl-10 pr-4 py-3 text-sm"
-              style={{ color: "#2d2b3d" }}
+              style={{ color: "#111111" }}
               placeholder="••••••••"
             />
           </div>
@@ -133,7 +133,7 @@ export default function RegisterPage() {
         }}
         disabled={isLoading}
         className="neo-input w-full flex justify-center items-center gap-3 py-3 px-4 text-sm font-semibold transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-        style={{ color: "#2d2b3d" }}
+        style={{ color: "#111111" }}
       >
         <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M47.532 24.5528C47.532 22.9214 47.3997 21.2811 47.1175 19.6761H24.48V28.9181H37.4434C36.9055 31.8988 35.177 34.5356 32.6461 36.2111V42.2078H40.3801C44.9217 38.0278 47.532 31.8547 47.532 24.5528Z" fill="#4285F4"/>
@@ -148,7 +148,7 @@ export default function RegisterPage() {
         <p className="text-sm" style={{ color: "#6b6880" }}>
           Already have an account?{" "}
           <Link href="/login" className="font-semibold transition-colors hover:opacity-80"
-            style={{ color: "#7c6ff7" }}
+            style={{ color: "#111111" }}
           >
             Sign in
           </Link>

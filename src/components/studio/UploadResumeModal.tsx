@@ -1,15 +1,17 @@
 "use client";
 
 import { useRef, useState, useCallback } from "react";
-import { Upload, FileText, X, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { Upload, FileText, X, CheckCircle, AlertCircle, Loader2, Lock } from "lucide-react";
 import { useResumeStore } from "@/lib/store/useResumeStore";
+import { detectCountry } from "@/lib/country";
+import { getPricingForCountry } from "@/lib/pricing";
 
 interface UploadResumeModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-type Stage = "idle" | "uploading" | "parsing" | "done" | "error";
+type Stage = "idle" | "uploading" | "parsing" | "done" | "error" | "upgrade";
 
 export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -17,6 +19,8 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
   const [errorMsg, setErrorMsg] = useState("");
   const [dragOver, setDragOver] = useState(false);
   const [fileName, setFileName] = useState("");
+  const [country, setCountry] = useState("US");
+  const [loadingCheckout, setLoadingCheckout] = useState(false);
 
   const setInitialData = useResumeStore((s) => s.setInitialData);
   const data = useResumeStore((s) => s.data);
@@ -26,6 +30,7 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
     setErrorMsg("");
     setFileName("");
     setDragOver(false);
+    setLoadingCheckout(false);
   };
 
   const handleClose = () => {
@@ -56,6 +61,13 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
       setStage("parsing");
       const res = await fetch("/api/parse-resume", { method: "POST", body: formData });
       const json = await res.json();
+
+      if (res.status === 403 && json.error === "LIMIT_REACHED") {
+        const detected = await detectCountry();
+        setCountry(detected);
+        setStage("upgrade");
+        return;
+      }
 
       if (!res.ok || !json.success) {
         throw new Error(json.error || "Failed to parse resume");
@@ -167,6 +179,82 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
   }, [data, setInitialData]);
 
 
+  const handleCheckout = async () => {
+    try {
+      setLoadingCheckout(true);
+      const res = await fetch("/api/payments/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ country }),
+      });
+      const result = await res.json();
+      
+      if (!res.ok) throw new Error(result.error || "Checkout failed");
+
+      if (result.provider === "stripe") {
+        window.location.href = result.url;
+      } else if (result.provider === "razorpay") {
+        const loadScript = () => new Promise((resolve) => {
+          if ((window as any).Razorpay) return resolve(true);
+          const script = document.createElement("script");
+          script.src = "https://checkout.razorpay.com/v1/checkout.js";
+          script.onload = () => resolve(true);
+          script.onerror = () => resolve(false);
+          document.body.appendChild(script);
+        });
+
+        const loaded = await loadScript();
+        if (!loaded) throw new Error("Failed to load Razorpay SDK");
+
+        const options = {
+          key: result.key,
+          subscription_id: result.subscriptionId,
+          name: "Reziyume Pro",
+          description: "Unlimited AI Resume Parsing",
+          handler: async function (response: any) {
+            try {
+              setLoadingCheckout(true);
+              const verifyRes = await fetch("/api/payments/verify-razorpay", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_subscription_id: response.razorpay_subscription_id,
+                  razorpay_signature: response.razorpay_signature,
+                }),
+              });
+
+              const verifyJson = await verifyRes.json();
+              if (!verifyRes.ok) throw new Error(verifyJson.error || "Verification failed");
+
+              window.location.href = "/dashboard/payment/success";
+            } catch (err: any) {
+              console.error(err);
+              alert(err.message || "Failed to verify payment. Please contact support.");
+              setLoadingCheckout(false);
+            }
+          },
+          theme: { color: "#7c6ff7" },
+          modal: {
+            ondismiss: function () {
+              setLoadingCheckout(false);
+            }
+          }
+        };
+
+        const rzp = new (window as any).Razorpay(options);
+        rzp.on("payment.failed", function () {
+          setLoadingCheckout(false);
+        });
+        rzp.open();
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Failed to initialize checkout.");
+      setLoadingCheckout(false);
+    }
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) processFile(file);
@@ -201,12 +289,12 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
           <div className="flex items-center gap-3">
             <div
               className="w-10 h-10 rounded-2xl flex items-center justify-center"
-              style={{ background: "linear-gradient(135deg, #7c6ff7 0%, #e879a0 100%)", boxShadow: "0 4px 14px rgba(124,111,247,0.4)" }}
+              style={{ background: "linear-gradient(135deg, #333333 0%, #111111 100%)", boxShadow: "0 4px 14px rgba(0,0,0,0.12)" }}
             >
               <Upload className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-[17px] font-extrabold tracking-tight" style={{ color: "#2d2b3d" }}>Upload Your Resume</h2>
+              <h2 className="text-[17px] font-extrabold tracking-tight" style={{ color: "#111111" }}>Upload Your Resume</h2>
               <p className="text-[12px] font-medium" style={{ color: "#9490b0" }}>We'll auto-fill the template with your details</p>
             </div>
           </div>
@@ -244,14 +332,14 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
                     boxShadow: "4px 4px 12px rgba(180,178,195,0.4), -4px -4px 12px rgba(255,255,255,0.85)"
                   }}
                 >
-                  <FileText className="w-8 h-8" style={{ color: "#7c6ff7" }} />
+                  <FileText className="w-8 h-8" style={{ color: "#111111" }} />
                 </div>
                 <div className="text-center">
-                  <p className="text-[15px] font-bold" style={{ color: "#2d2b3d" }}>
+                  <p className="text-[15px] font-bold" style={{ color: "#111111" }}>
                     Drop your PDF resume here
                   </p>
                   <p className="text-[13px] font-medium mt-1" style={{ color: "#9490b0" }}>
-                    or <span style={{ color: "#7c6ff7" }}>click to browse</span> · PDF only · Max 5MB
+                    or <span style={{ color: "#111111" }}>click to browse</span> · PDF only · Max 5MB
                   </p>
                 </div>
                 <input
@@ -282,12 +370,12 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
             <div className="flex flex-col items-center justify-center gap-5 py-12">
               <div
                 className="w-20 h-20 rounded-3xl flex items-center justify-center"
-                style={{ background: "linear-gradient(135deg, rgba(124,111,247,0.15), rgba(232,121,160,0.12))", boxShadow: "6px 6px 20px rgba(180,178,195,0.4), -6px -6px 20px rgba(255,255,255,0.85)" }}
+                style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.06), rgba(0,0,0,0.03))", boxShadow: "6px 6px 20px rgba(180,178,195,0.4), -6px -6px 20px rgba(255,255,255,0.85)" }}
               >
-                <Loader2 className="w-10 h-10 animate-spin" style={{ color: "#7c6ff7" }} />
+                <Loader2 className="w-10 h-10 animate-spin" style={{ color: "#111111" }} />
               </div>
               <div className="text-center">
-                <p className="text-[16px] font-extrabold" style={{ color: "#2d2b3d" }}>
+                <p className="text-[16px] font-extrabold" style={{ color: "#111111" }}>
                   {stage === "uploading" ? "Uploading…" : "AI is analyzing your resume…"}
                 </p>
                 <p className="text-[13px] font-medium mt-1" style={{ color: "#9490b0" }}>
@@ -299,7 +387,7 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
                   className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-semibold"
                   style={{ background: "rgba(255,255,255,0.5)", color: "#4a4760", border: "1px solid rgba(255,255,255,0.7)" }}
                 >
-                  <FileText className="w-4 h-4" style={{ color: "#7c6ff7" }} />
+                  <FileText className="w-4 h-4" style={{ color: "#111111" }} />
                   {fileName}
                 </div>
               )}
@@ -310,12 +398,12 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
             <div className="flex flex-col items-center justify-center gap-5 py-10">
               <div
                 className="w-20 h-20 rounded-3xl flex items-center justify-center"
-                style={{ background: "linear-gradient(135deg, rgba(34,197,94,0.15), rgba(124,111,247,0.1))", boxShadow: "6px 6px 20px rgba(180,178,195,0.4), -6px -6px 20px rgba(255,255,255,0.85)" }}
+                style={{ background: "linear-gradient(135deg, rgba(34,197,94,0.15), rgba(0,0,0,0.05))", boxShadow: "6px 6px 20px rgba(180,178,195,0.4), -6px -6px 20px rgba(255,255,255,0.85)" }}
               >
                 <CheckCircle className="w-10 h-10" style={{ color: "#16a34a" }} />
               </div>
               <div className="text-center">
-                <p className="text-[17px] font-extrabold" style={{ color: "#2d2b3d" }}>Resume Imported! 🎉</p>
+                <p className="text-[17px] font-extrabold" style={{ color: "#111111" }}>Resume Imported! 🎉</p>
                 <p className="text-[13px] font-medium mt-1.5" style={{ color: "#6b6880" }}>
                   Your details have been filled into the template.<br />Review and edit anything that needs adjusting.
                 </p>
@@ -338,16 +426,54 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
                 <AlertCircle className="w-10 h-10" style={{ color: "#dc2626" }} />
               </div>
               <div className="text-center">
-                <p className="text-[17px] font-extrabold" style={{ color: "#2d2b3d" }}>Couldn't Parse Resume</p>
+                <p className="text-[17px] font-extrabold" style={{ color: "#111111" }}>Couldn't Parse Resume</p>
                 <p className="text-[13px] font-medium mt-1.5 max-w-xs" style={{ color: "#6b6880" }}>{errorMsg}</p>
               </div>
               <button
                 onClick={reset}
                 className="neo-btn px-8 py-3 font-bold text-[14px]"
-                style={{ color: "#7c6ff7" }}
+                style={{ color: "#111111" }}
               >
                 Try Again
               </button>
+            </div>
+          )}
+
+          {stage === "upgrade" && (
+            <div className="flex flex-col items-center justify-center gap-5 py-8">
+              <div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center mb-2"
+                style={{ background: "linear-gradient(135deg, rgba(147,51,234,0.15), rgba(0,0,0,0.05))", boxShadow: "6px 6px 20px rgba(180,178,195,0.4), -6px -6px 20px rgba(255,255,255,0.85)" }}
+              >
+                <Lock className="w-8 h-8 text-purple-600" />
+              </div>
+              <div className="text-center">
+                <h3 className="text-[20px] font-extrabold text-[#111111]">Unlock Reziyume Pro</h3>
+                <p className="text-[14px] mt-2 font-medium max-w-[280px] mx-auto" style={{ color: "#6b6880" }}>
+                  You've used all 5 free AI Resume Parses available this month. Upgrade to Reziyume Pro to enjoy unlimited AI Resume Parsing.
+                </p>
+              </div>
+              <div className="mt-2 text-center">
+                <p className="text-[24px] font-bold" style={{ color: "#111111" }}>
+                  {getPricingForCountry(country).price}
+                  <span className="text-[14px] font-medium ml-1" style={{ color: "#6b6880" }}>
+                    /{getPricingForCountry(country).interval}
+                  </span>
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 mt-4 w-full px-8">
+                <button 
+                  onClick={handleCheckout}
+                  disabled={loadingCheckout}
+                  className="accent-btn w-full py-3 font-bold text-[14px] flex items-center justify-center gap-2"
+                >
+                  {loadingCheckout && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {loadingCheckout ? "Loading..." : "Upgrade to Reziyume Pro"}
+                </button>
+                <button onClick={handleClose} disabled={loadingCheckout} className="neo-btn w-full py-3 font-bold text-[14px]" style={{ color: "#6b6880" }}>
+                  Maybe Later
+                </button>
+              </div>
             </div>
           )}
         </div>

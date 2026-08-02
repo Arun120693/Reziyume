@@ -1,13 +1,95 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PDFParse } from "pdf-parse";
 import { GoogleGenAI, Type } from "@google/genai";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import prisma from "@/lib/prisma";
 
 function cleanText(t: string) {
   return t.replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
 }
 
 export async function POST(req: NextRequest) {
+  let reservedUserId: string | null = null;
+
   try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user?.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      const uRes = await tx.$queryRaw<any[]>`
+        SELECT id, plan, "monthlyParseCount", "lastMonthlyReset", "planExpiresAt"
+        FROM "resumeforge"."User" 
+        WHERE email = ${session.user.email} 
+        FOR UPDATE
+      `;
+      const u = uRes[0];
+      if (!u) return { error: "User not found", status: 404 };
+
+      const now = new Date();
+      let currentCount = u.monthlyParseCount;
+      
+      if (u.lastMonthlyReset) {
+        const lastReset = new Date(u.lastMonthlyReset);
+        if (lastReset.getMonth() !== now.getMonth() || lastReset.getFullYear() !== now.getFullYear()) {
+          currentCount = 0;
+        }
+      } else {
+        currentCount = 0;
+      }
+
+      // JIT Expiration Check
+     // JIT Expiration Check
+let effectivePlan = u.plan;
+if (u.plan === "PRO" && u.planExpiresAt) {
+  const expiresAt = new Date(u.planExpiresAt);
+  if (expiresAt < now) {
+    effectivePlan = "FREE";
+  }
+}
+
+// ======================================================
+// DEBUG LOGS
+// ======================================================
+console.log("========================================");
+console.log("PARSE LIMIT CHECK");
+console.log("User:", session.user.email);
+console.log("Plan in DB:", u.plan);
+console.log("Effective Plan:", effectivePlan);
+console.log("Monthly Parse Count (DB):", u.monthlyParseCount);
+console.log("Current Count:", currentCount);
+console.log("Last Monthly Reset:", u.lastMonthlyReset);
+console.log("Plan Expires At:", u.planExpiresAt);
+console.log(
+  "Limit Reached:",
+  effectivePlan === "FREE" && currentCount >= 5
+);
+console.log("========================================");
+
+if (effectivePlan === "FREE" && currentCount >= 5) {
+  console.log("Returning LIMIT_REACHED (403)");
+  return { error: "LIMIT_REACHED", status: 403 };
+}
+      // Eagerly increment to prevent race conditions during the slow Gemini API call
+      await tx.user.update({
+        where: { id: u.id },
+        data: {
+          monthlyParseCount: currentCount + 1,
+          lastMonthlyReset: now,
+        }
+      });
+
+      return { success: true, user: u };
+    });
+
+    if (result.error) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
+    }
+
+    reservedUserId = result.user.id;
+
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
 
@@ -187,6 +269,8 @@ ${rawText}
       projects: processItems(parsedData.projects),
     };
 
+    // Usage was already eagerly incremented safely in the transaction above.
+
     console.log("======================================================");
     console.log("STAGE 1: Gemini Response (Raw JSON)");
     console.log("Summary:", !!parsedData.summary);
@@ -200,6 +284,19 @@ ${rawText}
     return NextResponse.json({ success: true, parsed: finalParsed });
   } catch (err: any) {
     console.error("PDF parse error:", err);
+    
+    // Rollback the eager increment if the parsing fails
+    if (typeof reservedUserId === "string") {
+      try {
+        await prisma.user.update({
+          where: { id: reservedUserId },
+          data: { monthlyParseCount: { decrement: 1 } }
+        });
+      } catch (rollbackErr) {
+        console.error("Failed to rollback usage limit:", rollbackErr);
+      }
+    }
+
     return NextResponse.json({ error: "Failed to parse PDF: " + (err?.message || "unknown error") }, { status: 500 });
   }
 }
