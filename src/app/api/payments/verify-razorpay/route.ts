@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Razorpay synchronous verification error:", error);
     return NextResponse.json({ error: "Internal Error" }, { status: 500 });
   }

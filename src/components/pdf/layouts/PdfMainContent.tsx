@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResumeData, hasProfilePhoto } from '@/lib/types/resume';
+import { ResumeData } from '@/lib/types/resume';
 import { TemplateConfig } from '../../studio/preview/templates/registry';
 import { PdfSummary } from '../PdfSummary';
 import { PdfExperience } from '../PdfExperience';

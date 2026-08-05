@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from '@react-pdf/renderer';
+import { View } from '@react-pdf/renderer';
 import { ResumeData } from '@/lib/types/resume';
 import { TemplateConfig } from '../studio/preview/templates/registry';
 import { createPdfStyles } from './PdfShared';

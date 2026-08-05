@@ -8,7 +8,7 @@ const inputClass = "w-full px-4 py-3 rounded-xl text-sm outline-none transition-
 const labelClass = "block text-sm font-semibold mb-1.5";
 const labelStyle = { color: "#4a4760" };
 
-export function ProjectsForm({ onClose }: { onClose?: () => void }) {
+export function ProjectsForm() {
   const projects = useResumeStore((state) => state.data?.projects) || [];
   const addProject = useResumeStore((state) => state.addProject);
   const updateProject = useResumeStore((state) => state.updateProject);

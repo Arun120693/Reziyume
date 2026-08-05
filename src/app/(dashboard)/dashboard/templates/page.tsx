@@ -25,6 +25,7 @@ const CATEGORY_MAP: Record<string, string> = {
   Photo:        "photo",
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function TemplateCard({ template, isCreating, selectedId, onSelect }: any) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.35);
@@ -32,7 +33,7 @@ function TemplateCard({ template, isCreating, selectedId, onSelect }: any) {
   useEffect(() => {
     if (!containerRef.current) return;
     const obs = new ResizeObserver((entries) => {
-      for (let e of entries) setScale(e.contentRect.width / 794);
+      for (const e of entries) setScale(e.contentRect.width / 794);
     });
     obs.observe(containerRef.current);
     return () => obs.disconnect();
@@ -127,6 +128,7 @@ export default function TemplatesPage() {
       }
       const data = await res.json();
       router.push(`/dashboard/studio/${data.resume.id}`);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setIsCreating(false);
       setSelectedId(null);

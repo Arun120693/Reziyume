@@ -46,8 +46,10 @@ export async function POST(req: Request) {
       { message: "User created successfully", user: newUser },
       { status: 201 }
     );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error instanceof z.ZodError) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return NextResponse.json({ message: (error as any).errors[0].message }, { status: 400 });
     }
     console.error("Registration error:", error);

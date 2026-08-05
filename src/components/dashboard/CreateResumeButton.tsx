@@ -12,7 +12,7 @@ interface CreateResumeButtonProps {
 
 export function CreateResumeButton({ className, variant = "primary", children }: CreateResumeButtonProps) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
 
   const handleCreate = () => {
     router.push("/dashboard/templates");

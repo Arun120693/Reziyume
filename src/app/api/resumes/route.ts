@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { defaultResumeData } from "@/lib/types/resume";
+import { Prisma } from "@prisma/client";
 
 export async function POST(req: Request) {
   try {
@@ -18,7 +19,7 @@ export async function POST(req: Request) {
       if (body.templateId) {
         templateId = body.templateId;
       }
-    } catch (e) {
+    } catch {
       // ignore JSON parse error if body is empty
     }
 
@@ -28,27 +29,28 @@ export async function POST(req: Request) {
         userId: session.user.id,
         name: defaultResumeData.name,
         templateId: templateId,
-        contact: defaultResumeData.contact as any,
+        contact: defaultResumeData.contact as unknown as Prisma.InputJsonValue,
         summary: defaultResumeData.summary,
-        experience: defaultResumeData.experience as any,
-        education: defaultResumeData.education as any,
-        skills: defaultResumeData.skills as any,
-        projects: defaultResumeData.projects as any,
-        customSections: defaultResumeData.customSections as any,
-        sectionOrder: defaultResumeData.sectionOrder as any,
-        sectionVisibility: defaultResumeData.sectionVisibility as any,
-        formatting: defaultResumeData.formatting as any,
+        experience: defaultResumeData.experience as unknown as Prisma.InputJsonValue,
+        education: defaultResumeData.education as unknown as Prisma.InputJsonValue,
+        skills: defaultResumeData.skills as unknown as Prisma.InputJsonValue,
+        projects: defaultResumeData.projects as unknown as Prisma.InputJsonValue,
+        customSections: defaultResumeData.customSections as unknown as Prisma.InputJsonValue,
+        sectionOrder: defaultResumeData.sectionOrder as unknown as Prisma.InputJsonValue,
+        sectionVisibility: defaultResumeData.sectionVisibility as unknown as Prisma.InputJsonValue,
+        formatting: defaultResumeData.formatting as unknown as Prisma.InputJsonValue,
       },
     });
 
     return NextResponse.json({ resume }, { status: 201 });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Failed to create resume:", error);
     return NextResponse.json({ message: "Error: " + (error.message || String(error)) }, { status: 500 });
   }
 }
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
 

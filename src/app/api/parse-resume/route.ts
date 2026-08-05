@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     }
 
     const result = await prisma.$transaction(async (tx) => {
-      const uRes = await tx.$queryRaw<any[]>`
+      const uRes = await tx.$queryRaw<{ id: string; plan: string; monthlyParseCount: number; lastMonthlyReset: Date; planExpiresAt: Date | null }[]>`
         SELECT id, plan, "monthlyParseCount", "lastMonthlyReset", "planExpiresAt"
         FROM "resumeforge"."User" 
         WHERE email = ${session.user.email} 
@@ -86,6 +86,13 @@ if (effectivePlan === "FREE" && currentCount >= 5) {
 
     if (result.error) {
       return NextResponse.json({ error: result.error }, { status: result.status });
+    }
+    
+    if (!result.user) {
+      return NextResponse.json(
+        { error: "Invalid or expired session" },
+        { status: 401 }
+      );
     }
 
     reservedUserId = result.user.id;
@@ -232,7 +239,7 @@ ${rawText}
     const parsedData = JSON.parse(response.text || "{}");
 
     // Helper to format newlines or markdown bullets into proper HTML for the frontend
-    const formatDescriptionToHTML = (desc: any) => {
+    const formatDescriptionToHTML = (desc: unknown) => {
       if (!desc) return "";
       
       // If Gemini somehow returned an array of strings
@@ -252,9 +259,9 @@ ${rawText}
     };
 
     // Add unique IDs and format descriptions
-    const processItems = (arr: any[]) => (arr || []).map((item: any) => {
-      const newItem = { ...item, id: crypto.randomUUID() };
-      if (newItem.description) {
+    const processItems = (arr: unknown[]) => (arr || []).map((item: unknown) => {
+      const newItem = { ...(item as Record<string, unknown>), id: crypto.randomUUID() } as Record<string, unknown>;
+      if (typeof newItem.description === 'string') {
         newItem.description = formatDescriptionToHTML(newItem.description);
       }
       return newItem;
@@ -282,7 +289,7 @@ ${rawText}
     console.log("======================================================");
 
     return NextResponse.json({ success: true, parsed: finalParsed });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("PDF parse error:", err);
     
     // Rollback the eager increment if the parsing fails
@@ -297,6 +304,6 @@ ${rawText}
       }
     }
 
-    return NextResponse.json({ error: "Failed to parse PDF: " + (err?.message || "unknown error") }, { status: 500 });
+    return NextResponse.json({ error: "Failed to parse PDF: " + ((err as Error)?.message || "unknown error") }, { status: 500 });
   }
 }

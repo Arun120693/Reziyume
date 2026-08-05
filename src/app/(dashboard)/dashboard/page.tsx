@@ -15,6 +15,14 @@ interface Resume {
   updatedAt: string;
 }
 
+const timeAgo = (dateStr: string) => {
+  const diff = (Date.now() - new Date(dateStr).getTime()) / 1000;
+  if (diff < 60) return "just now";
+  if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} hr ago`;
+  return `${Math.floor(diff / 86400)} days ago`;
+};
+
 function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: string) => void }) {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -27,7 +35,7 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
   useEffect(() => {
     if (!containerRef.current) return;
     const observer = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         setScale(entry.contentRect.width / 794);
       }
     });
@@ -45,13 +53,7 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  const timeAgo = (dateStr: string) => {
-    const diff = (Date.now() - new Date(dateStr).getTime()) / 1000;
-    if (diff < 60) return "just now";
-    if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)} hr ago`;
-    return `${Math.floor(diff / 86400)} days ago`;
-  };
+
 
   const handleDelete = async () => {
     if (!confirm("Delete this resume?")) return;
@@ -148,7 +150,7 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
 }
 
 export default function DashboardPage() {
-  const router = useRouter();
+
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [loading, setLoading] = useState(true);
 

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -13,7 +14,6 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
   const [cropImageSrc, setCropImageSrc] = useState<string | null>(null);
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
 
-  if (!contact) return null;
 
   const templateConfig = getTemplateConfig(templateId || "");
   const showPhotoUpload = templateConfig.supportsPhoto;
@@ -25,6 +25,9 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
       }
     };
   }, [cropImageSrc]);
+
+  if (!contact) return null;
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateContact({ [e.target.name]: e.target.value });

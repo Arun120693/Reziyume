@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 const fs = require('fs');
 const buffer = fs.readFileSync('Arun.jpg');
 const arr = new Uint8Array(buffer.slice(0, 16));

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Page, View, Image, Text, Link } from '@react-pdf/renderer';
+import { Page, View, Image } from '@react-pdf/renderer';
 import { ResumeData, hasProfilePhoto } from '@/lib/types/resume';
 import { TemplateConfig } from '../../studio/preview/templates/registry';
 import { createPdfStyles } from '../PdfShared';
@@ -13,7 +13,7 @@ interface PdfHeaderLayoutProps {
 
 export const PdfHeaderLayout = ({ data, config }: PdfHeaderLayoutProps) => {
   const styles = createPdfStyles(config, data.formatting);
-  const { layout, colors } = config;
+  const { layout } = config;
   
   const isSplitHeader = layout === 'split-header';
   const isPhotoBanner = layout === 'photo-banner';
@@ -23,7 +23,7 @@ export const PdfHeaderLayout = ({ data, config }: PdfHeaderLayoutProps) => {
 
   const renderCustomHeader = () => {
     // Basic wrapper with background for card/banner
-    const headerStyle: any = {
+    const headerStyle: Record<string, string | number> = {
       padding: 40,
       paddingBottom: 20,
     };
@@ -40,6 +40,7 @@ export const PdfHeaderLayout = ({ data, config }: PdfHeaderLayoutProps) => {
             <PdfHeader data={data} config={config} showPhoto={false} />
           </View>
           {hasProfilePhoto(data) && (
+            // eslint-disable-next-line jsx-a11y/alt-text
             <Image src={data.contact.photoBase64} style={[styles.photo, { marginLeft: 20, marginRight: 0 }]} />
           )}
         </View>

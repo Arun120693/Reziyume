@@ -3,7 +3,7 @@
 import { useResumeStore } from "@/lib/store/useResumeStore";
 import { Plus, Trash2 } from "lucide-react";
 
-export function SkillsForm({ onClose }: { onClose?: () => void }) {
+export function SkillsForm() {
   const skills = useResumeStore((state) => state.data?.skills) || [];
   const addSkill = useResumeStore((state) => state.addSkill);
   const updateSkill = useResumeStore((state) => state.updateSkill);

@@ -26,7 +26,7 @@ export function ResumePreview() {
   useEffect(() => {
     if (!containerRef.current) return;
     const observer = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         // Calculate scale based on container width vs standard A4 width (794px)
         const newScale = entry.contentRect.width / 794;
         setScale(newScale);
@@ -39,7 +39,7 @@ export function ResumePreview() {
   useEffect(() => {
     if (!contentRef.current) return;
     const contentObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         setContentHeight(Math.max(1123, entry.contentRect.height));
       }
     });

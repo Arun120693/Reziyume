@@ -20,7 +20,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email", placeholder: "m@example.com" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
@@ -57,13 +57,13 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       if (account?.provider === "google") {
-        const isVerified = (profile as any)?.email_verified;
+        const isVerified = (profile as { email_verified?: boolean })?.email_verified;
         if (!isVerified) return false;
 
         const email = profile?.email || user?.email;
         if (!email) return false;
 
-        let dbUser = await prisma.user.findUnique({ where: { email } });
+        const dbUser = await prisma.user.findUnique({ where: { email } });
         if (!dbUser) {
           const { randomBytes } = await import("crypto");
           const dummyPassword = randomBytes(32).toString("hex");
@@ -103,7 +103,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (token && session.user) {
-        // @ts-ignore
+        // @ts-expect-error adding id to session.user
         session.user.id = token.id;
       }
       return session;

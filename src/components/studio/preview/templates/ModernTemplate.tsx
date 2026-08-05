@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { ResumeData } from "@/lib/types/resume";
 
 interface TemplateProps {

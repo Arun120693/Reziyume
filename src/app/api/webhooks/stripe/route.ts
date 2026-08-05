@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       signature,
       process.env.STRIPE_WEBHOOK_SECRET as string
     );
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Stripe webhook verification failed:", err);
     return NextResponse.json({ error: "Verification failed" }, { status: 400 });
   }
@@ -28,7 +28,11 @@ export async function POST(req: NextRequest) {
       case "checkout.session.completed":
       case "invoice.payment_succeeded": {
         // Activation / Renewal
-        const data = event.data.object as any;
+        const data = event.data.object as unknown as {
+          subscription?: string;
+          metadata?: { userId?: string };
+          subscription_details?: { metadata?: { userId?: string } };
+        };
         const subscriptionId = data.subscription;
         
         let userId = data.metadata?.userId;
@@ -44,7 +48,7 @@ export async function POST(req: NextRequest) {
           }
 
           if (userId) {
-            const currentPeriodEnd = new Date((subscription as any).current_period_end * 1000);
+            const currentPeriodEnd = new Date(((subscription as unknown) as { current_period_end: number }).current_period_end * 1000);
             
             // Check state for idempotency: if user is FREE -> reset monthlyParseCount
             const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -67,8 +71,13 @@ export async function POST(req: NextRequest) {
       }
       
       case "customer.subscription.deleted": {
-        const subscription = event.data.object as any;
-        const userId = subscription.metadata?.userId;
+        // Expiration / Cancellation
+        const data = event.data.object as unknown as {
+          subscription?: string;
+          id?: string;
+          metadata?: { userId?: string };
+        };
+        const userId = data.metadata?.userId;
         
         if (userId) {
           await prisma.user.update({

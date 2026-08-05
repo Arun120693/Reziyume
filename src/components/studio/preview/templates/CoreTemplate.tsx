@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import { ResumeData, hasProfilePhoto } from "@/lib/types/resume";
 import { TemplateConfig } from "./registry";
@@ -6,7 +7,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
   const { layout, colors, fonts, styles } = config;
 
   // Utility to determine if a section has content
-  const hasContent = (section: any) => {
+  const hasContent = (section: unknown) => {
     if (Array.isArray(section)) return section.length > 0;
     return !!section;
   };
@@ -59,7 +60,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
     }
 
     let baseClass = `text-base font-bold mb-2 block ${fonts.heading} `;
-    let styleObj: React.CSSProperties = { color: activeColors.primary, lineHeight: 'normal' };
+    const styleObj: React.CSSProperties = { color: activeColors.primary, lineHeight: 'normal' };
 
     if (styles.headingStyle === 'underlined') {
       styleObj.borderBottom = `2px solid ${activeColors.primary}`;

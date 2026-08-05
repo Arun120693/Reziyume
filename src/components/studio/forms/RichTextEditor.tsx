@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useMemo } from "react";
+import { useMemo, useId } from "react";
 import "react-quill-new/dist/quill.snow.css";
 import { Bot } from "lucide-react";
 
@@ -14,7 +14,8 @@ interface RichTextEditorProps {
 }
 
 export function RichTextEditor({ value, onChange, placeholder }: RichTextEditorProps) {
-  const editorId = useMemo(() => `editor-${Math.random().toString(36).substr(2, 9)}`, []);
+  const rawId = useId();
+  const editorId = useMemo(() => `editor-${rawId.replace(/:/g, "")}`, [rawId]);
 
   const modules = useMemo(() => ({
     toolbar: `#${editorId}-toolbar`,

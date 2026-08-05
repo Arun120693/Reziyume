@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -60,7 +61,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
     );
   }
 
-  const handleDragEnd = (result: any) => {
+  const handleDragEnd = (result: { destination?: { index: number } | null, source: { index: number } }) => {
     if (!result.destination) return;
     const items = Array.from(data.sectionOrder);
     const [moved] = items.splice(result.source.index, 1);
@@ -94,7 +95,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
     }
   };
 
-  const sectionMeta: Record<string, { icon: any; label: string }> = {
+  const sectionMeta: Record<string, { icon: React.ElementType; label: string }> = {
     experience:     { icon: Briefcase,    label: "Experience" },
     education:      { icon: GraduationCap, label: "Education" },
     skills:         { icon: Wrench,       label: "Skills" },
@@ -108,8 +109,8 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
       case "personalDetails": return <PersonalDetailsForm onClose={close} />;
       case "experience":      return <ExperienceForm onClose={close} />;
       case "education":       return <EducationForm onClose={close} />;
-      case "skills":          return <SkillsForm onClose={close} />;
-      case "projects":        return <ProjectsForm onClose={close} />;
+      case "skills":          return <SkillsForm />;
+      case "projects":        return <ProjectsForm />;
       case "customSections":  return <CustomSectionsForm onClose={close} />;
       default: return (
         <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-3">

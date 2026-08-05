@@ -171,7 +171,7 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
       console.log("[UploadResumeModal] Calling setInitialData with:", merged);
       setInitialData(merged);
       setStage("done");
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       console.error(err);
       setStage("error");
       setErrorMsg(err?.message || "Failed to process the PDF.");
@@ -195,7 +195,7 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
         window.location.href = result.url;
       } else if (result.provider === "razorpay") {
         const loadScript = () => new Promise((resolve) => {
-          if ((window as any).Razorpay) return resolve(true);
+          if ((window as unknown as { Razorpay: unknown }).Razorpay) return resolve(true);
           const script = document.createElement("script");
           script.src = "https://checkout.razorpay.com/v1/checkout.js";
           script.onload = () => resolve(true);
@@ -211,7 +211,7 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
           subscription_id: result.subscriptionId,
           name: "Reziyume Pro",
           description: "Unlimited AI Resume Parsing",
-          handler: async function (response: any) {
+          handler: async function (response: { razorpay_payment_id: string; razorpay_subscription_id: string; razorpay_signature: string }) {
             try {
               setLoadingCheckout(true);
               const verifyRes = await fetch("/api/payments/verify-razorpay", {
@@ -228,9 +228,9 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
               if (!verifyRes.ok) throw new Error(verifyJson.error || "Verification failed");
 
               window.location.href = "/dashboard/payment/success";
-            } catch (err: any) {
+            } catch (err: unknown) {
               console.error(err);
-              alert(err.message || "Failed to verify payment. Please contact support.");
+              alert((err as Error)?.message || "Failed to verify payment. Please contact support.");
               setLoadingCheckout(false);
             }
           },
@@ -242,15 +242,16 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
           }
         };
 
-        const rzp = new (window as any).Razorpay(options);
+        const Razorpay = (window as unknown as { Razorpay: new (opts: unknown) => { on: (event: string, callback: () => void) => void; open: () => void } }).Razorpay;
+        const rzp = new Razorpay(options);
         rzp.on("payment.failed", function () {
           setLoadingCheckout(false);
         });
         rzp.open();
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      alert(err.message || "Failed to initialize checkout.");
+      alert((err as Error)?.message || "Failed to initialize checkout.");
       setLoadingCheckout(false);
     }
   };
@@ -295,7 +296,7 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
             </div>
             <div>
               <h2 className="text-[17px] font-extrabold tracking-tight" style={{ color: "#111111" }}>Upload Your Resume</h2>
-              <p className="text-[12px] font-medium" style={{ color: "#9490b0" }}>We'll auto-fill the template with your details</p>
+              <p className="text-[12px] font-medium" style={{ color: "#9490b0" }}>We&apos;ll auto-fill the template with your details</p>
             </div>
           </div>
           <button
@@ -426,7 +427,7 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
                 <AlertCircle className="w-10 h-10" style={{ color: "#dc2626" }} />
               </div>
               <div className="text-center">
-                <p className="text-[17px] font-extrabold" style={{ color: "#111111" }}>Couldn't Parse Resume</p>
+                <p className="text-[17px] font-extrabold" style={{ color: "#111111" }}>Couldn&apos;t Parse Resume</p>
                 <p className="text-[13px] font-medium mt-1.5 max-w-xs" style={{ color: "#6b6880" }}>{errorMsg}</p>
               </div>
               <button
@@ -450,7 +451,7 @@ export function UploadResumeModal({ isOpen, onClose }: UploadResumeModalProps) {
               <div className="text-center">
                 <h3 className="text-[20px] font-extrabold text-[#111111]">Unlock Reziyume Pro</h3>
                 <p className="text-[14px] mt-2 font-medium max-w-[280px] mx-auto" style={{ color: "#6b6880" }}>
-                  You've used all 5 free AI Resume Parses available this month. Upgrade to Reziyume Pro to enjoy unlimited AI Resume Parsing.
+                  You&apos;ve used all 5 free AI Resume Parses available this month. Upgrade to Reziyume Pro to enjoy unlimited AI Resume Parsing.
                 </p>
               </div>
               <div className="mt-2 text-center">

@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 import { prisma } from './src/lib/prisma';
 import { defaultResumeData } from './src/lib/types/resume';
 

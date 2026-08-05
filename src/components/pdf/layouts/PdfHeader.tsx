@@ -21,6 +21,7 @@ export const PdfHeader = ({ data, config, align = 'left', showPhoto = true, ligh
   return (
     <View style={[styles.headerContainer, align === 'center' ? { alignItems: 'center', textAlign: 'center', flexDirection: 'column' } : {}]}>
       {showPhoto && contact.photoBase64 && (
+        // eslint-disable-next-line jsx-a11y/alt-text
         <Image src={contact.photoBase64} style={styles.photo} />
       )}
       <View style={[styles.headerTextContainer, align === 'center' ? { alignItems: 'center' } : {}]}>

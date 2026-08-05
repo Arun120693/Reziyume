@@ -1,0 +1,339 @@
+
+> resumeforge@0.1.0 lint
+> eslint
+
+
+/Users/arun-personal/.gemini/Resume Forge/capture_fixed.js
+  1:19  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:7   warning  'fs' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  2:12  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/arun-personal/.gemini/Resume Forge/get_db.js
+  1:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/arun-personal/.gemini/Resume Forge/get_latest.js
+  1:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/arun-personal/.gemini/Resume Forge/parse_target.js
+   1:12  error    A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  15:11  warning  'e' is defined but never used            @typescript-eslint/no-unused-vars
+
+/Users/arun-personal/.gemini/Resume Forge/scratch.js
+  1:20  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/arun-personal/.gemini/Resume Forge/scratch2.js
+  1:20  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/arun-personal/.gemini/Resume Forge/src/app/(auth)/BackgroundResumes.tsx
+  3:7  warning  'ModernResume' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/arun-personal/.gemini/Resume Forge/src/app/(dashboard)/dashboard/studio/[id]/page.tsx
+  29:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  32:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  33:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  34:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  36:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  37:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  40:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/arun-personal/.gemini/Resume Forge/src/app/(dashboard)/dashboard/templates/page.tsx
+   30:71  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  132:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/arun-personal/.gemini/Resume Forge/src/app/api/parse-resume/route.ts
+   24:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  237:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  257:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  257:65  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  287:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/arun-personal/.gemini/Resume Forge/src/app/api/payments/checkout/route.ts
+  154:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/arun-personal/.gemini/Resume Forge/src/app/api/payments/verify-razorpay/route.ts
+  102:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/arun-personal/.gemini/Resume Forge/src/app/api/register/route.ts
+  51:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/arun-personal/.gemini/Resume Forge/src/app/api/resumes/route.ts
+  23:14  warning  'e' is defined but never used             @typescript-eslint/no-unused-vars
+  33:47  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:53  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  36:51  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  37:45  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  38:49  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  39:61  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  40:57  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  41:67  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  42:53  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  47:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:27  warning  'req' is defined but never used           @typescript-eslint/no-unused-vars
+
+/Users/arun-personal/.gemini/Resume Forge/src/app/api/webhooks/stripe/route.ts
+  22:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  32:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  48:64  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  71:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/dashboard/CreateResumeButton.tsx
+  15:21  warning  'setIsLoading' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/pdf/PdfHtmlRenderer.tsx
+   8:15  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @typescript-eslint/no-explicit-any
+  64:11  error  Error: Cannot reassign variable after render completes
+
+Reassigning `inList` after render has completed can cause inconsistent behavior on subsequent renders. Consider using state instead.
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/pdf/PdfHtmlRenderer.tsx:64:11
+  62 |       {blocks.map((block, idx) => {
+  63 |         if (block.startsWith('[UL]')) {
+> 64 |           inList = true;
+     |           ^^^^^^ Cannot reassign `inList` after render completes
+  65 |           const content = block.replace('[UL]', '').trim();
+  66 |           if (!content) return null;
+  67 |           block = content; // process the rest as list items if any  react-hooks/immutability
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/pdf/PdfShared.ts
+  1:22  warning  'Font' is defined but never used       @typescript-eslint/no-unused-vars
+  5:31  warning  'fontClass' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/pdf/PdfSummary.tsx
+  2:16  warning  'Text' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/pdf/layouts/PdfHeader.tsx
+  24:9  warning  Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images  jsx-a11y/alt-text
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/pdf/layouts/PdfHeaderLayout.tsx
+   4:29  warning  'Text' is defined but never used                                                                             @typescript-eslint/no-unused-vars
+   4:35  warning  'Link' is defined but never used                                                                             @typescript-eslint/no-unused-vars
+  18:19  warning  'colors' is assigned a value but never used                                                                  @typescript-eslint/no-unused-vars
+  28:24  error    Unexpected any. Specify a different type                                                                     @typescript-eslint/no-explicit-any
+  45:13  warning  Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images  jsx-a11y/alt-text
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/pdf/layouts/PdfMainContent.tsx
+  2:22  warning  'hasProfilePhoto' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/studio/CustomizePanel.tsx
+  33:30  warning  'i' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/studio/ResumeStudio.tsx
+  65:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  99:45  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/studio/UploadResumeModal.tsx
+  176:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  200:26  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  216:46  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  233:27  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  247:36  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  253:19  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  300:85  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  431:94  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  455:22  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/studio/forms/AddContentDialog.tsx
+  3:13  warning  'Briefcase' is defined but never used       @typescript-eslint/no-unused-vars
+  3:69  warning  'Languages' is defined but never used       @typescript-eslint/no-unused-vars
+  3:80  warning  'Award' is defined but never used           @typescript-eslint/no-unused-vars
+  3:87  warning  'LayoutTemplate' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/studio/forms/CustomSectionsForm.tsx
+  4:31  warning  'Lightbulb' is defined but never used    @typescript-eslint/no-unused-vars
+  4:42  warning  'ChevronDown' is defined but never used  @typescript-eslint/no-unused-vars
+  4:55  warning  'ChevronUp' is defined but never used    @typescript-eslint/no-unused-vars
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/studio/forms/EducationForm.tsx
+  12:33  warning  'onClose' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/studio/forms/PersonalDetailsForm.tsx
+    6:10  warning  'Lightbulb' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+  134:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/studio/forms/PhotoCropper.tsx
+    3:35  warning  'useEffect' is defined but never used                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+  126:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/studio/preview/templates/CoreTemplate.tsx
+   12:32  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   98:9   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  367:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  398:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  436:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  473:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  520:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  575:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  603:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  643:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/arun-personal/.gemini/Resume Forge/src/components/studio/preview/templates/ModernTemplate.tsx
+  175:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/arun-personal/.gemini/Resume Forge/src/generated/prisma/client.ts
+  13:13  warning  'process' is defined but never used  @typescript-eslint/no-unused-vars
+  19:13  warning  '$Enums' is defined but never used   @typescript-eslint/no-unused-vars
+
+/Users/arun-personal/.gemini/Resume Forge/src/generated/prisma/internal/class.ts
+  132:15  warning  'T' is defined but never used             @typescript-eslint/no-unused-vars
+  132:81  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  144:21  warning  'T' is defined but never used             @typescript-eslint/no-unused-vars
+  144:60  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  155:79  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  167:58  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  183:47  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/arun-personal/.gemini/Resume Forge/src/generated/prisma/internal/prismaNamespace.ts
+  132:11   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  133:12   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  137:11   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  138:9    error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  183:9    error  The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  210:15   error  Constraining the generic type `T` to `any` does nothing and is unnecessary                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-unnecessary-type-constraint
+  210:25   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  210:48   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  216:13   error  Prefer using the primitive `bigint` as a type name, rather than the upper-cased `BigInt`                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-wrapper-object-types
+  226:25   error  Constraining the generic type `T` to `unknown` does nothing and is unnecessary                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unnecessary-type-constraint
+  257:21   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  286:24   error  Constraining the generic type `A` to `any` does nothing and is unnecessary                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-unnecessary-type-constraint
+  286:34   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  286:51   error  The `Function` type accepts any function-like value.
+Prefer explicitly defining any function parameters and return type                                                                                                                                                                                                                                                                    @typescript-eslint/no-unsafe-function-type
+  294:30   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  326:21   error  Constraining the generic type `A1` to `any` does nothing and is unnecessary                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unnecessary-type-constraint
+  326:32   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  326:37   error  Constraining the generic type `A2` to `any` does nothing and is unnecessary                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unnecessary-type-constraint
+  326:48   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  371:7    error  The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  380:38   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  381:46   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  408:48   error  The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  408:169  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  412:135  error  The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  572:14   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  575:62   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  576:17   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  579:42   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  580:17   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  583:62   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  584:17   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  587:42   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  588:17   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  954:33   error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+
+/Users/arun-personal/.gemini/Resume Forge/src/generated/prisma/models/Resume.ts
+    12:18   warning  '$Enums' is defined but never used                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+   108:33   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   168:31   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   821:15   error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+   826:29   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   831:147  error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  1091:52   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  1175:11   error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  1185:11   error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  1193:7    error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  1199:87   error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  1212:170  error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  1214:52   error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  1221:146  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  1227:49   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  1489:34   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  1549:34   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  1649:34   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+
+/Users/arun-personal/.gemini/Resume Forge/src/generated/prisma/models/User.ts
+   144:31   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   216:29   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   671:39   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   688:49   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   764:44   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   764:140  error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+   765:44   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   765:140  error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+   787:15   error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+   792:27   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   797:145  error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  1057:52   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  1141:11   error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  1151:11   error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  1159:7    error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  1165:85   error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  1178:168  error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  1180:56   error    The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  1187:146  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  1193:49   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-explicit-any
+  1452:32   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  1508:32   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  1604:32   warning  'ExtArgs' is defined but never used                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+
+✖ 179 problems (120 errors, 59 warnings)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+

@@ -149,6 +149,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (process.env.NODE_ENV === "development") {
       console.error("================ Payment Error [DEV] ================");

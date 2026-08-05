@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { Sidebar } from "./Sidebar";
+
 import { SidebarMainWrapper } from "./SidebarMainWrapper";
 
 export default async function DashboardLayout({

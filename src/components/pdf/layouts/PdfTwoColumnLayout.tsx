@@ -31,13 +31,13 @@ export const PdfTwoColumnLayout = ({ data, config }: PdfTwoColumnLayoutProps) =>
     <Page size="A4" style={[styles.page, { padding: 0, flexDirection: 'row' }]}>
       {isRight ? (
         <>
-          <Main />
-          <Sidebar />
+          {Main()}
+          {Sidebar()}
         </>
       ) : (
         <>
-          <Sidebar />
-          <Main />
+          {Sidebar()}
+          {Main()}
         </>
       )}
     </Page>
