@@ -127,8 +127,23 @@ export const authOptions: NextAuthOptions = {
       return session;
     }
   },
-  pages: {
-    signIn: "/login",
+  debug: process.env.NODE_ENV !== "production",
+
+logger: {
+  error(code, metadata) {
+    console.error("[NextAuth Error]", code, metadata);
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  warn(code) {
+    console.warn("[NextAuth Warn]", code);
+  },
+  debug(code, metadata) {
+    console.log("[NextAuth Debug]", code, metadata);
+  },
+},
+
+pages: {
+  signIn: "/login",
+},
+
+secret: process.env.NEXTAUTH_SECRET,
 };
