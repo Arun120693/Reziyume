@@ -3,6 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import prisma from "./prisma";
+import { logger } from "./logger";
+import { findOrCreateGoogleUser, getGoogleUserByEmail } from "@/services/auth/googleUserService";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -57,25 +59,30 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       if (account?.provider === "google") {
-        const isVerified = (profile as { email_verified?: boolean })?.email_verified;
-        if (!isVerified) return false;
+        try {
+          const isVerified = (profile as { email_verified?: boolean })?.email_verified;
+          if (!isVerified) {
+            logger.warn("[Google Auth]", "Sign in rejected: Email not verified", { email: profile?.email || user?.email });
+            return false;
+          }
 
-        const email = profile?.email || user?.email;
-        if (!email) return false;
+          const email = profile?.email || user?.email;
+          if (!email) {
+            logger.error("[Google Auth]", "Sign in rejected: No email provided", { profile, user });
+            return false;
+          }
 
-        const dbUser = await prisma.user.findUnique({ where: { email } });
-        if (!dbUser) {
-          const { randomBytes } = await import("crypto");
-          const dummyPassword = randomBytes(32).toString("hex");
-          const hash = await bcrypt.hash(dummyPassword, 10);
-          await prisma.user.create({
-            data: {
-              email,
-              passwordHash: hash,
-            },
-          });
+          const name = profile?.name || user?.name;
+          const image = profile?.image || user?.image;
+
+          await findOrCreateGoogleUser({ email, name, image, emailVerified: isVerified });
+          return true;
+        } catch (error) {
+          logger.error("[Google Auth]", "Sign in failed during user lookup/creation", error);
+          // Return false or throw error. Throwing error allows NextAuth to show an error page, but returning false is also safe.
+          // The prompt says "Throw meaningful errors instead of allowing generic OAuthCallback failures."
+          throw new Error("Failed to process Google sign in. Please try again.");
         }
-        return true;
       }
       return true;
     },
@@ -91,9 +98,20 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, account }) {
       if (user) {
         if (account?.provider === "google") {
-          const dbUser = await prisma.user.findUnique({ where: { email: user.email! } });
-          if (dbUser) {
-            token.id = dbUser.id;
+          try {
+            if (!user.email) {
+              logger.error("[JWT]", "Google user missing email in JWT callback", { user });
+              throw new Error("User email is missing");
+            }
+            const dbUser = await getGoogleUserByEmail(user.email);
+            if (dbUser) {
+              token.id = dbUser.id;
+            } else {
+               logger.warn("[JWT]", "Database user not found for Google login", { email: user.email });
+            }
+          } catch (error) {
+             logger.error("[JWT]", "Error fetching Google user in JWT callback", error);
+             throw new Error("Failed to fetch user data for session.");
           }
         } else {
           token.id = user.id;
