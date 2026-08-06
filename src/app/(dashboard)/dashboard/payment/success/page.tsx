@@ -25,9 +25,9 @@ export default function PaymentSuccessPage() {
           <CheckCircle className="w-10 h-10 text-green-600" />
         </div>
         
-        <h1 className="text-2xl font-extrabold text-[#111111] mb-2">Payment Successful!</h1>
+        <h1 className="text-2xl font-extrabold text-[#111111] mb-2">🎉 Welcome to Reziyume Pro!</h1>
         <p className="text-[15px] font-medium text-[#6b6880] mb-8">
-          Welcome to Reziyume Pro. Your account has been upgraded and you now have unlimited AI resume parsing.
+          Your subscription is active.
         </p>
 
         <Link href="/dashboard" className="w-full">

@@ -81,7 +81,7 @@ export default function Home() {
           }}
         >
           <span>✦</span>
-          100% Free. No Paywalls. No Watermarks.
+          AI-powered builder
         </div>
 
         {/* Headline */}
@@ -100,7 +100,7 @@ export default function Home() {
 
         {/* Subtitle */}
         <p className="max-w-2xl text-lg sm:text-xl mb-12 leading-relaxed" style={{ color: "#6b6880" }}>
-          Reziyume is a completely free online resume builder featuring modern templates, AI writing assistance, and an intuitive drag-and-drop editor. Everything is unlocked forever.
+          Reziyume is a powerful AI-powered resume builder featuring modern templates, AI writing assistance, and an intuitive drag-and-drop editor.
         </p>
 
         {/* CTAs */}
@@ -129,7 +129,7 @@ export default function Home() {
 
         {/* Feature pills */}
         <div className="flex flex-wrap justify-center gap-3 mt-14">
-          {["Totally Free Forever", "No Hidden Fees", "ATS-Friendly Templates", "Unlimited Downloads"].map((feat) => (
+          {["Free to Start", "No Hidden Fees", "ATS-Friendly Templates", "Unlimited Downloads"].map((feat) => (
             <div
               key={feat}
               className="px-4 py-2 rounded-full text-sm font-semibold"

@@ -2,9 +2,12 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { Crown, Star } from "lucide-react";
+import { useUserContext } from "@/lib/context/UserContext";
 
 export function Sidebar({ email }: { email: string }) {
   const pathname = usePathname();
+  const { plan } = useUserContext();
   const isStudio = pathname?.includes("/studio/");
 
   if (isStudio) return null;
@@ -58,10 +61,47 @@ export function Sidebar({ email }: { email: string }) {
           Resume
         </Link>
 
+        {/* Upgrade to Pro */}
+        <Link
+          href="/dashboard/upgrade"
+          className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-[14px] font-semibold transition-all group"
+          style={
+            pathname === "/dashboard/upgrade"
+              ? {
+                  background: "rgba(255,255,255,0.6)",
+                  color: "#111111",
+                  boxShadow: "4px 4px 12px rgba(180,178,195,0.5), -4px -4px 12px rgba(255,255,255,0.8)"
+                }
+              : { color: "#6b6880" }
+          }
+        >
+          {plan === "FREE" ? (
+            <Crown className="w-4 h-4 text-amber-500 group-hover:scale-110 transition-transform" />
+          ) : (
+            <Star className="w-4 h-4 text-purple-500 group-hover:scale-110 transition-transform" />
+          )}
+          {plan === "FREE" ? "Upgrade to Pro" : "Pro Plan"}
+        </Link>
       </nav>
 
       {/* Bottom */}
       <div className="px-3 pb-6 space-y-2">
+        {/* Plan display */}
+        <div className="px-4 pb-2 mb-2">
+          <div className="text-[11px] uppercase tracking-wider font-bold mb-1" style={{ color: "#9490b0" }}>
+            Current Plan
+          </div>
+          <div className="flex items-center gap-2 text-[14px] font-bold" style={{ color: "#111111" }}>
+            {plan === "FREE" ? (
+              <span>Free</span>
+            ) : (
+              <span className="flex items-center gap-1.5 text-purple-600">
+                <Star className="w-3.5 h-3.5 fill-current" /> Pro
+              </span>
+            )}
+          </div>
+        </div>
+        
         <div className="text-xs px-4 pb-1 truncate font-medium" style={{ color: "#9490b0" }}>
           {email}
         </div>

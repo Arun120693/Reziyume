@@ -172,7 +172,7 @@ export default function DashboardPage() {
           My Resumes
         </h1>
         <p className="text-[14px]" style={{ color: "#9490b0" }}>
-          Manage your resumes or create a new one. All templates are 100% free.
+          Manage your resumes or create a new one.
         </p>
       </div>
 
