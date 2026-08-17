@@ -166,7 +166,6 @@ if (effectivePlan === "FREE" && currentCount >= 5) {
               location: { type: Type.STRING },
               description: { type: Type.STRING, description: "Bulleted or paragraph description of responsibilities" },
             },
-            required: ["company", "position"],
           },
         },
         education: {
@@ -182,7 +181,6 @@ if (effectivePlan === "FREE" && currentCount >= 5) {
               location: { type: Type.STRING },
               description: { type: Type.STRING },
             },
-            required: ["school", "degree"],
           },
         },
         skills: {
@@ -193,7 +191,6 @@ if (effectivePlan === "FREE" && currentCount >= 5) {
               name: { type: Type.STRING },
               level: { type: Type.STRING, description: "e.g. Beginner, Intermediate, Expert" },
             },
-            required: ["name"],
           },
         },
         projects: {
@@ -209,10 +206,10 @@ if (effectivePlan === "FREE" && currentCount >= 5) {
                 items: { type: Type.STRING },
               },
             },
-            required: ["name"],
           },
         },
       },
+      required: ["contact", "summary", "experience", "education", "skills", "projects"],
     };
 
     const prompt = `You are an expert resume parser. I will provide you with the raw extracted text from a PDF resume.
@@ -238,6 +235,9 @@ ${rawText}
     });
 
     const parsedData = JSON.parse(response.text || "{}");
+    console.log("RAW TEXT LENGTH:", rawText.length);
+    console.log("GEMINI RAW KEYS:", Object.keys(parsedData));
+    console.log("GEMINI RAW EXPERIENCE:", parsedData.experience ? parsedData.experience.length : "missing");
 
     // Helper to format newlines or markdown bullets into proper HTML for the frontend
     const formatDescriptionToHTML = (desc: unknown) => {
