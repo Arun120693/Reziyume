@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { CanvasFactory } from "pdf-parse/worker";
 import { PDFParse } from "pdf-parse";
 import { GoogleGenAI, Type } from "@google/genai";
 import { getServerSession } from "next-auth";
@@ -114,7 +115,7 @@ if (effectivePlan === "FREE" && currentCount >= 5) {
 
     // 1. Extract raw text from PDF
     const uint8 = new Uint8Array(await file.arrayBuffer());
-    const parser = new PDFParse({ data: uint8, verbosity: 0 });
+    const parser = new PDFParse({ data: uint8, verbosity: 0, CanvasFactory });
     const textResult = await parser.getText();
     await parser.destroy();
     

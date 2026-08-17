@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   turbopack: {},
 
   // pdf-parse uses Node.js APIs — run it only on the server
-  serverExternalPackages: ["pdf-parse", "@napi-rs/canvas"],
+  serverExternalPackages: ["pdf-parse", "@napi-rs/canvas", "pdfjs-dist"],
 };
 
 export default nextConfig;
