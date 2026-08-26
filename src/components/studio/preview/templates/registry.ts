@@ -1,4 +1,4 @@
-export type LayoutType = 'single-column' | 'two-column-left' | 'two-column-right' | 'split-header' | 'centered' | 'photo-sidebar' | 'photo-banner' | 'photo-top-right' | 'photo-card' | 'photo-elegant';
+export type LayoutType = 'single-column' | 'two-column-left' | 'two-column-right' | 'split-header' | 'centered' | 'photo-sidebar' | 'photo-banner' | 'photo-top-right' | 'photo-card' | 'photo-elegant' | 'photo-split-yellow' | 'photo-pink-border' | 'photo-dark-modern' | 'photo-overlap-green' | 'photo-dark-bubbles';
 export type HeadingStyle = 'solid-bg' | 'underlined' | 'uppercase' | 'default';
 
 export interface TemplateConfig {
@@ -183,6 +183,61 @@ export const templates: TemplateConfig[] = [
     colors: { primary: '#9f1239', background: '#fffbf7', text: '#1c1917', secondaryText: '#78716c', border: '#fce7f3' },
     fonts: { heading: 'font-serif', body: 'font-sans' },
     styles: { headingStyle: 'underlined', spacing: 'relaxed', roundedPhoto: true }
+  },
+  {
+    id: "split-yellow",
+    name: "Golden Split",
+    category: "Photo",
+    description: "Strong two-part design with a golden top header and dark divided content area.",
+    layout: 'photo-split-yellow',
+    supportsPhoto: true,
+    colors: { primary: '#facc15', background: '#27272a', text: '#f4f4f5', secondaryText: '#a1a1aa', border: '#3f3f46' },
+    fonts: { heading: 'font-sans', body: 'font-sans' },
+    styles: { headingStyle: 'uppercase', spacing: 'relaxed', roundedPhoto: true }
+  },
+  {
+    id: "pink-border",
+    name: "Blush Border",
+    category: "Photo",
+    description: "Elegant layout wrapped in a soft pink border with a photo on the left.",
+    layout: 'photo-pink-border',
+    supportsPhoto: true,
+    colors: { primary: '#be185d', background: '#ffffff', text: '#1f2937', secondaryText: '#4b5563', border: '#fce7f3' },
+    fonts: { heading: 'font-serif', body: 'font-sans' },
+    styles: { headingStyle: 'underlined', spacing: 'relaxed', roundedPhoto: false }
+  },
+  {
+    id: "dark-modern",
+    name: "Midnight Modern",
+    category: "Photo",
+    description: "High-contrast dark sidebar for photo and skills, with a clean white main column.",
+    layout: 'photo-dark-modern',
+    supportsPhoto: true,
+    colors: { primary: '#000000', background: '#ffffff', text: '#171717', secondaryText: '#52525b', border: '#262626' },
+    fonts: { heading: 'font-sans', body: 'font-sans' },
+    styles: { headingStyle: 'solid-bg', spacing: 'normal', roundedPhoto: false }
+  },
+  {
+    id: "overlap-green",
+    name: "Forest Overlap",
+    category: "Photo",
+    description: "Creative beige and dark green split with a distinct overlapping summary box.",
+    layout: 'photo-overlap-green',
+    supportsPhoto: true,
+    colors: { primary: '#064e3b', background: '#f5f5f4', text: '#292524', secondaryText: '#57534e', border: '#a8a29e' },
+    fonts: { heading: 'font-sans', body: 'font-sans' },
+    styles: { headingStyle: 'default', spacing: 'normal', roundedPhoto: true }
+  },
+  {
+    id: "dark-bubbles",
+    name: "Neon Bubbles",
+    category: "Photo",
+    description: "Dark canvas accented by glowing gradient bubbles for a vibrant creative look.",
+    layout: 'photo-dark-bubbles',
+    supportsPhoto: true,
+    colors: { primary: '#f97316', background: '#09090b', text: '#fafafa', secondaryText: '#a1a1aa', border: '#27272a' },
+    fonts: { heading: 'font-sans', body: 'font-sans' },
+    styles: { headingStyle: 'underlined', spacing: 'relaxed', roundedPhoto: false }
   },
 ];
 

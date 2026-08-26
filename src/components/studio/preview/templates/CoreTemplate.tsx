@@ -669,6 +669,349 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
     );
   }
 
+  // ─── NEW TEMPLATES ─────────────────────────────────────────────────────
+  
+  // 1. photo-split-yellow
+  if (layout === 'photo-split-yellow') {
+    return (
+      <div className={`min-h-[29.7cm] w-full flex flex-col ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
+        {/* Top Golden Header */}
+        <div className="px-12 py-10 flex items-center justify-between" style={{ backgroundColor: activeColors.primary, color: activeColors.background }}>
+          <div className="max-w-[60%]">
+            <h1 className={`text-5xl font-bold tracking-tight leading-tight ${fonts.heading}`}>
+              {data.contact.fullName || <span className="opacity-40 italic">Your Name</span>}
+            </h1>
+            <p className={`text-xl font-medium mt-2 tracking-wide uppercase ${fonts.heading}`} style={{ color: activeColors.background, opacity: 0.9 }}>
+              {data.contact.jobTitle || <span className="opacity-40 italic normal-case">Professional Title</span>}
+            </p>
+          </div>
+          {hasProfilePhoto(data) ? (
+            <img
+              src={data.contact.photoBase64}
+              alt={data.contact.fullName}
+              className={`w-40 h-40 object-cover shadow-2xl ${styles.roundedPhoto ? 'rounded-full' : 'rounded-2xl'}`}
+              style={{ border: `4px solid ${activeColors.background}` }}
+            />
+          ) : (
+            <div className={`w-40 h-40 flex flex-col items-center justify-center text-[12px] gap-2 ${styles.roundedPhoto ? 'rounded-full' : 'rounded-2xl'}`} style={{ border: `3px dashed ${activeColors.background}`, color: activeColors.background, opacity: 0.6 }}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              <span>Add Photo</span>
+            </div>
+          )}
+        </div>
+        {/* Two Column Bottom Content */}
+        <div className="flex flex-1 p-10 gap-10">
+          <div className="w-[35%] flex flex-col gap-8">
+            <div className="flex flex-col gap-2">
+               {SectionHeading({ title: "ABOUT ME" })}
+               <p className={`text-[12px] leading-relaxed whitespace-pre-wrap ${fonts.body}`} style={{ color: activeColors.secondaryText }}>
+                 {data.summary || <span className="opacity-40 italic">Your summary will appear here.</span>}
+               </p>
+            </div>
+            {renderSkills()}
+            <div className="flex flex-col gap-2">
+               {SectionHeading({ title: "CONTACT" })}
+               <div className="flex flex-col gap-1.5 text-[12px]" style={{ color: activeColors.secondaryText }}>
+                 {data.contact.phone && <div>{data.contact.phone}</div>}
+                 {data.contact.email && <div>{data.contact.email}</div>}
+                 {data.contact.website && <div>{data.contact.website}</div>}
+                 {data.contact.location && <div>{data.contact.location}</div>}
+                 {data.contact.linkedin && <div>{data.contact.linkedin}</div>}
+               </div>
+            </div>
+          </div>
+          <div className="w-[65%] flex flex-col gap-8">
+            {renderEducation()}
+            {renderExperience()}
+            {renderCustomSections()}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. photo-pink-border
+  if (layout === 'photo-pink-border') {
+    return (
+      <div className={`min-h-[29.7cm] w-full p-4 ${fonts.body}`} style={{ backgroundColor: activeColors.border, fontSize: '13px' }}>
+        <div className="w-full h-full bg-white flex flex-col p-10" style={{ border: `1px solid ${activeColors.primary}` }}>
+          {/* Header */}
+          <div className="flex justify-between items-start mb-8 pb-8" style={{ borderBottom: `2px solid ${activeColors.primary}` }}>
+             {hasProfilePhoto(data) ? (
+              <img
+                src={data.contact.photoBase64}
+                alt={data.contact.fullName}
+                className="w-32 h-32 object-cover rounded-xl"
+              />
+            ) : (
+              <div className="w-32 h-32 rounded-xl flex flex-col items-center justify-center text-[11px] gap-1" style={{ border: `2px dashed ${activeColors.primary}`, color: activeColors.primary, opacity: 0.5 }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                <span>Add Photo</span>
+              </div>
+            )}
+            <div className="text-right flex-1 ml-10">
+              <h1 className={`text-5xl font-bold tracking-widest uppercase ${fonts.heading}`} style={{ color: activeColors.text, letterSpacing: '0.1em' }}>
+                {data.contact.fullName || <span className="opacity-40 italic normal-case">Your Name</span>}
+              </h1>
+              <p className={`text-[15px] mt-3 tracking-widest uppercase ${fonts.heading}`} style={{ color: activeColors.secondaryText }}>
+                {data.contact.jobTitle || <span className="opacity-40 italic normal-case">Professional Title</span>}
+              </p>
+            </div>
+          </div>
+          {/* Columns */}
+          <div className="flex flex-1 gap-10">
+            <div className="w-[30%] flex flex-col gap-6">
+              <div className="flex flex-col gap-2">
+                 {SectionHeading({ title: "CONTACT" })}
+                 <div className="flex flex-col gap-2 text-[11px]" style={{ color: activeColors.secondaryText }}>
+                   {data.contact.phone && <div className="flex items-center gap-2"><span className="text-lg">📞</span> {data.contact.phone}</div>}
+                   {data.contact.email && <div className="flex items-center gap-2"><span className="text-lg">✉</span> {data.contact.email}</div>}
+                   {data.contact.location && <div className="flex items-center gap-2"><span className="text-lg">🏠</span> {data.contact.location}</div>}
+                   {data.contact.linkedin && <div className="flex items-center gap-2"><span className="text-lg">in</span> {data.contact.linkedin}</div>}
+                 </div>
+              </div>
+              {renderEducation()}
+              {renderSkills()}
+            </div>
+            <div className="w-[70%] flex flex-col gap-6 pl-6" style={{ borderLeft: `1px solid ${activeColors.border}` }}>
+              {renderSummary()}
+              {renderExperience()}
+              {renderCustomSections()}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 3. photo-dark-modern
+  if (layout === 'photo-dark-modern') {
+    return (
+      <div className={`min-h-[29.7cm] w-full flex ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
+        <div className="w-[35%] p-8 flex flex-col gap-8" style={{ backgroundColor: activeColors.primary, color: '#ffffff' }}>
+          {hasProfilePhoto(data) ? (
+            <img
+              src={data.contact.photoBase64}
+              alt={data.contact.fullName}
+              className="w-full h-auto object-cover rounded-md"
+              style={{ aspectRatio: '3/4' }}
+            />
+          ) : (
+            <div className="w-full aspect-[3/4] flex flex-col items-center justify-center text-[12px] gap-2 rounded-md" style={{ border: `2px dashed rgba(255,255,255,0.4)`, color: 'rgba(255,255,255,0.6)' }}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              <span>Add Photo</span>
+            </div>
+          )}
+          <div className="flex flex-col gap-2">
+             <h3 className={`text-sm font-bold tracking-widest uppercase mb-1 ${fonts.heading}`} style={{ color: '#ffffff' }}>Contact</h3>
+             <div className="flex flex-col gap-2 text-[11px]" style={{ color: 'rgba(255,255,255,0.8)' }}>
+               {data.contact.location && <div className="flex items-start gap-2"><span>📍</span> <span>{data.contact.location}</span></div>}
+               {data.contact.email && <div className="flex items-start gap-2"><span>✉</span> <span>{data.contact.email}</span></div>}
+               {data.contact.website && <div className="flex items-start gap-2"><span>🌐</span> <span>{data.contact.website}</span></div>}
+               {data.contact.phone && <div className="flex items-start gap-2"><span>📞</span> <span>{data.contact.phone}</span></div>}
+             </div>
+          </div>
+          {/* Override colors just for skills/custom in sidebar */}
+          <div style={{ color: '#ffffff' }}>
+            {hasContent(data.skills) && (
+              <div className="mb-5">
+                <h3 className={`text-sm font-bold tracking-widest uppercase mb-3 ${fonts.heading}`}>Skill</h3>
+                <div className="flex flex-col gap-2 text-[12px] opacity-90">
+                  {data.skills.map(s => <div key={s.id} className="flex justify-between"><span>{s.name}</span> <span className="opacity-50">{s.level || '•••••'}</span></div>)}
+                </div>
+              </div>
+            )}
+            <div className="mt-8">
+              {renderCustomSections()}
+            </div>
+          </div>
+        </div>
+        <div className="w-[65%] p-10 flex flex-col gap-8">
+          <div>
+            <h1 className={`text-5xl font-black tracking-tight uppercase leading-none ${fonts.heading}`} style={{ color: activeColors.text }}>
+              {data.contact.fullName || <span className="opacity-40 italic normal-case">Your Name</span>}
+            </h1>
+            <p className={`text-xl font-bold mt-2 tracking-widest uppercase ${fonts.heading}`} style={{ color: activeColors.secondaryText }}>
+              {data.contact.jobTitle || <span className="opacity-40 italic normal-case">Professional Title</span>}
+            </p>
+          </div>
+          <div className="text-[12px] leading-relaxed" style={{ color: activeColors.secondaryText }}>
+             {data.summary}
+          </div>
+          {renderEducation()}
+          {renderExperience()}
+        </div>
+      </div>
+    );
+  }
+
+  // 4. photo-overlap-green
+  if (layout === 'photo-overlap-green') {
+    return (
+      <div className={`min-h-[29.7cm] w-full flex relative ${fonts.body}`} style={{ backgroundColor: activeColors.background, fontSize: '13px' }}>
+        {/* Left Beige Column */}
+        <div className="w-[45%] pt-12 pb-10 pl-10 pr-6 flex flex-col z-0">
+          <h1 className={`text-5xl font-black tracking-tighter uppercase leading-none ${fonts.heading}`} style={{ color: activeColors.primary }}>
+            {data.contact.fullName ? data.contact.fullName.split(' ').map((n, i) => <div key={i}>{n}</div>) : <span className="opacity-40 italic normal-case">Your Name</span>}
+          </h1>
+          <p className={`text-[15px] font-medium mt-3 tracking-wider ${fonts.heading}`} style={{ color: activeColors.secondaryText }}>
+            {data.contact.jobTitle || <span className="opacity-40 italic">Graphic Designer</span>}
+          </p>
+          
+          <div className="mt-48 flex flex-col gap-8">
+            {renderSkills()}
+            {renderEducation()}
+            {renderCustomSections()}
+            
+            <div className="flex flex-col gap-2 mt-auto text-[11px]" style={{ color: activeColors.secondaryText }}>
+              {data.contact.phone && <div className="flex items-center gap-2"><span style={{color: activeColors.primary}}>📞</span> {data.contact.phone}</div>}
+              {data.contact.website && <div className="flex items-center gap-2"><span style={{color: activeColors.primary}}>🌐</span> {data.contact.website}</div>}
+              {data.contact.location && <div className="flex items-center gap-2"><span style={{color: activeColors.primary}}>📍</span> {data.contact.location}</div>}
+            </div>
+          </div>
+        </div>
+        
+        {/* Right Green Column */}
+        <div className="w-[55%] pt-10 pb-10 pr-10 pl-6 flex flex-col z-0" style={{ backgroundColor: activeColors.primary, color: '#ffffff' }}>
+          <div className="flex justify-center mb-40">
+             {hasProfilePhoto(data) ? (
+              <img
+                src={data.contact.photoBase64}
+                alt={data.contact.fullName}
+                className="w-48 h-48 object-cover rounded-full shadow-2xl"
+                style={{ border: '4px solid #ffffff' }}
+              />
+            ) : (
+              <div className="w-48 h-48 rounded-full flex flex-col items-center justify-center text-[12px] gap-2 bg-white/10" style={{ border: `4px dashed rgba(255,255,255,0.4)` }}>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                <span>Add Photo</span>
+              </div>
+            )}
+          </div>
+          
+          <div className="flex-1 flex flex-col gap-8">
+            {hasContent(data.experience) && (
+              <div className="mb-5">
+                <div className={`text-base font-bold mb-4 block bg-white/20 px-3 py-1 rounded-md inline-block ${fonts.heading}`}>Professional Experience:</div>
+                <div className={getSpacingClass()}>{
+                  data.experience.map(exp => (
+                    <div key={exp.id} className="mb-4">
+                      <h4 className="font-bold text-[14px]">{exp.position}</h4>
+                      <div className="text-[12px] opacity-90 mb-1">{exp.startDate} - {exp.current ? 'Present' : exp.endDate} | {exp.company}</div>
+                      <div className="text-[12px] opacity-80 pl-4 prose-ul:list-disc" dangerouslySetInnerHTML={{ __html: cleanDescription(exp.description) }} />
+                    </div>
+                  ))
+                }</div>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {/* Absolute Overlapping "About Me" box */}
+        <div className="absolute top-64 left-10 right-10 rounded-2xl shadow-xl p-6 z-10" style={{ backgroundColor: '#b7bda5', border: `1px solid ${activeColors.border}` }}>
+          <div className={`text-sm font-bold px-3 py-1 bg-black text-white rounded-full inline-block mb-3 ${fonts.heading}`}>About Me</div>
+          <p className={`text-[12px] leading-relaxed ${fonts.body}`} style={{ color: activeColors.text }}>
+            {data.summary || <span className="opacity-40 italic">Your professional summary will appear here.</span>}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // 5. photo-dark-bubbles
+  if (layout === 'photo-dark-bubbles') {
+    return (
+      <div className={`min-h-[29.7cm] w-full flex relative overflow-hidden ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
+        {/* CSS Bubbles Background */}
+        <div className="absolute top-[-100px] right-[-100px] w-[400px] h-[400px] rounded-full opacity-60 z-0" style={{ background: `radial-gradient(circle, ${activeColors.primary} 0%, transparent 70%)` }} />
+        <div className="absolute bottom-[-150px] left-[-150px] w-[500px] h-[500px] rounded-full opacity-40 z-0" style={{ background: `radial-gradient(circle, #facc15 0%, transparent 70%)` }} />
+        
+        {/* Content */}
+        <div className="w-[35%] pt-12 pb-10 px-8 flex flex-col items-center gap-10 z-10 border-r border-white/10">
+           {hasProfilePhoto(data) ? (
+            <img
+              src={data.contact.photoBase64}
+              alt={data.contact.fullName}
+              className="w-40 h-48 object-cover rounded-xl shadow-lg border border-white/20"
+            />
+          ) : (
+            <div className="w-40 h-48 rounded-xl flex flex-col items-center justify-center text-[12px] gap-2 border-2 border-dashed border-white/30 bg-white/5">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              <span>Add Photo</span>
+            </div>
+          )}
+          
+          <div className="w-full flex flex-col gap-8 text-white">
+            <div className="flex flex-col gap-3">
+              <h3 className={`text-lg font-bold border-b border-white/20 pb-1 ${fonts.heading}`}>Contact</h3>
+              <div className="flex flex-col gap-2 text-[11px] opacity-90">
+                 {data.contact.phone && <div className="flex items-center gap-2">📞 {data.contact.phone}</div>}
+                 {data.contact.email && <div className="flex items-center gap-2">✉ {data.contact.email}</div>}
+                 {data.contact.location && <div className="flex items-center gap-2">📍 {data.contact.location}</div>}
+                 {data.contact.linkedin && <div className="flex items-center gap-2">in {data.contact.linkedin}</div>}
+              </div>
+            </div>
+            
+            <div className="flex flex-col gap-3">
+              <h3 className={`text-lg font-bold border-b border-white/20 pb-1 ${fonts.heading}`}>Expertise</h3>
+              <div className="flex flex-col gap-1.5 text-[12px] opacity-90">
+                 {data.skills.map(s => <div key={s.id} className="flex items-center before:content-['•'] before:mr-2 before:text-orange-500">{s.name}</div>)}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="w-[65%] pt-12 pb-10 px-10 flex flex-col gap-8 z-10">
+          <div>
+            <h1 className={`text-5xl font-black tracking-tight uppercase leading-none text-white ${fonts.heading}`}>
+              {data.contact.fullName || <span className="opacity-40 italic normal-case">Your Name</span>}
+            </h1>
+            <p className={`text-lg font-medium mt-3 tracking-widest uppercase text-white/80 ${fonts.heading}`}>
+              {data.contact.jobTitle || <span className="opacity-40 italic normal-case">Professional Title</span>}
+            </p>
+          </div>
+          
+          <p className="text-[12px] leading-relaxed text-white/70">
+            {data.summary}
+          </p>
+          
+          <div className="flex flex-col gap-8 text-white/90">
+             {hasContent(data.experience) && (
+               <div className="mb-5">
+                 <h3 className={`text-xl font-bold mb-4 ${fonts.heading}`}>Experience</h3>
+                 <div className={getSpacingClass()}>{
+                   data.experience.map(exp => (
+                     <div key={exp.id} className="mb-4">
+                       <div className="font-bold text-[14px] text-white">{exp.position} <span className="font-normal opacity-80">– {exp.company}</span></div>
+                       <div className="text-[11px] text-white/60 mb-1.5">{exp.current ? 'Remote | ' : ''}{exp.startDate} - {exp.current ? 'Present' : exp.endDate}</div>
+                       <div className="text-[12px] text-white/70 pl-4 prose-ul:list-disc" dangerouslySetInnerHTML={{ __html: cleanDescription(exp.description) }} />
+                     </div>
+                   ))
+                 }</div>
+               </div>
+             )}
+             
+             {renderCustomSections()}
+             
+             {hasContent(data.education) && (
+               <div className="mb-5">
+                 <h3 className={`text-xl font-bold mb-4 ${fonts.heading}`}>Education</h3>
+                 <div className={getSpacingClass()}>{
+                   data.education.map(edu => (
+                     <div key={edu.id} className="mb-2">
+                       <div className="font-bold text-[13px] text-white">{edu.degree} {edu.fieldOfStudy && `in ${edu.fieldOfStudy}`}</div>
+                       <div className="text-[12px] text-white/70">{edu.school} | {edu.startDate} - {edu.endDate}</div>
+                     </div>
+                   ))
+                 }</div>
+               </div>
+             )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // default / single-column / centered
   return (
     <div className={`min-h-[29.7cm] w-full shadow-xl ${fonts.body}`} style={containerStyle}>
