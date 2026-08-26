@@ -227,17 +227,72 @@ ${rawText}
 ----------------
 `;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-flash-latest',
-      contents: prompt,
-      config: {
-        responseMimeType: 'application/json',
-        responseSchema: responseSchema,
-        temperature: 0.1,
-      },
-    });
+    let responseText = "";
+    let attempt = 1;
+    const maxAttempts = 3;
+    const primaryModel = "gemini-3.6-flash";
+    const fallbackModel = "gemini-3.5-flash-lite";
 
-    const parsedData = JSON.parse(response.text || "{}");
+    while (attempt <= maxAttempts) {
+      try {
+        console.log(`[Gemini API] Attempt ${attempt}/${maxAttempts} using ${primaryModel}`);
+        const response = await ai.models.generateContent({
+          model: primaryModel,
+          contents: prompt,
+          config: {
+            responseMimeType: 'application/json',
+            responseSchema: responseSchema,
+          },
+        });
+        responseText = response.text || "{}";
+        break; // Success, exit retry loop
+      } catch (err: unknown) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const error = err as any;
+        const is503 = error?.status === 503 || error?.code === 503 || error?.status === "UNAVAILABLE" || error?.message?.includes("503") || error?.message?.includes("UNAVAILABLE");
+        console.error(`[Gemini API] Attempt ${attempt} failed with model ${primaryModel}. Status category: ${is503 ? '503/UNAVAILABLE' : 'OTHER'}`);
+        
+        if (is503) {
+          if (attempt < maxAttempts) {
+            const waitTime = Math.pow(2, attempt - 1) * 1000;
+            console.log(`[Gemini API] 503 Unavailable. Waiting ${waitTime}ms before retry...`);
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+            attempt++;
+          } else {
+            console.log(`[Gemini API] Primary model failed after ${maxAttempts} attempts. Trying fallback ${fallbackModel}`);
+            try {
+              const fallbackResponse = await ai.models.generateContent({
+                model: fallbackModel,
+                contents: prompt,
+                config: {
+                  responseMimeType: 'application/json',
+                  responseSchema: responseSchema,
+                },
+              });
+              responseText = fallbackResponse.text || "{}";
+              console.log(`[Gemini API] Fallback successful.`);
+              break;
+            } catch (fallbackErr: unknown) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const fErr = fallbackErr as any;
+              const fallbackIs503 = fErr?.status === 503 || fErr?.code === 503 || fErr?.status === "UNAVAILABLE" || fErr?.message?.includes("503") || fErr?.message?.includes("UNAVAILABLE");
+              console.error(`[Gemini API] Fallback model ${fallbackModel} also failed. Status category: ${fallbackIs503 ? '503/UNAVAILABLE' : 'OTHER'}`);
+              
+              if (fallbackIs503) {
+                throw new Error("Resume AI parsing is temporarily busy. Please try again in a moment.");
+              } else {
+                throw new Error("Resume AI parsing encountered an unexpected error. Please try again.");
+              }
+            }
+          }
+        } else {
+          // Do not expose raw Gemini infrastructure errors to the user.
+          throw new Error("Resume AI parsing encountered an unexpected error. Please try again.");
+        }
+      }
+    }
+
+    const parsedData = JSON.parse(responseText);
     console.log("RAW TEXT LENGTH:", rawText.length);
     console.log("GEMINI RAW KEYS:", Object.keys(parsedData));
     console.log("GEMINI RAW EXPERIENCE:", parsedData.experience ? parsedData.experience.length : "missing");
@@ -308,6 +363,11 @@ ${rawText}
       }
     }
 
-    return NextResponse.json({ error: "Failed to parse PDF: " + ((err as Error)?.message || "unknown error") }, { status: 500 });
+    const errMsg = (err as Error)?.message || "unknown error";
+    const cleanMsg = errMsg.includes("temporarily busy") || errMsg.includes("unexpected error") 
+      ? errMsg 
+      : "Failed to parse PDF: " + errMsg;
+
+    return NextResponse.json({ error: cleanMsg }, { status: 500 });
   }
 }
