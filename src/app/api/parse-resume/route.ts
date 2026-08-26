@@ -83,6 +83,9 @@ if (effectivePlan === "FREE" && currentCount >= 5) {
       });
 
       return { success: true, user: u };
+    }, {
+      maxWait: 10000, // 10 seconds to wait for a connection (Vercel cold start)
+      timeout: 10000, // 10 seconds for the transaction itself
     });
 
     if (result.error) {
