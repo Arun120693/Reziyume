@@ -53,6 +53,9 @@ export async function findOrCreateGoogleUser(params: GoogleUserParams) {
       });
 
       return createdUser;
+    }, {
+      maxWait: 10000,
+      timeout: 10000,
     });
 
     logger.info(LOG_PREFIX, "New user created via Google Auth", { email: newUser.email });
