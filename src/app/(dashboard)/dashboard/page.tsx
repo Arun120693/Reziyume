@@ -5,15 +5,10 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CoreTemplate } from "@/components/studio/preview/templates/CoreTemplate";
 import { getTemplateConfig } from "@/components/studio/preview/templates/registry";
-import { dummyResumeData } from "@/lib/dummyData";
-import { Loader2, MoreVertical, Pencil, Trash2, Download, Copy, Plus } from "lucide-react";
+import { ResumeData, defaultResumeData } from "@/lib/types/resume";
+import { Loader2, MoreVertical, Pencil, Trash2, Download, Plus } from "lucide-react";
 
-interface Resume {
-  id: string;
-  title: string;
-  templateId: string;
-  updatedAt: string;
-}
+type Resume = ResumeData;
 
 const timeAgo = (dateStr: string) => {
   const diff = (Date.now() - new Date(dateStr).getTime()) / 1000;
@@ -58,8 +53,13 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
   const handleDelete = async () => {
     if (!confirm("Delete this resume?")) return;
     setIsDeleting(true);
-    await fetch(`/api/resumes/${resume.id}`, { method: "DELETE" });
-    onDelete(resume.id);
+    try {
+      const response = await fetch(`/api/resumes/${resume.id}`, { method: "DELETE" });
+      if (!response.ok) throw new Error("Could not delete this resume. Please try again.");
+      onDelete(resume.id);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Unable to delete resume");
+    } finally { setIsDeleting(false); }
   };
 
   return (
@@ -67,6 +67,7 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
       {/* Card thumbnail */}
       <div
         ref={containerRef}
+        role="link" tabIndex={0} aria-label={`Edit ${resume.name}`} onKeyDown={e => { if (e.key === "Enter") router.push(`/dashboard/studio/${resume.id}`); }}
         className="aspect-[1/1.414] w-full bg-white relative overflow-hidden rounded-2xl cursor-pointer transition-all duration-300"
         style={{
           boxShadow: "6px 6px 18px rgba(180,178,195,0.55), -6px -6px 18px rgba(255,255,255,0.9)"
@@ -79,7 +80,7 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
           className="origin-top-left absolute top-0 left-0 pointer-events-none"
           style={{ width: "794px", transform: `scale(${scale})` }}
         >
-          <CoreTemplate data={{ ...dummyResumeData, templateId: resume.templateId }} config={config} />
+          <CoreTemplate data={{ ...defaultResumeData, ...resume }} config={config} />
         </div>
         {isDeleting && (
           <div className="absolute inset-0 flex items-center justify-center"
@@ -93,11 +94,13 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
       {/* Card footer */}
       <div className="mt-3 flex items-center justify-between px-1">
         <div>
-          <p className="text-[14px] font-bold leading-tight" style={{ color: "#111111" }}>{resume.title}</p>
+          <p className="text-[14px] font-bold leading-tight" style={{ color: "#111111" }}>{resume.name}</p>
           <p className="text-[12px] mt-0.5" style={{ color: "#9490b0" }}>edited {timeAgo(resume.updatedAt)} · A4</p>
         </div>
         <div className="relative" ref={menuRef}>
           <button
+            aria-label={`Actions for ${resume.name}`}
+            aria-expanded={menuOpen}
             onClick={(e) => { e.stopPropagation(); setMenuOpen(!menuOpen); }}
             className="p-1.5 rounded-full transition-colors"
             style={{ color: "#9490b0" }}
@@ -123,15 +126,11 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
               >
                 <Pencil className="w-3.5 h-3.5" /> Edit
               </button>
-              <button className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-[13px] font-medium transition-colors hover:bg-white/50"
+
+              <button onClick={() => router.push(`/dashboard/studio/${resume.id}`)} className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-[13px] font-medium transition-colors hover:bg-white/50"
                 style={{ color: "#111111" }}
               >
-                <Copy className="w-3.5 h-3.5" /> Duplicate
-              </button>
-              <button className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-[13px] font-medium transition-colors hover:bg-white/50"
-                style={{ color: "#111111" }}
-              >
-                <Download className="w-3.5 h-3.5" /> Download PDF
+                <Download className="w-3.5 h-3.5" /> Open to download
               </button>
               <div className="my-1 mx-3" style={{ height: "1px", background: "rgba(124,111,247,0.15)" }} />
               <button
@@ -153,11 +152,14 @@ export default function DashboardPage() {
 
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetch("/api/resumes")
-      .then((r) => r.json())
-      .then((d) => { setResumes(d.resumes || []); setLoading(false); });
+      .then((r) => { if (!r.ok) throw new Error("Unable to load resumes. Please refresh to retry."); return r.json(); })
+      .then((d) => { setResumes(d.resumes || []); })
+      .catch(error => setError(error.message))
+      .finally(() => setLoading(false));
   }, []);
 
   const handleDelete = (id: string) => {
@@ -165,17 +167,18 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen px-10 py-10">
+    <div className="min-h-screen px-5 sm:px-10 py-10">
       {/* Page header */}
       <div className="mb-8">
         <h1 className="text-[26px] font-extrabold tracking-tight mb-1" style={{ color: "#111111" }}>
-          My Resumes
+          Your next chapter.
         </h1>
         <p className="text-[14px]" style={{ color: "#9490b0" }}>
-          Manage your resumes or create a new one.
+          A workspace for your experience, your ambition, and your next great opportunity.
         </p>
       </div>
 
+      {error && <p role="alert" className="mb-6 rounded-xl bg-red-50 p-4 text-sm text-red-800">{error}</p>}
       {loading ? (
         <div className="flex items-center justify-center h-64">
           <div className="neo-raised flex items-center justify-center w-16 h-16 rounded-2xl">
@@ -183,7 +186,7 @@ export default function DashboardPage() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 min-[450px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {/* New Resume Card */}
           <Link href="/dashboard/templates" className="flex flex-col group">
             <div

@@ -55,7 +55,7 @@ export default function RegisterPage() {
 
       <form className="space-y-5" onSubmit={handleSubmit}>
         <div>
-          <label className="block text-sm font-semibold mb-2" style={{ color: "#4a4760" }}>
+          <label htmlFor="email" className="block text-sm font-semibold mb-2" style={{ color: "#4a4760" }}>
             Email address
           </label>
           <div className="relative">
@@ -63,6 +63,8 @@ export default function RegisterPage() {
               <Mail className="h-4.5 w-4.5" />
             </div>
             <input
+              id="email"
+              autoComplete="email"
               type="email"
               required
               value={email}
@@ -75,7 +77,7 @@ export default function RegisterPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold mb-2" style={{ color: "#4a4760" }}>
+          <label htmlFor="password" className="block text-sm font-semibold mb-2" style={{ color: "#4a4760" }}>
             Password <span style={{ color: "#9490b0", fontWeight: 400 }}>(min. 6 characters)</span>
           </label>
           <div className="relative">
@@ -83,6 +85,8 @@ export default function RegisterPage() {
               <Lock className="h-4.5 w-4.5" />
             </div>
             <input
+              id="password"
+              autoComplete="new-password"
               type="password"
               required
               minLength={6}

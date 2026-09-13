@@ -7,6 +7,8 @@ export interface TemplateConfig {
   category: string;
   description: string;
   layout: LayoutType;
+  recommendedFor?: string[];
+  featured?: boolean;
   supportsPhoto: boolean; // whether this template prominently features a photo
   colors: {
     primary: string;
@@ -27,6 +29,12 @@ export interface TemplateConfig {
 }
 
 export const templates: TemplateConfig[] = [
+{"id": "signal", "name": "Signal", "category": "Professional", "description": "A focused single-column design for engineering, data, and technical achievements.", "layout": "single-column", "supportsPhoto": false, "featured": true, "recommendedFor": ["Software engineering", "Data & analytics"], "colors": {"primary": "#233d64", "background": "#ffffff", "text": "#242b30", "secondaryText": "#52606a", "border": "#e2e6e5"}, "fonts": {"heading": "font-sans", "body": "font-sans"}, "styles": {"headingStyle": "uppercase", "spacing": "compact", "roundedPhoto": false}},
+{"id": "executive", "name": "Executive", "category": "Professional", "description": "Refined serif typography and generous spacing for a career built on leadership.", "layout": "centered", "supportsPhoto": false, "featured": true, "recommendedFor": ["Leadership", "Consulting", "Finance"], "colors": {"primary": "#283e35", "background": "#ffffff", "text": "#242b30", "secondaryText": "#52606a", "border": "#e2e6e5"}, "fonts": {"heading": "font-serif", "body": "font-sans"}, "styles": {"headingStyle": "underlined", "spacing": "relaxed", "roundedPhoto": false}},
+{"id": "launch", "name": "Launch", "category": "Minimalist", "description": "A clean, approachable foundation for internships, projects, and your first role.", "layout": "single-column", "supportsPhoto": false, "featured": true, "recommendedFor": ["Students & graduates", "Internships"], "colors": {"primary": "#245c50", "background": "#ffffff", "text": "#242b30", "secondaryText": "#52606a", "border": "#e2e6e5"}, "fonts": {"heading": "font-sans", "body": "font-sans"}, "styles": {"headingStyle": "underlined", "spacing": "normal", "roundedPhoto": false}},
+{"id": "pivot", "name": "Pivot", "category": "Professional", "description": "Clear headings bring transferable skills and a new career direction into focus.", "layout": "single-column", "supportsPhoto": false, "featured": true, "recommendedFor": ["Career change", "Operations"], "colors": {"primary": "#623f55", "background": "#ffffff", "text": "#242b30", "secondaryText": "#52606a", "border": "#e2e6e5"}, "fonts": {"heading": "font-sans", "body": "font-sans"}, "styles": {"headingStyle": "uppercase", "spacing": "normal", "roundedPhoto": false}},
+{"id": "folio", "name": "Folio", "category": "Creative", "description": "An editorial two-column composition for design, brand, and creative careers.", "layout": "two-column-right", "supportsPhoto": false, "featured": true, "recommendedFor": ["Design", "Marketing"], "colors": {"primary": "#a44e32", "background": "#ffffff", "text": "#242b30", "secondaryText": "#52606a", "border": "#e2e6e5"}, "fonts": {"heading": "font-serif", "body": "font-sans"}, "styles": {"headingStyle": "underlined", "spacing": "relaxed", "roundedPhoto": false}},
+{"id": "blueprint", "name": "Blueprint", "category": "Modern", "description": "A crisp split header with confident blue accents for product and business roles.", "layout": "split-header", "supportsPhoto": false, "featured": true, "recommendedFor": ["Product management", "Business"], "colors": {"primary": "#264bb0", "background": "#ffffff", "text": "#242b30", "secondaryText": "#52606a", "border": "#e2e6e5"}, "fonts": {"heading": "font-sans", "body": "font-sans"}, "styles": {"headingStyle": "uppercase", "spacing": "normal", "roundedPhoto": false}},
   // ─── Existing templates (no photo) ───────────────────────────────────────
   {
     id: "onyx",
@@ -242,5 +250,5 @@ export const templates: TemplateConfig[] = [
 ];
 
 export function getTemplateConfig(id: string): TemplateConfig {
-  return templates.find(t => t.id === id) || templates[0];
+  return templates.find(t => t.id === id) || templates.find(t => t.id === "onyx")!;
 }

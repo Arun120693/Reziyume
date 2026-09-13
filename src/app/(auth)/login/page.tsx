@@ -18,19 +18,18 @@ export default function LoginPage() {
     setIsLoading(true);
     setError("");
 
-    const result = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
+    try {
+      const result = await signIn("credentials", { redirect: false, email, password });
+      if (!result || result.error) {
+        setError("Invalid email or password");
+      } else {
+        router.push("/dashboard");
+        router.refresh();
+      }
+    } catch {
+      setError("Unable to sign in. Please check your connection and try again.");
+    } finally { setIsLoading(false); }
 
-    if (result?.error) {
-      setError("Invalid email or password");
-      setIsLoading(false);
-    } else {
-      router.push("/dashboard");
-      router.refresh();
-    }
   };
 
   return (
@@ -39,7 +38,7 @@ export default function LoginPage() {
 
       <form className="space-y-5" onSubmit={handleSubmit}>
         <div>
-          <label className="block text-sm font-semibold mb-2" style={{ color: "#4a4760" }}>
+          <label htmlFor="email" className="block text-sm font-semibold mb-2" style={{ color: "#4a4760" }}>
             Email address
           </label>
           <div className="relative">
@@ -47,6 +46,8 @@ export default function LoginPage() {
               <Mail className="h-4.5 w-4.5" />
             </div>
             <input
+              id="email"
+              autoComplete="email"
               type="email"
               required
               value={email}
@@ -59,7 +60,7 @@ export default function LoginPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold mb-2" style={{ color: "#4a4760" }}>
+          <label htmlFor="password" className="block text-sm font-semibold mb-2" style={{ color: "#4a4760" }}>
             Password
           </label>
           <div className="relative">
@@ -67,6 +68,8 @@ export default function LoginPage() {
               <Lock className="h-4.5 w-4.5" />
             </div>
             <input
+              id="password"
+              autoComplete="current-password"
               type="password"
               required
               value={password}

@@ -4,14 +4,14 @@ import { CoreTemplate } from "@/components/studio/preview/templates/CoreTemplate
 import { dummyResumeData } from "@/lib/dummyData";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { templates } from "@/components/studio/preview/templates/registry";
-import { Loader2, X, Star, Layout, Cpu, Palette, Camera } from "lucide-react";
+import { templates, TemplateConfig } from "@/components/studio/preview/templates/registry";
+import { Loader2, X, Star, Layout, Cpu, Palette, Camera, Search } from "lucide-react";
 import Link from "next/link";
 
 const FILTER_TABS = [
   { id: "all",      label: "All Templates", icon: null },
-  { id: "popular",  label: "Popular",        icon: Star },
-  { id: "photo",    label: "With Photo",     icon: Camera },
+  { id: "popular",  label: "Featured",        icon: Star },
+  { id: "photo",    label: "With Photo",     icon: Camera, Search },
   { id: "simple",   label: "Simple",         icon: Layout },
   { id: "modern",   label: "Modern",         icon: Cpu },
   { id: "creative", label: "Creative",       icon: Palette },
@@ -25,8 +25,7 @@ const CATEGORY_MAP: Record<string, string> = {
   Photo:        "photo",
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function TemplateCard({ template, isCreating, selectedId, onSelect }: any) {
+function TemplateCard({ template, isCreating, selectedId, onSelect }: { template: TemplateConfig; isCreating: boolean; selectedId: string | null; onSelect: (id: string) => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.35);
 
@@ -40,7 +39,7 @@ function TemplateCard({ template, isCreating, selectedId, onSelect }: any) {
   }, []);
 
   return (
-    <div className="group flex flex-col cursor-pointer" onClick={() => onSelect(template.id)}>
+    <button type="button" disabled={isCreating} aria-label={`Use ${template.name} template`} className="group flex flex-col cursor-pointer text-left disabled:cursor-wait" onClick={() => onSelect(template.id)}>
       {/* Preview card */}
       <div
         ref={containerRef}
@@ -102,7 +101,9 @@ function TemplateCard({ template, isCreating, selectedId, onSelect }: any) {
           <Camera className="w-3 h-3 flex-shrink-0" style={{ color: "#666666" }} />
         )}
       </div>
-    </div>
+      <p className="mt-2 text-xs text-slate-600 leading-relaxed">{template.description}</p>
+      <p className="mt-2 text-[10px] font-semibold text-emerald-800">{template.recommendedFor?.join(" · ")}</p>
+    </button>
   );
 }
 
@@ -111,10 +112,13 @@ export default function TemplatesPage() {
   const [isCreating, setIsCreating] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState("all");
+  const [query, setQuery] = useState("");
+  const [error, setError] = useState("");
 
   const handleSelectTemplate = async (templateId: string) => {
     if (isCreating) return;
     try {
+      setError("");
       setIsCreating(true);
       setSelectedId(templateId);
       const res = await fetch("/api/resumes", {
@@ -132,13 +136,14 @@ export default function TemplatesPage() {
     } catch (err: any) {
       setIsCreating(false);
       setSelectedId(null);
-      alert("Something went wrong: " + err.message);
+      setError(err instanceof Error ? err.message : "Unable to create your resume. Please try again.");
     }
   };
 
   const filteredTemplates = templates.filter((t) => {
+    if (!`${t.name} ${t.category} ${t.description} ${t.recommendedFor?.join(" ") || ""}`.toLowerCase().includes(query.toLowerCase().trim())) return false;
     if (activeFilter === "all") return true;
-    if (activeFilter === "popular") return ["onyx", "diamond", "sapphire", "quartz", "portrait", "nova"].includes(t.id);
+    if (activeFilter === "popular") return t.featured === true;
     if (activeFilter === "photo") return t.supportsPhoto === true;
     return CATEGORY_MAP[t.category] === activeFilter;
   });
@@ -146,31 +151,34 @@ export default function TemplatesPage() {
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-base)" }}>
       {/* Header */}
-      <div className="flex items-start justify-between px-10 pt-10 pb-6">
+      <div className="flex items-start justify-between px-5 sm:px-10 pt-10 pb-6">
         <div>
           <h1 className="text-[28px] font-extrabold tracking-tight" style={{ color: "#111111" }}>
-            Apply a design template
+            A great first impression starts here.
           </h1>
           <p className="text-[14px] mt-1" style={{ color: "#9490b0" }}>
-            Choose a template to start building your resume
+            Explore designs for your career, your experience, and your next chapter.
           </p>
         </div>
         <Link
           href="/dashboard"
+          aria-label="Back to dashboard"
           className="w-9 h-9 flex items-center justify-center rounded-full transition-all neo-raised"
         >
           <X className="w-4 h-4" style={{ color: "#6b6880" }} />
         </Link>
       </div>
 
+      <div className="px-5 sm:px-10 pb-6"><label className="flex items-center gap-3 rounded-xl border border-stone-200 bg-white p-3 max-w-lg"><Search size={18} className="text-stone-500"/><input aria-label="Search templates by name or career" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by style or career, e.g. engineering" className="w-full text-sm outline-none"/></label><p className="text-xs text-stone-600 mt-3">For online applications, try a simple single-column template such as Signal, Launch, or Pivot.</p>{error && <p role="alert" className="mt-3 text-sm text-red-700">{error}</p>}</div>
       {/* Filter tabs */}
-      <div className="px-10 pb-8 flex gap-2 flex-wrap">
+      <div className="px-5 sm:px-10 pb-8 flex gap-2 flex-wrap">
         {FILTER_TABS.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeFilter === tab.id;
           return (
             <button
               key={tab.id}
+              aria-pressed={isActive}
               onClick={() => setActiveFilter(tab.id)}
               className="flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all"
               style={
@@ -197,8 +205,8 @@ export default function TemplatesPage() {
       </div>
 
       {/* Template grid */}
-      <div className="px-10 pb-24">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+      <div className="px-5 sm:px-10 pb-24">
+        <div className="grid grid-cols-1 min-[450px]:grid-cols-2 xl:grid-cols-3 gap-8">
           {filteredTemplates.map((template) => (
             <TemplateCard
               key={template.id}

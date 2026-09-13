@@ -1,153 +1,33 @@
 "use client";
 
 import { useResumeStore } from "@/lib/store/useResumeStore";
+import { templates } from "./preview/templates/registry";
 
-const ACCENT_COLORS = [
-  "#1e2a3b", "#2563eb", "#7c3aed", "#db2777", "#059669",
-  "#d97706", "#dc2626", "#0284c7", "#64748b", "#000000",
-];
-
-const FONT_OPTIONS = [
-  "Inter", "Roboto", "Georgia", "Merriweather", "Lato",
-  "Poppins", "Playfair Display", "Source Sans Pro", "Montserrat", "Zilla Slab",
+const COLORS = ["#233d64", "#294c3e", "#264bb0", "#623f55", "#a44e32", "#7c3aed", "#0d9488", "#18181b"];
+const FONTS = [
+  { label: "Modern sans", value: "Inter, sans-serif" },
+  { label: "Classic serif", value: "Georgia, serif" },
+  { label: "Clean Arial", value: "Arial, sans-serif" },
+  { label: "Traditional Times", value: "Times New Roman, serif" },
+  { label: "Technical mono", value: "Courier New, monospace" },
 ];
 
 export function CustomizePanel() {
-  const data = useResumeStore((s) => s.data);
-  const updateFormatting = useResumeStore((s) => s.updateFormatting);
-
+  const data = useResumeStore(s => s.data);
+  const updateFormatting = useResumeStore(s => s.updateFormatting);
+  const updateTemplateId = useResumeStore(s => s.updateTemplateId);
   if (!data) return null;
-
-  const fmt = data.formatting || {};
-
-  const navItems = [
-    "Document", "Templates", "Layout", "Font Size",
-    "Spacing", "Entries", "Headings", "Font", "Colors",
-    "Header", "Photo", "Links", "Footer", "Sections"
-  ];
-
-  return (
-    <div className="flex h-full">
-      {/* Sub-nav */}
-      <div className="w-[120px] flex-shrink-0 flex flex-col py-4 gap-0.5 border-r border-slate-200/60 bg-white/30">
-        {navItems.map((item, i) => (
-          <button
-            key={item}
-            className={`text-left text-[12.5px] px-4 py-2 transition-colors ${
-              item === "Font"
-                ? "font-semibold text-slate-800 border-l-2 border-slate-800"
-                : "text-slate-500 hover:text-slate-700"
-            }`}
-          >
-            {item}
-          </button>
-        ))}
-      </div>
-
-      {/* Panel content */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-6">
-
-        {/* Font card */}
-        <div className="bg-white rounded-xl p-5 shadow-sm space-y-4">
-          <h3 className="text-[16px] font-bold text-slate-800">Font</h3>
-
-          <div>
-            <label className="text-[12px] font-semibold text-slate-600 mb-2 block">Body Font</label>
-            <select
-              value={fmt.fontFamily || "Inter"}
-              onChange={(e) => updateFormatting({ fontFamily: e.target.value })}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-[13px] text-slate-700 bg-white appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-slate-300"
-            >
-              {FONT_OPTIONS.map((f) => <option key={f} value={f}>{f}</option>)}
-            </select>
-          </div>
-
-          <div>
-            <label className="text-[12px] font-semibold text-slate-600 mb-2 block">Name Font</label>
-            <select
-              className="w-full border border-slate-200 rounded-lg px-3 py-2.5 text-[13px] text-slate-700 bg-white appearance-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-slate-300"
-            >
-              <option>Same as body font</option>
-              {FONT_OPTIONS.map((f) => <option key={f} value={f}>{f}</option>)}
-            </select>
-          </div>
-        </div>
-
-        {/* Colors card */}
-        <div className="bg-white rounded-xl p-5 shadow-sm space-y-4">
-          <h3 className="text-[16px] font-bold text-slate-800">Colors</h3>
-
-          {/* Color mode thumbnails */}
-          <div className="flex gap-3">
-            {["Full Page", "Column", "Border"].map((mode) => (
-              <div key={mode} className="flex flex-col items-center gap-1.5">
-                <div className={`w-14 h-16 rounded-lg border-2 ${mode === "Column" ? "border-indigo-600" : "border-slate-200"} overflow-hidden bg-white flex`}>
-                  {mode === "Column" && <div className="w-1/2 h-full bg-indigo-600/80" />}
-                  {mode === "Border" && <div className="w-1 h-full bg-slate-400/50" />}
-                </div>
-                <span className="text-[11px] text-slate-500">{mode}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Accent colors */}
-          <div>
-            <label className="text-[12px] font-semibold text-slate-600 mb-2 block">Accent Color</label>
-            <div className="flex flex-wrap gap-2">
-              {ACCENT_COLORS.map((color) => (
-                <button
-                  key={color}
-                  onClick={() => updateFormatting({ accentColor: color })}
-                  className={`w-7 h-7 rounded-full transition-all ${
-                    (fmt.accentColor || "#1e2a3b") === color ? "ring-2 ring-offset-2 ring-slate-400 scale-110" : "hover:scale-105"
-                  }`}
-                  style={{ backgroundColor: color }}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Spacing */}
-        <div className="bg-white rounded-xl p-5 shadow-sm space-y-3">
-          <h3 className="text-[16px] font-bold text-slate-800">Spacing</h3>
-          <div className="flex gap-2">
-            {["compact", "normal", "relaxed"].map((s) => (
-              <button
-                key={s}
-                onClick={() => updateFormatting({ margins: s })}
-                className={`flex-1 py-2 rounded-lg text-[12px] font-medium border transition-colors capitalize ${
-                  (fmt.margins || "normal") === s
-                    ? "border-slate-800 bg-slate-800 text-white"
-                    : "border-slate-200 text-slate-600 hover:border-slate-400"
-                }`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Font Size */}
-        <div className="bg-white rounded-xl p-5 shadow-sm space-y-3">
-          <h3 className="text-[16px] font-bold text-slate-800">Font Size</h3>
-          <div className="flex gap-2">
-            {["small", "medium", "large"].map((s) => (
-              <button
-                key={s}
-                onClick={() => updateFormatting({ fontSize: s })}
-                className={`flex-1 py-2 rounded-lg text-[12px] font-medium border transition-colors capitalize ${
-                  (fmt.fontSize || "medium") === s
-                    ? "border-slate-800 bg-slate-800 text-white"
-                    : "border-slate-200 text-slate-600 hover:border-slate-400"
-                }`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+  const fmt = data.formatting;
+  const fieldClass = "w-full border border-stone-200 rounded-lg px-3 py-3 text-sm bg-white mt-2";
+  return <div className="p-5 space-y-5">
+    <div><p className="text-xs uppercase tracking-widest text-stone-500">Make it yours</p><h2 className="text-xl font-semibold mt-1">Small details. Big difference.</h2><p className="text-sm text-stone-500 mt-2">Your changes appear in the preview and save automatically.</p></div>
+    <div className="bg-white border border-stone-200 rounded-xl p-5 space-y-5">
+      <label className="block text-sm font-semibold">Template<select className={fieldClass} value={templates.some(t => t.id === data.templateId) ? data.templateId : "onyx"} onChange={e => updateTemplateId(e.target.value)}>{templates.map(t => <option key={t.id} value={t.id}>{t.name} · {t.category}</option>)}</select></label>
+      <label className="block text-sm font-semibold">Body font<select className={fieldClass} value={fmt.fontFamily} onChange={e => updateFormatting({ fontFamily:e.target.value })}>{!FONTS.some(f => f.value === fmt.fontFamily) && <option value={fmt.fontFamily}>{fmt.fontFamily}</option>}{FONTS.map(f => <option key={f.value} value={f.value}>{f.label}</option>)}</select></label>
+      <label className="block text-sm font-semibold">Text size<select className={fieldClass} value={fmt.fontSize} onChange={e => updateFormatting({ fontSize:e.target.value })}><option value="small">Small · more content</option><option value="medium">Medium · balanced</option><option value="large">Large · easier reading</option></select></label>
+      <label className="block text-sm font-semibold">Page margins<select className={fieldClass} value={fmt.margins} onChange={e => updateFormatting({ margins:e.target.value })}><option value="narrow">Narrow</option><option value="normal">Standard</option><option value="wide">Generous</option></select></label>
+      <fieldset><legend className="text-sm font-semibold mb-3">Accent color</legend><div className="flex flex-wrap gap-3">{COLORS.map(color => <button key={color} aria-label={`Accent color ${color}`} aria-pressed={fmt.accentColor === color} onClick={() => updateFormatting({ accentColor:color })} className="w-8 h-8 rounded-full border-2 border-white shadow-sm outline-offset-2" style={{backgroundColor:color, outline:fmt.accentColor === color ? `2px solid ${color}` : undefined}} />)}</div><div className="flex items-center justify-between mt-4"><label className="flex items-center gap-2 text-xs text-stone-600">Custom color<input aria-label="Custom accent color" type="color" value={fmt.accentColor || templates.find(t => t.id === data.templateId)?.colors.primary || "#18181b"} onChange={e => updateFormatting({accentColor:e.target.value})} className="h-8 w-9 cursor-pointer"/></label><button className="text-xs underline text-stone-600" onClick={() => updateFormatting({accentColor:""})}>Reset to template</button></div></fieldset>
     </div>
-  );
+    <p className="text-xs leading-relaxed text-stone-500">Use the Content tab to reorder sections or add experience, education, projects, and more.</p>
+  </div>;
 }

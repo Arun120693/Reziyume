@@ -111,7 +111,7 @@ export const defaultFormatting: Formatting = {
 
 export const defaultResumeData: Omit<ResumeData, "id" | "userId" | "createdAt" | "updatedAt"> = {
   name: "Untitled Resume",
-  templateId: "modern",
+  templateId: "signal",
   contact: defaultContactInfo,
   summary: "",
   experience: [],

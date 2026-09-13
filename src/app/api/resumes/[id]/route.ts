@@ -84,3 +84,16 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
   }
 }
+
+export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    const { id } = await params;
+    const result = await prisma.resume.deleteMany({ where: { id, userId: session.user.id } });
+    if (!result.count) return NextResponse.json({ message: "Resume not found" }, { status: 404 });
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ message: "Unable to delete resume" }, { status: 500 });
+  }
+}

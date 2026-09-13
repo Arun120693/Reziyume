@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Reziyume",
-  description: "Create your professional resume with Reziyume",
+  title: "Reziyume — Build a resume for your next chapter",
+  description: "Create a polished resume with 25 customizable templates, live editing, resume import, and PDF downloads. Find a style for your next career move.",
 };
 
 export default function RootLayout({

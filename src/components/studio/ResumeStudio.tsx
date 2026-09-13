@@ -1,6 +1,7 @@
 
 "use client";
 
+import { SaveStatus } from "./SaveStatus";
 import { useEffect, useState } from "react";
 import { useResumeStore } from "@/lib/store/useResumeStore";
 import { ResumeData } from "@/lib/types/resume";
@@ -16,14 +17,14 @@ import { CustomizePanel } from "./CustomizePanel";
 import {
   Loader2, GraduationCap, Briefcase, Wrench, FolderGit2,
   Sparkles, Plus, GripVertical, Eye, EyeOff, ChevronRight,
-  LayoutTemplate, Download, MoreVertical, ArrowLeft, Upload
+  LayoutTemplate, Download, ArrowLeft, Upload
 } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import Link from "next/link";
 import { UploadResumeModal } from "./UploadResumeModal";
 import { getTemplateConfig } from "./preview/templates/registry";
-import { pdf } from "@react-pdf/renderer";
-import { PdfDocument } from "../pdf/PdfDocument";
+import { captureResume } from "@/lib/export/captureResume";
+import jsPDF from "jspdf";
 
 export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
   const setInitialData = useResumeStore((s) => s.setInitialData);
@@ -50,6 +51,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"content" | "customize">("content");
   const [isDownloading, setIsDownloading] = useState(false);
+  const [exportStyle, setExportStyle] = useState("visual");
 
   useEffect(() => { setInitialData(initialData); }, [initialData, setInitialData]);
 
@@ -72,17 +74,89 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
   const handleDownload = async () => {
     setIsDownloading(true);
 
+    let capturedElement: HTMLElement | null = null;
+    let originalTransform = "";
     try {
-      const config = getTemplateConfig(data.templateId || 'ruby');
-      const blob = await pdf(<PdfDocument data={data} config={config} />).toBlob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${data.name || 'Resume'}.pdf`;
-      link.click();
-      URL.revokeObjectURL(url);
+      if (exportStyle === "text") {
+        const [{ pdf }, { PdfDocument }] = await Promise.all([import("@react-pdf/renderer"), import("@/components/pdf/PdfDocument")]);
+        const config = getTemplateConfig(data.templateId);
+        const blob = await pdf(<PdfDocument data={{ ...data, contact: { ...data.contact, photoBase64: "" } }} config={{ ...config, layout: "single-column", colors: { ...config.colors, background: "#ffffff", text: "#242b30", secondaryText: "#52606a" } }} />).toBlob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${data.name || "Resume"}.pdf`;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+        return;
+      }
+      const element = document.getElementById("resume-preview-content");
+      if (!element) throw new Error("Resume preview element not found");
+
+      // Wait for fonts to load
+      if (document.fonts) {
+        await document.fonts.ready;
+      }
+
+      // Wait for any images within the preview to load
+      const images = Array.from(element.querySelectorAll('img'));
+      await Promise.all(images.map(img => {
+        if (img.complete) return Promise.resolve();
+        return new Promise(resolve => {
+          img.onload = resolve;
+          img.onerror = resolve; // Continue even if an image fails
+        });
+      }));
+
+      // Temporarily remove transform for accurate capture
+      capturedElement = element;
+      originalTransform = element.style.transform;
+      element.style.transform = "none";
+
+      // CRITICAL: Wait for a few animation frames AFTER removing transform
+      // to ensure the browser recalculates the layout and font metrics at scale=1
+      // Without this, html2canvas captures stale computed styles, causing alignment regressions
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+      // html2canvas config
+      const canvas = await captureResume(element);
+
+      // Restore transform
+      element.style.transform = originalTransform;
+
+      // jsPDF generation
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+
+      const pdfWidth = 210; // A4 width in mm
+      const pdfHeight = 297; // A4 height in mm
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = pdfWidth / imgWidth;
+      const totalImgHeightInMm = imgHeight * ratio;
+
+      const imgData = canvas.toDataURL("image/png");
+
+      let heightLeft = totalImgHeightInMm;
+      let position = 0;
+
+      // Add first page
+      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, totalImgHeightInMm);
+      heightLeft -= pdfHeight;
+
+      // Add additional pages if content is taller than A4
+      while (heightLeft > 0) {
+        position = heightLeft - totalImgHeightInMm; // Shift image up
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, totalImgHeightInMm);
+        heightLeft -= pdfHeight;
+      }
+
+      pdf.save(`${data.name || 'Resume'}.pdf`);
     } catch (error) {
-      console.error("React-PDF generation failed:", error);
+      console.error("PDF generation failed:", error);
 
       if (error instanceof Error) {
           console.error(error.message);
@@ -91,6 +165,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
 
       alert(error instanceof Error ? error.message : String(error));
     } finally {
+      if (capturedElement) capturedElement.style.transform = originalTransform;
       setIsDownloading(false);
     }
   };
@@ -128,12 +203,12 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
   ] as const;
 
   return (
-    <div className="h-screen flex flex-col" style={{ background: "var(--bg-base)" }}>
+    <div className="min-h-screen lg:h-screen flex flex-col" style={{ background: "var(--bg-base)" }}>
       {/* Top nav bar — glass */}
       <div
-        className="flex-shrink-0 px-4 flex items-center justify-between h-[56px] flex-shrink-0"
+        className="px-4 py-3 flex flex-wrap gap-3 items-center justify-between min-h-[56px] flex-shrink-0"
         style={{
-          background: "rgba(235,233,245,0.8)",
+          background: "rgba(250,249,246,0.95)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
           borderBottom: "1px solid rgba(255,255,255,0.6)",
@@ -141,16 +216,17 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
         }}
       >
         {/* Left: back + tabs */}
-        <div className="flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-1">
           {activeForm ? (
             <button
               onClick={() => setActiveForm(null)}
+              aria-label="Back to sections"
               className="flex items-center justify-center w-9 h-9 rounded-xl transition-all mr-1 neo-btn"
             >
               <ArrowLeft className="w-4 h-4" style={{ color: "#6b6880" }} />
             </button>
           ) : (
-            <Link href="/dashboard" className="flex items-center justify-center w-9 h-9 rounded-xl transition-all mr-1 neo-btn">
+            <Link href="/dashboard" aria-label="Back to dashboard" className="flex items-center justify-center w-9 h-9 rounded-xl transition-all mr-1 neo-btn">
               <ArrowLeft className="w-4 h-4" style={{ color: "#6b6880" }} />
             </Link>
           )}
@@ -197,8 +273,10 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
         </div>
 
         {/* Right: resume name + download */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <SaveStatus />
           <input
+            aria-label="Resume name"
             type="text"
             value={data.name || ""}
             onChange={(e) => updateName(e.target.value)}
@@ -206,6 +284,9 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
             className="w-40 neo-input px-3 py-1.5 text-[13px] font-medium"
             style={{ color: "#111111" }}
           />
+          <select aria-label="PDF format" value={exportStyle} onChange={e => setExportStyle(e.target.value)} className="max-w-40 rounded-lg border border-stone-200 bg-white px-2 py-2 text-xs">
+            <option value="visual">PDF matching preview</option><option value="text">Text PDF · single column</option>
+          </select>
           <button
             onClick={handleDownload}
             disabled={isDownloading}
@@ -214,16 +295,14 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
             {isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
             {isDownloading ? "Saving..." : "Download"}
           </button>
-          <button className="neo-btn w-8 h-8 flex items-center justify-center">
-            <MoreVertical className="w-4 h-4" style={{ color: "#6b6880" }} />
-          </button>
+
         </div>
       </div>
 
       {/* Body */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row lg:overflow-hidden">
         {/* Left panel */}
-        <div className="w-[540px] flex-shrink-0 flex flex-col overflow-hidden bg-transparent">
+        <div className="w-full lg:w-[440px] xl:w-[500px] flex-shrink-0 flex flex-col overflow-hidden bg-transparent">
           {activeTab === "content" && (
             activeForm ? (
               <div className="flex-1 overflow-hidden bg-white/0">
@@ -321,7 +400,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
                                       >
                                         {meta.label}
                                       </span>
-                                      <div className="flex items-center gap-1">
+                                      <div className="flex flex-wrap items-center gap-1">
                                         <button
                                           onClick={(e) => { e.stopPropagation(); updateSectionVisibility(sectionId, !isVisible); }}
                                           className="p-1.5 rounded-md hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
@@ -383,7 +462,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
         </div>
 
         {/* Right panel: preview on beige bg */}
-        <div className="flex-1 overflow-y-auto flex justify-center items-start p-8" style={{ backgroundColor: "#E8E4DC" }}>
+        <div className="flex-1 min-w-0 overflow-y-auto flex justify-center items-start p-4 sm:p-8" style={{ backgroundColor: "#E8E4DC" }}>
           <div className="w-full max-w-[794px]">
             <ResumePreview />
           </div>

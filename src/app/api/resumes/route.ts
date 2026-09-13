@@ -66,12 +66,7 @@ export async function GET() {
       orderBy: {
         updatedAt: "desc",
       },
-      select: {
-        id: true,
-        name: true,
-        templateId: true,
-        updatedAt: true,
-      },
+
     });
 
     return NextResponse.json({ resumes });

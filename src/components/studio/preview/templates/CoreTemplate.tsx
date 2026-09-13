@@ -38,10 +38,11 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
     if (styles.headingStyle === 'solid-bg') {
       return (
         <div 
-          className="flex items-center mb-2" 
+          className="mb-2"
           style={{ 
             backgroundColor: activeColors.primary,
-            height: '28px', // Fixed height for the coloured bar
+            paddingTop: '6px',
+            paddingBottom: '6px',
             paddingLeft: '0.5rem',
             paddingRight: '0.5rem',
           }}
@@ -50,7 +51,9 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
             className={`text-base font-bold m-0 p-0 block ${fonts.heading}`} 
             style={{ 
               color: activeColors.background, 
-              lineHeight: 'normal' // Natural line height prevents ascender clipping in html2canvas
+              fontSize: '16px',
+              lineHeight: '24px',
+              overflowWrap: 'anywhere'
             }}
           >
             {title}

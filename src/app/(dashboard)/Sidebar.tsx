@@ -14,10 +14,10 @@ export function Sidebar({ email }: { email: string }) {
 
   return (
     <aside
-      className="w-[260px] flex-shrink-0 flex flex-col fixed inset-y-0 left-0 z-50 glass-nav"
+      className="w-full md:w-[260px] flex-shrink-0 flex flex-row md:flex-col fixed top-0 md:bottom-0 left-0 z-50 glass-nav"
     >
       {/* Logo */}
-      <div className="px-6 pt-7 pb-5">
+      <div className="px-4 py-4 md:px-6 md:pt-7 md:pb-5">
         <Link href="/dashboard" className="flex items-center gap-3">
           <div
             className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -37,10 +37,10 @@ export function Sidebar({ email }: { email: string }) {
       </div>
 
       {/* Divider */}
-      <div className="mx-5 mb-4" style={{ height: "1px", background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent)" }} />
+      <div className="hidden md:block mx-5 mb-4" style={{ height: "1px", background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent)" }} />
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-2 space-y-1">
+      <nav className="flex-1 flex md:block items-center justify-end px-3 py-2 md:space-y-1">
         <Link
           href="/dashboard"
           className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-[14px] font-semibold transition-all"
@@ -61,6 +61,7 @@ export function Sidebar({ email }: { email: string }) {
           Resume
         </Link>
 
+        <Link href="/dashboard/templates" className="hidden sm:block px-4 py-2.5 rounded-xl text-sm font-semibold text-stone-600 hover:bg-white">Templates</Link>
         {/* Upgrade to Pro */}
         <Link
           href="/dashboard/upgrade"
@@ -85,7 +86,7 @@ export function Sidebar({ email }: { email: string }) {
       </nav>
 
       {/* Bottom */}
-      <div className="px-3 pb-6 space-y-2">
+      <div className="hidden md:block px-3 pb-6 space-y-2">
         {/* Plan display */}
         <div className="px-4 pb-2 mb-2">
           <div className="text-[11px] uppercase tracking-wider font-bold mb-1" style={{ color: "#9490b0" }}>

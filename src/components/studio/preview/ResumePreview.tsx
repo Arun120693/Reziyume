@@ -59,6 +59,7 @@ export function ResumePreview() {
     >
       <div 
         ref={contentRef}
+        id="resume-preview-content"
         className="origin-top-left absolute top-0 left-0 bg-white shadow-xl flex flex-col"
         style={{
           width: '794px',

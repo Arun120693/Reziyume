@@ -51,6 +51,16 @@ export const PdfHtmlRenderer = ({ html, baseStyle }: PdfHtmlRendererProps) => {
 
   // Remove any remaining HTML tags
   clean = clean.replace(/<[^>]+>/g, '');
+  // Formatting tokens must never become literal text in exported resumes.
+  clean = clean.replace(/\[\/?[BI]\]/g, '');
+  const entities: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '\"', apos: "'", nbsp: ' ', bull: '•', middot: '·' };
+  clean = clean.replace(/&(#x[0-9a-f]+|#\d+|\w+);/gi, (match, entity: string) => {
+    if (entity.startsWith('#')) {
+      const code = entity[1].toLowerCase() === 'x' ? parseInt(entity.slice(2), 16) : parseInt(entity.slice(1), 10);
+      return code >= 0 && code <= 0x10ffff ? String.fromCodePoint(code) : match;
+    }
+    return entities[entity.toLowerCase()] ?? match;
+  });
 
   const rawBlocks = clean.split(/(?=\[P\]|\[UL\]|\[\/UL\])/).filter(Boolean);
 
