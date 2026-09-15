@@ -851,32 +851,18 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
   // 4. photo-overlap-green
   if (layout === 'photo-overlap-green') {
     return (
-      <div className={`min-h-[29.7cm] w-full flex relative ${fonts.body}`} style={{ backgroundColor: activeColors.background, fontSize: '13px' }}>
-        {/* Left Beige Column */}
-        <div className="w-[45%] pt-12 pb-10 pl-10 pr-6 flex flex-col z-0">
+      <div className={`min-h-[29.7cm] w-full flex flex-col relative ${fonts.body}`} style={{ background: `linear-gradient(to right, ${activeColors.background} 45%, ${activeColors.primary} 45%)`, fontSize: '13px' }}>
+        <div className="flex items-start">
+          <div className="w-[45%] min-w-0 pt-12 pl-10 pr-6 pb-6">
           <h1 className={`text-5xl font-black tracking-tighter uppercase leading-none ${fonts.heading}`} style={{ color: activeColors.primary }}>
             {data.contact.fullName ? data.contact.fullName.split(' ').map((n, i) => <div key={i}>{n}</div>) : <span className="opacity-40 italic normal-case">Your Name</span>}
           </h1>
           <p className={`text-[15px] font-medium mt-3 tracking-wider ${fonts.heading}`} style={{ color: activeColors.secondaryText }}>
             {data.contact.jobTitle || <span className="opacity-40 italic">Graphic Designer</span>}
           </p>
-          
-          <div className="mt-48 flex flex-col gap-8">
-            {renderSkills()}
-            {renderEducation()}
-            {renderCustomSections()}
-            
-            <div className="flex flex-col gap-2 mt-auto text-[11px]" style={{ color: activeColors.secondaryText }}>
-              {data.contact.phone && <div className="flex items-center gap-2"><span style={{color: activeColors.primary}}>📞</span> {data.contact.phone}</div>}
-              {data.contact.website && <div className="flex items-center gap-2"><span style={{color: activeColors.primary}}>🌐</span> {data.contact.website}</div>}
-              {data.contact.location && <div className="flex items-center gap-2"><span style={{color: activeColors.primary}}>📍</span> {data.contact.location}</div>}
-            </div>
+
           </div>
-        </div>
-        
-        {/* Right Green Column */}
-        <div className="w-[55%] pt-10 pb-10 pr-10 pl-6 flex flex-col z-0" style={{ backgroundColor: activeColors.primary, color: '#ffffff' }}>
-          <div className="flex justify-center mb-40">
+          <div className="w-[55%] pt-10 pr-10 pl-6 pb-6 flex justify-center text-white">
              {hasProfilePhoto(data) ? (
               <img
                 src={data.contact.photoBase64}
@@ -891,8 +877,29 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
               </div>
             )}
           </div>
-          
-          <div className="flex-1 flex flex-col gap-8">
+        </div>
+
+        {/* Keep the spanning summary in flow so both columns start below it. */}
+        <div className="mx-10 mb-8 rounded-2xl shadow-xl p-6 relative z-10" style={{ backgroundColor: '#b7bda5', border: `1px solid ${activeColors.border}` }}>
+          <div className={`text-sm font-bold px-3 py-1 bg-black text-white rounded-full inline-block mb-3 ${fonts.heading}`}>About Me</div>
+          <p className={`text-[12px] leading-relaxed ${fonts.body}`} style={{ color: activeColors.text }}>
+            {data.summary || <span className="opacity-40 italic">Your professional summary will appear here.</span>}
+          </p>
+        </div>
+
+        <div className="flex flex-1">
+          <div className="w-[45%] min-w-0 pb-10 pl-10 pr-6 flex flex-col gap-8">
+            {renderSkills()}
+            {renderEducation()}
+            {renderCustomSections()}
+
+            <div className="flex flex-col gap-2 mt-auto text-[11px]" style={{ color: activeColors.secondaryText }}>
+              {data.contact.phone && <div className="flex items-center gap-2"><span style={{color: activeColors.primary}}>📞</span> {data.contact.phone}</div>}
+              {data.contact.website && <div className="flex items-center gap-2"><span style={{color: activeColors.primary}}>🌐</span> {data.contact.website}</div>}
+              {data.contact.location && <div className="flex items-center gap-2"><span style={{color: activeColors.primary}}>📍</span> {data.contact.location}</div>}
+            </div>
+          </div>
+          <div className="w-[55%] min-w-0 pb-10 pr-10 pl-6 flex flex-col gap-8 text-white">
             {hasContent(data.experience) && (
               <div className="mb-5">
                 <div className={`text-base font-bold mb-4 block bg-white/20 px-3 py-1 rounded-md inline-block ${fonts.heading}`}>Professional Experience:</div>
@@ -908,14 +915,6 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
               </div>
             )}
           </div>
-        </div>
-        
-        {/* Absolute Overlapping "About Me" box */}
-        <div className="absolute top-64 left-10 right-10 rounded-2xl shadow-xl p-6 z-10" style={{ backgroundColor: '#b7bda5', border: `1px solid ${activeColors.border}` }}>
-          <div className={`text-sm font-bold px-3 py-1 bg-black text-white rounded-full inline-block mb-3 ${fonts.heading}`}>About Me</div>
-          <p className={`text-[12px] leading-relaxed ${fonts.body}`} style={{ color: activeColors.text }}>
-            {data.summary || <span className="opacity-40 italic">Your professional summary will appear here.</span>}
-          </p>
         </div>
       </div>
     );
