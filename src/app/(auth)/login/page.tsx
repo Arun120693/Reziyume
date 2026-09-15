@@ -1,17 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Loader2, Mail, Lock } from "lucide-react";
 
 export default function LoginPage() {
+  return <Suspense fallback={<div className="text-center">Loading sign-in…</div>}><LoginForm /></Suspense>;
+}
+
+function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const searchParams = useSearchParams();
+  const authError = searchParams.get("error");
+  const displayedError = error || (authError
+    ? "Google sign-in could not be completed. Please try again. If this continues, contact support."
+    : "");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,7 +91,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {error && (
+        {displayedError && (
           <div className="text-sm font-medium p-3 rounded-xl border"
             style={{
               color: "#e11d48",
@@ -89,7 +99,7 @@ export default function LoginPage() {
               border: "1px solid rgba(225,29,72,0.2)"
             }}
           >
-            {error}
+            {displayedError}
           </div>
         )}
 
@@ -113,9 +123,15 @@ export default function LoginPage() {
 
       <button
         type="button"
-        onClick={() => {
+        onClick={async () => {
           setIsLoading(true);
-          signIn("google");
+          setError("");
+          try {
+            await signIn("google", { callbackUrl: "/dashboard" });
+          } catch {
+            setError("Unable to start Google sign-in. Please try again.");
+            setIsLoading(false);
+          }
         }}
         disabled={isLoading}
         className="neo-input w-full flex justify-center items-center gap-3 py-3 px-4 text-sm font-semibold transition-colors disabled:opacity-60 disabled:cursor-not-allowed"

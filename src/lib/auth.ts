@@ -87,13 +87,19 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
     async redirect({ url, baseUrl }) {
-      // Prevent looping back to auth pages if no specific callbackUrl was provided
-      if (url === `${baseUrl}/login` || url === `${baseUrl}/register`) {
+      try {
+        const destination = new URL(url, baseUrl);
+        if (destination.origin !== new URL(baseUrl).origin) {
+          return `${baseUrl}/dashboard`;
+        }
+        const pathname = destination.pathname.replace(/\/+$/, "");
+        if (pathname === "/login" || pathname === "/register") {
+          return `${baseUrl}/dashboard`;
+        }
+        return destination.href;
+      } catch {
         return `${baseUrl}/dashboard`;
       }
-      if (url.startsWith(baseUrl)) return url;
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      return `${baseUrl}/dashboard`;
     },
     async jwt({ token, user, account }) {
       if (user) {
@@ -136,8 +142,11 @@ logger: {
   warn(code) {
     console.warn("[NextAuth Warn]", code);
   },
-  debug(code, metadata) {
-    console.log("[NextAuth Debug]", code, metadata);
+  debug(code) {
+    // Custom loggers bypass NextAuth's debug flag; never log OAuth tokens.
+    if (process.env.NODE_ENV !== "production") {
+      console.log("[NextAuth Debug]", code);
+    }
   },
 },
 
