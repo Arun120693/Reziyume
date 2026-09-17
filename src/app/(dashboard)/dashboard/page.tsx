@@ -6,7 +6,7 @@ import Link from "next/link";
 import { CoreTemplate } from "@/components/studio/preview/templates/CoreTemplate";
 import { getTemplateConfig } from "@/components/studio/preview/templates/registry";
 import { ResumeData, defaultResumeData } from "@/lib/types/resume";
-import { Loader2, MoreVertical, Pencil, Trash2, Download, Plus } from "lucide-react";
+import { Loader2, MoreVertical, Pencil, Trash2, Download, Plus, Copy, Share2 } from "lucide-react";
 
 type Resume = ResumeData;
 
@@ -18,7 +18,7 @@ const timeAgo = (dateStr: string) => {
   return `${Math.floor(diff / 86400)} days ago`;
 };
 
-function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: string) => void }) {
+function ResumeCard({ resume, onDelete, onDuplicate }: { resume: Resume; onDelete: (id: string) => void; onDuplicate: (resume: Resume) => void }) {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.28);
@@ -60,6 +60,20 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
     } catch (error) {
       alert(error instanceof Error ? error.message : "Unable to delete resume");
     } finally { setIsDeleting(false); }
+  };
+  const handleDuplicate = async () => {
+    const response = await fetch(`/api/resumes/${resume.id}/duplicate`, { method: "POST" });
+    if (response.ok) { onDuplicate(await response.json()); setMenuOpen(false); }
+    else alert("Unable to duplicate this resume.");
+  };
+  const handleShare = async () => {
+    const response = await fetch(`/api/resumes/${resume.id}/share`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ public: true }) });
+    if (response.ok) { const result = await response.json(); await navigator.clipboard?.writeText(`${window.location.origin}${result.url}`); alert("Share link copied."); setMenuOpen(false); }
+    else alert("Unable to create a share link.");
+  };
+  const handlePrivacy = async () => {
+    const response = await fetch(`/api/resumes/${resume.id}/share`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ public: !resume.isPublic }) });
+    if (response.ok) { setMenuOpen(false); window.location.reload(); }
   };
 
   return (
@@ -132,6 +146,9 @@ function ResumeCard({ resume, onDelete }: { resume: Resume; onDelete: (id: strin
               >
                 <Download className="w-3.5 h-3.5" /> Open to download
               </button>
+              <button onClick={handleDuplicate} className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-[13px] font-medium hover:bg-white/50" style={{ color: "#111111" }}><Copy className="w-3.5 h-3.5" /> Duplicate</button>
+              <button onClick={handleShare} className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-[13px] font-medium hover:bg-white/50" style={{ color: "#111111" }}><Share2 className="w-3.5 h-3.5" /> Share link</button>
+              {resume.isPublic && <button onClick={handlePrivacy} className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-[13px] font-medium hover:bg-white/50" style={{ color: "#e11d48" }}>Make private</button>}
               <div className="my-1 mx-3" style={{ height: "1px", background: "rgba(124,111,247,0.15)" }} />
               <button
                 onClick={() => { setMenuOpen(false); handleDelete(); }}
@@ -217,7 +234,7 @@ export default function DashboardPage() {
 
           {/* Existing Resumes */}
           {resumes.map((resume) => (
-            <ResumeCard key={resume.id} resume={resume} onDelete={handleDelete} />
+            <ResumeCard key={resume.id} resume={resume} onDelete={handleDelete} onDuplicate={(copy) => setResumes((current) => [copy, ...current])} />
           ))}
         </div>
       )}

@@ -89,6 +89,8 @@ export interface ResumeData {
   formatting: Formatting;
   createdAt: string;
   updatedAt: string;
+  shareToken?: string | null;
+  isPublic?: boolean;
 }
 
 export const defaultContactInfo: ContactInfo = {
