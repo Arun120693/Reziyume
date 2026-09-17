@@ -123,6 +123,11 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
         }
       }
 
+      // Let the browser commit the margin changes before html2canvas reads pixels.
+      if (movedItems.length > 0) {
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      }
+
       // html2canvas config
       const [{ captureResume }, { createVisualPdf }] = await Promise.all([import("@/lib/export/captureResume"), import("@/lib/export/createVisualPdf")]);
       const canvas = await captureResume(element);
