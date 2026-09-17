@@ -860,6 +860,12 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
           <p className={`text-[15px] font-medium mt-3 tracking-wider ${fonts.heading}`} style={{ color: activeColors.secondaryText }}>
             {data.contact.jobTitle || <span className="opacity-40 italic">Graphic Designer</span>}
           </p>
+          {(data.contact.phone || data.contact.location) && (
+            <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-[11px]" style={{ color: activeColors.secondaryText }}>
+              {data.contact.phone && <span>☎ {data.contact.phone}</span>}
+              {data.contact.location && <span>📍 {data.contact.location}</span>}
+            </div>
+          )}
 
           </div>
           <div className="w-[55%] pt-10 pr-10 pl-6 pb-6 flex justify-center text-white">
@@ -894,9 +900,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
             {renderCustomSections()}
 
             <div className="flex flex-col gap-2 mt-auto text-[11px]" style={{ color: activeColors.secondaryText }}>
-              {data.contact.phone && <div className="flex items-center gap-2"><span style={{color: activeColors.primary}}>📞</span> {data.contact.phone}</div>}
               {data.contact.website && <div className="flex items-center gap-2"><span style={{color: activeColors.primary}}>🌐</span> {data.contact.website}</div>}
-              {data.contact.location && <div className="flex items-center gap-2"><span style={{color: activeColors.primary}}>📍</span> {data.contact.location}</div>}
             </div>
           </div>
           <div className="w-[55%] min-w-0 pb-10 pr-10 pl-6 flex flex-col gap-8 text-white">

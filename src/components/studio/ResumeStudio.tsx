@@ -110,7 +110,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
       // Keep an experience heading with the beginning of its details when the
       // visual PDF is sliced into A4 pages. The browser preview remains unchanged.
       const pageHeight = element.getBoundingClientRect().width * 297 / 210;
-      const movedItems: Array<{ element: HTMLElement; marginTop: string }> = [];
+      const pageBreaks: number[] = [];
       for (const item of Array.from(element.querySelectorAll<HTMLElement>('[data-resume-experience-item="true"]'))) {
         const rect = item.getBoundingClientRect();
         const rootRect = element.getBoundingClientRect();
@@ -118,27 +118,20 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
         const bottom = rect.bottom - rootRect.top;
         const nextPage = Math.ceil((top + 1) / pageHeight) * pageHeight;
         if (top < nextPage && bottom > nextPage && rect.height < pageHeight * 0.9) {
-          movedItems.push({ element: item, marginTop: item.style.marginTop });
-          item.style.marginTop = `${(parseFloat(getComputedStyle(item).marginTop) || 0) + nextPage - top + 4}px`;
+          pageBreaks.push(top);
         }
-      }
-
-      // Let the browser commit the margin changes before html2canvas reads pixels.
-      if (movedItems.length > 0) {
-        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       }
 
       // html2canvas config
       const [{ captureResume }, { createVisualPdf }] = await Promise.all([import("@/lib/export/captureResume"), import("@/lib/export/createVisualPdf")]);
       const canvas = await captureResume(element);
 
-      for (const moved of movedItems) moved.element.style.marginTop = moved.marginTop;
-
       // Restore transform
       element.style.transform = originalTransform;
       element.style.minHeight = originalMinHeight;
 
-      const blob = createVisualPdf(canvas);
+      const scale = canvas.width / element.getBoundingClientRect().width;
+      const blob = createVisualPdf(canvas, pageBreaks.map((breakPoint) => breakPoint * scale));
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
