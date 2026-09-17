@@ -12,7 +12,7 @@ export async function captureResume(element: HTMLElement) {
   try {
     await document.fonts.ready;
     return await html2canvas(element, {
-      scale: 2,
+      scale: 1.5,
       useCORS: true,
       backgroundColor: null,
       logging: false,

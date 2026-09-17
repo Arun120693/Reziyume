@@ -44,7 +44,7 @@ function LoginForm() {
 
   return (
     <div>
-      <h3 className="text-xl font-bold mb-6 text-center" style={{ color: "#111111" }}>Welcome back</h3>
+      <h2 className="text-xl font-bold mb-6 text-center" style={{ color: "#111111" }}>Welcome back</h2>
 
       <form className="space-y-5" onSubmit={handleSubmit}>
         <div>
@@ -92,7 +92,7 @@ function LoginForm() {
         </div>
 
         {displayedError && (
-          <div className="text-sm font-medium p-3 rounded-xl border"
+          <div role="alert" className="text-sm font-medium p-3 rounded-xl border"
             style={{
               color: "#e11d48",
               background: "rgba(225,29,72,0.08)",

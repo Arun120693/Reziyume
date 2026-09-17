@@ -361,7 +361,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
   // Layout Renders
   if (layout === 'two-column-left') {
     return (
-      <div className={`min-h-[29.7cm] w-full bg-white shadow-xl flex ${fonts.body}`} style={containerStyle}>
+      <div className={`w-full bg-white shadow-xl flex ${fonts.body}`} style={containerStyle}>
         <div className="w-1/3 p-10 flex flex-col gap-6" style={{ backgroundColor: activeColors.border }}>
           {hasProfilePhoto(data) && (
             <div className="flex justify-center mb-2">
@@ -392,7 +392,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
 
   if (layout === 'two-column-right') {
     return (
-      <div className={`min-h-[29.7cm] w-full bg-white shadow-xl flex ${fonts.body}`} style={containerStyle}>
+      <div className={`w-full bg-white shadow-xl flex ${fonts.body}`} style={containerStyle}>
         <div className="w-2/3 p-10">
           <div className="mb-6 flex items-center gap-4">
             {hasProfilePhoto(data) && (
@@ -422,7 +422,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
 
   if (layout === 'split-header') {
     return (
-      <div className={`min-h-[29.7cm] w-full bg-white shadow-xl flex flex-col ${fonts.body}`} style={containerStyle}>
+      <div className={`w-full bg-white shadow-xl flex flex-col ${fonts.body}`} style={containerStyle}>
         <div className="p-10 relative flex justify-center items-center" style={{ backgroundColor: activeColors.primary, color: activeColors.background }}>
           <div className="text-center">
             <h1 className={`text-3xl font-bold tracking-tight ${fonts.heading}`}>
@@ -465,7 +465,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
     const sidebarBg = activeColors.primary;
     const sidebarText = '#ffffff';
     return (
-      <div className={`min-h-[29.7cm] w-full flex ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
+      <div className={`w-full flex ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
         {/* Sidebar */}
         <div className="w-[35%] flex-shrink-0 flex flex-col items-center pt-10 pb-6 px-5 gap-5" style={{ backgroundColor: sidebarBg }}>
           {/* Photo */}
@@ -514,7 +514,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
   // ─── PHOTO-BANNER ──────────────────────────────────────────────────────
   if (layout === 'photo-banner') {
     return (
-      <div className={`min-h-[29.7cm] w-full ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
+      <div className={`w-full ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
         {/* Banner header */}
         <div className="flex items-center gap-6 px-10 pt-10 pb-6" style={{ borderBottom: `3px solid ${activeColors.primary}` }}>
           {hasProfilePhoto(data) ? (
@@ -553,7 +553,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
   // ─── PHOTO-TOP-RIGHT ───────────────────────────────────────────────────
   if (layout === 'photo-top-right') {
     return (
-      <div className={`min-h-[29.7cm] w-full ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
+      <div className={`w-full ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
         {/* Header with name left + photo right */}
         <div className="px-10 pt-10 pb-0">
           <div className="flex justify-between items-start">
@@ -596,7 +596,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
   // ─── PHOTO-CARD ────────────────────────────────────────────────────────
   if (layout === 'photo-card') {
     return (
-      <div className={`min-h-[29.7cm] w-full ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
+      <div className={`w-full ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
         {/* Card header with gradient background */}
         <div className="px-10 pt-10 pb-8" style={{ background: `linear-gradient(135deg, ${activeColors.primary}15 0%, ${activeColors.border} 100%)` }}>
           <div className="flex items-center gap-6">
@@ -637,7 +637,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
   // ─── PHOTO-ELEGANT ─────────────────────────────────────────────────────
   if (layout === 'photo-elegant') {
     return (
-      <div className={`min-h-[29.7cm] w-full ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
+      <div className={`w-full ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
         {/* Centered elegant header */}
         <div className="flex flex-col items-center px-10 pt-10 pb-8 text-center">
           {hasProfilePhoto(data) ? (
@@ -677,7 +677,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
   // 1. photo-split-yellow
   if (layout === 'photo-split-yellow') {
     return (
-      <div className={`min-h-[29.7cm] w-full flex flex-col ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
+      <div className={`w-full flex flex-col ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
         {/* Top Golden Header */}
         <div className="px-12 py-10 flex items-center justify-between" style={{ backgroundColor: activeColors.primary, color: activeColors.background }}>
           <div className="max-w-[60%]">
@@ -736,7 +736,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
   // 2. photo-pink-border
   if (layout === 'photo-pink-border') {
     return (
-      <div className={`min-h-[29.7cm] w-full p-4 ${fonts.body}`} style={{ backgroundColor: activeColors.border, fontSize: '13px' }}>
+      <div className={`w-full p-4 ${fonts.body}`} style={{ backgroundColor: activeColors.border, fontSize: '13px' }}>
         <div className="w-full h-full bg-white flex flex-col p-10" style={{ border: `1px solid ${activeColors.primary}` }}>
           {/* Header */}
           <div className="flex justify-between items-start mb-8 pb-8" style={{ borderBottom: `2px solid ${activeColors.primary}` }}>
@@ -790,7 +790,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
   // 3. photo-dark-modern
   if (layout === 'photo-dark-modern') {
     return (
-      <div className={`min-h-[29.7cm] w-full flex ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
+      <div className={`w-full flex ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
         <div className="w-[35%] p-8 flex flex-col gap-8" style={{ backgroundColor: activeColors.primary, color: '#ffffff' }}>
           {hasProfilePhoto(data) ? (
             <img
@@ -851,7 +851,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
   // 4. photo-overlap-green
   if (layout === 'photo-overlap-green') {
     return (
-      <div className={`min-h-[29.7cm] w-full flex flex-col relative ${fonts.body}`} style={{ background: `linear-gradient(to right, ${activeColors.background} 45%, ${activeColors.primary} 45%)`, fontSize: '13px' }}>
+      <div className={`w-full flex flex-col relative ${fonts.body}`} style={{ background: `linear-gradient(to right, ${activeColors.background} 45%, ${activeColors.primary} 45%)`, fontSize: '13px' }}>
         <div className="flex items-start">
           <div className="w-[45%] min-w-0 pt-12 pl-10 pr-6 pb-6">
           <h1 className={`text-5xl font-black tracking-tighter uppercase leading-none ${fonts.heading}`} style={{ color: activeColors.primary }}>
@@ -923,7 +923,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
   // 5. photo-dark-bubbles
   if (layout === 'photo-dark-bubbles') {
     return (
-      <div className={`min-h-[29.7cm] w-full flex relative overflow-hidden ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
+      <div className={`w-full flex relative overflow-hidden ${fonts.body}`} style={{ backgroundColor: activeColors.background, color: activeColors.text, fontSize: '13px' }}>
         {/* CSS Bubbles Background */}
         <div className="absolute top-[-100px] right-[-100px] w-[400px] h-[400px] rounded-full opacity-60 z-0" style={{ background: `radial-gradient(circle, ${activeColors.primary} 0%, transparent 70%)` }} />
         <div className="absolute bottom-[-150px] left-[-150px] w-[500px] h-[500px] rounded-full opacity-40 z-0" style={{ background: `radial-gradient(circle, #facc15 0%, transparent 70%)` }} />
@@ -1016,7 +1016,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
 
   // default / single-column / centered
   return (
-    <div className={`min-h-[29.7cm] w-full shadow-xl ${fonts.body}`} style={containerStyle}>
+    <div className={`w-full shadow-xl ${fonts.body}`} style={containerStyle}>
       {renderHeader()}
       <div className="mt-6">
         {mainContent}

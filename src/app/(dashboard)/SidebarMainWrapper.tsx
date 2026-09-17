@@ -23,7 +23,7 @@ export function SidebarMainWrapper({
       <Sidebar email={email} />
 
       {/* Main content */}
-      <main className="flex-1 min-w-0 md:ml-[260px] pt-20 md:pt-0 min-h-screen">
+      <main className="flex-1 min-w-0 md:ml-[260px] pt-32 md:pt-0 min-h-screen">
         {children}
       </main>
     </div>

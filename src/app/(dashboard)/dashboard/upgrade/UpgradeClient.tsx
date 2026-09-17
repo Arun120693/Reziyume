@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Check, Loader2 } from "lucide-react";
+import { getPricingForCountry } from "@/lib/pricing";
 import { useAnalytics } from "@/lib/hooks/useAnalytics";
 
 declare global {
@@ -35,15 +36,13 @@ export function UpgradeClient({ country }: { country: string }) {
   }, [trackEvent]);
 
   const features = [
-    "Unlimited AI Resume Generation",
-    "Unlimited Resume Parsing",
-    "Premium Resume Templates",
-    "Unlimited PDF Downloads",
-    "Priority AI Processing",
-    "Future Premium Features Included",
+    "Unlimited AI-assisted PDF imports",
+    "All current resume templates (also free)",
+    "Live editing and customization (also free)",
+    "Visual and text PDF downloads (also free)",
   ];
 
-  const price = country === "IN" ? "₹99" : "$5";
+  const { price } = getPricingForCountry(country);
 
   const handleUpgrade = async () => {
     try {
@@ -133,6 +132,7 @@ export function UpgradeClient({ country }: { country: string }) {
         </div>
       </div>
 
+      <p className="mb-6 text-sm leading-relaxed text-stone-600">Free includes 5 PDF imports per calendar month. Upgrade to import without that limit. Editing, templates and PDF downloads remain free.</p>
       <ul className="space-y-4 mb-8">
         {features.map((feature, i) => (
           <li key={i} className="flex items-center gap-3">
@@ -165,7 +165,7 @@ export function UpgradeClient({ country }: { country: string }) {
             Creating secure checkout...
           </>
         ) : (
-          "Upgrade Now"
+          "Get unlimited imports"
         )}
       </button>
       

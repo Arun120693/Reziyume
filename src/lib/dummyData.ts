@@ -3,89 +3,26 @@ import { ResumeData } from "./types/resume";
 export const dummyResumeData: ResumeData = {
   id: "dummy",
   userId: "dummy_user",
-  name: "James Appleseed",
-  templateId: "apollo",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
+  name: "Alex Morgan — Sample Resume",
+  templateId: "executive",
+  createdAt: "2026-01-01T00:00:00.000Z",
+  updatedAt: "2026-01-01T00:00:00.000Z",
   contact: {
-    fullName: "James Appleseed",
-    jobTitle: "Head Cashier",
-    email: "james.appleseed@resume.com",
-    phone: "(555) 555-5555",
-    location: "1234 Main St, San Francisco, CA",
-    linkedin: "",
-    website: "",
-    photoBase64: "", // Omit photo for classic ATS look, or can add a placeholder
+    fullName: "Alex Morgan", jobTitle: "Senior Software Engineer",
+    email: "alex.morgan@example.com", phone: "(415) 555-0142",
+    location: "San Francisco, CA", linkedin: "", website: "", photoBase64: "",
   },
-  summary: "Head Cashier with over 7 years of experience in providing excellent customer service, handling daily accounts and maintaining inventory. Aiming to use my knowledge and expertise to effectively fill the managerial role in your store. Possesses a Bachelor's degree in Arts.",
+  summary: "Senior software engineer with 8 years of experience building thoughtful, reliable web products. Combines hands-on engineering with technical leadership to turn complex problems into fast, accessible experiences.",
   experience: [
-    {
-      id: "exp1",
-      company: "Barnes & Noble",
-      position: "Cashier and Key Holder",
-      startDate: "09/2016",
-      endDate: "Present",
-      current: true,
-      location: "Syracuse, New York",
-      description: "• Expertise in business administration, record keeping, planning, policies, procedures, researching, scheduling, and related responsibilities to ensure productive operations\n• Open and close the registers, assisting in the training of 6 new cashiers, monitoring cash limits and ensuring quality customer service at all times"
-    },
-    {
-      id: "exp2",
-      company: "Best Buy",
-      position: "Cashier",
-      startDate: "05/2014",
-      endDate: "08/2016",
-      current: false,
-      location: "Syracuse, New York",
-      description: "• Operate POS cash register, handling 92 transactions on average daily, and count money in cash drawers to ensure the amount is correct\n• Develop reputation for prompt, efficient service with high level of accuracy, receiving top ratings during all 2 years in the store\n• Maintain thorough knowledge of store merchandise, and responsible for selling in-store credit cards"
-    }
+    { id: "exp1", company: "Northstar Labs · Sample company", position: "Senior Software Engineer", startDate: "03/2022", endDate: "Present", current: true, location: "San Francisco, CA",
+      description: "<ul><li>Improved application performance by 38% through targeted query optimization and a leaner rendering pipeline.</li><li>Led a team of 5 engineers to launch a customer workspace, reducing onboarding time from 3 days to 4 hours.</li><li>Introduced automated release checks that cut production regressions by 32%.</li></ul>" },
+    { id: "exp2", company: "Fieldwork Digital · Sample company", position: "Software Engineer", startDate: "07/2018", endDate: "02/2022", current: false, location: "Austin, TX",
+      description: "<ul><li>Built reusable interface components adopted across 4 product teams, shortening feature delivery by 25%.</li><li>Partnered with design and research to simplify checkout, increasing completion by 18%.</li><li>Mentored 3 early-career engineers through code reviews and weekly pairing sessions.</li></ul>" },
   ],
-  education: [
-    {
-      id: "edu1",
-      school: "State High School",
-      degree: "High School Diploma",
-      fieldOfStudy: "General Studies",
-      startDate: "09/2010",
-      endDate: "05/2014",
-      current: false,
-      location: "Rome, Lazio",
-      description: "• Expertise in business administration, record keeping, planning, policies, procedures, researching, scheduling, and related responsibilities to ensure productive operations\n• Open and close the registers, assisting in the training of 6 new cashiers, monitoring cash limits and ensuring quality customer service at all times"
-    }
-  ],
-  skills: [
-    { id: "s1", name: "Accuracy", level: "" },
-    { id: "s2", name: "Computer Skills", level: "" },
-    { id: "s3", name: "Product Knowledge", level: "" },
-    { id: "s4", name: "Memorization", level: "" },
-    { id: "s5", name: "Job Safety", level: "" },
-    { id: "s6", name: "Loss prevention techniques", level: "" },
-  ],
+  education: [{ id: "edu1", school: "University of California, Davis", degree: "Bachelor of Science", fieldOfStudy: "Computer Science", startDate: "09/2014", endDate: "06/2018", current: false, location: "Davis, CA", description: "Focus: human-computer interaction and distributed systems." }],
+  skills: ["TypeScript", "React", "Node.js", "PostgreSQL", "System design", "Team leadership"].map((name, i) => ({ id: `s${i}`, name, level: "" })),
   projects: [],
-  customSections: [
-    {
-      id: "lang1",
-      title: "Languages",
-      items: [
-        {
-          id: "li1",
-          name: "Arabic",
-          subtitle: "Native Speaker",
-          startDate: "",
-          endDate: "",
-          description: ""
-        },
-        {
-          id: "li2",
-          name: "Cantonese",
-          subtitle: "Fluent",
-          startDate: "",
-          endDate: "",
-          description: ""
-        }
-      ]
-    }
-  ],
+  customSections: [{ id: "extra", title: "Community", items: [{ id: "c1", name: "Engineering mentor", subtitle: "Volunteer", startDate: "", endDate: "", description: "Monthly portfolio reviews and interview practice for early-career developers." }] }],
   sectionOrder: ["experience", "skills", "education", "customSections"],
   sectionVisibility: {
     experience: true,

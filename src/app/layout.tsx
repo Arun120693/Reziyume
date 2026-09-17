@@ -13,7 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Reziyume — Build a resume for your next chapter",
+  metadataBase: new URL("https://reziyume.com"),
+  title: { default: "Reziyume — Professional Resume Builder", template: "%s | Reziyume" },
   description: "Create a polished resume with 25 customizable templates, live editing, resume import, and PDF downloads. Find a style for your next career move.",
 };
 

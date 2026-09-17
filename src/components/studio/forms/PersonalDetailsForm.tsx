@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { useResumeStore } from "@/lib/store/useResumeStore";
 import { PhotoCropper } from "./PhotoCropper";
-import { Lightbulb, Check, Loader2 } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { getTemplateConfig } from "@/components/studio/preview/templates/registry";
 
 export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
@@ -94,10 +94,11 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-6 md:col-span-1">
             <div>
-              <label className={labelClass} style={labelStyle}>Full name</label>
+              <label htmlFor="contact-fullName" className={labelClass} style={labelStyle}>Full name</label>
               <input
                 type="text"
-                name="fullName"
+                id="contact-fullName"
+              name="fullName"
                 value={contact.fullName}
                 onChange={handleChange}
                 className={inputClass}
@@ -107,10 +108,11 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
             </div>
 
             <div>
-              <label className={labelClass} style={labelStyle}>Professional title</label>
+              <label htmlFor="contact-jobTitle" className={labelClass} style={labelStyle}>Professional title</label>
               <input
                 type="text"
-                name="jobTitle"
+                id="contact-jobTitle"
+              name="jobTitle"
                 value={contact.jobTitle}
                 onChange={handleChange}
                 className={inputClass}
@@ -175,9 +177,10 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
           </div>
 
           <div className="md:col-span-2">
-            <label className={labelClass} style={labelStyle}>Email</label>
+            <label htmlFor="contact-email" className={labelClass} style={labelStyle}>Email</label>
             <input
               type="email"
+              id="contact-email"
               name="email"
               value={contact.email}
               onChange={handleChange}
@@ -188,9 +191,10 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
           </div>
 
           <div className="md:col-span-2">
-            <label className={labelClass} style={labelStyle}>Phone</label>
+            <label htmlFor="contact-phone" className={labelClass} style={labelStyle}>Phone</label>
             <input
               type="tel"
+              id="contact-phone"
               name="phone"
               value={contact.phone}
               onChange={handleChange}
@@ -201,9 +205,10 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
           </div>
 
           <div className="md:col-span-2">
-            <label className={labelClass} style={labelStyle}>Location</label>
+            <label htmlFor="contact-location" className={labelClass} style={labelStyle}>Location</label>
             <input
               type="text"
+              id="contact-location"
               name="location"
               value={contact.location}
               onChange={handleChange}
@@ -214,9 +219,10 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
           </div>
 
           <div className="md:col-span-2">
-            <label className={labelClass} style={labelStyle}>LinkedIn</label>
+            <label htmlFor="contact-linkedin" className={labelClass} style={labelStyle}>LinkedIn</label>
             <input
               type="url"
+              id="contact-linkedin"
               name="linkedin"
               value={contact.linkedin}
               onChange={handleChange}
@@ -227,9 +233,10 @@ export function PersonalDetailsForm({ onClose }: { onClose?: () => void }) {
           </div>
 
           <div className="md:col-span-2">
-            <label className={labelClass} style={labelStyle}>Website</label>
+            <label htmlFor="contact-website" className={labelClass} style={labelStyle}>Website</label>
             <input
               type="url"
+              id="contact-website"
               name="website"
               value={contact.website}
               onChange={handleChange}

@@ -241,3 +241,66 @@ body {
 .marketing { overflow-x:clip; }
 .auth-shell .neo-input { background:#fff; border:1px solid #dcded6; box-shadow:none; border-radius:8px; }
 .auth-shell .accent-btn { background:#294c3e; box-shadow:none; border-radius:8px; }
+
+/* V2 refinements preserve the editorial palette and existing template layouts. */
+.mobile-nav { display:none; }
+.hero-actions { flex-wrap:wrap; }
+.hero-checks { flex-wrap:wrap; font-size:12px; }
+.benefits-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:32px; }
+.benefits-grid svg { color:#74846b; margin-bottom:20px; }
+.benefits-grid h3,.price-card h3 { font-size:18px; font-weight:600; line-height:1.4; margin-bottom:12px; }
+.benefits-grid p,.section-intro,.price-card>p,.product-trust p { font-size:14px; line-height:1.85; color:#59655d; }
+.gallery-cta { display:flex; align-items:center; flex-direction:column; gap:12px; margin-top:32px; }
+.gallery-cta>span { font-size:12px; color:#59655d; text-align:center; }
+.pricing-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.price-card { padding:32px; border:1px solid #dedfd6; border-radius:12px; }
+.price-card:first-child { background:#f0f1e9; }
+.price-card .price-value { font-size:36px; letter-spacing:-1px; color:#294c3e; margin:16px 0 0; }
+.price-value small { font-size:14px; letter-spacing:0; }
+.price-card ul { display:grid; gap:14px; margin:24px 0; font-size:14px; }
+.price-card li { display:flex; gap:10px; align-items:start; }
+.price-card li svg { flex-shrink:0; margin-top:2px; }
+.price-card .button-text { margin-top:24px; }
+.product-trust { display:flex; gap:24px; padding-block:32px; border-block:1px solid #dedfd6; }
+.product-trust>svg { flex-shrink:0; color:#294c3e; }
+.product-trust h2 { font-size:26px; letter-spacing:-.5px; margin-bottom:12px; }
+.product-trust p { max-width:850px; }
+.closing-section h2 { max-width:800px; margin:auto; }
+.closing-copy { margin:20px auto 0; color:#e0e6d7; line-height:1.7; }
+.site-footer { width:100%; flex-wrap:wrap; }
+.site-footer a:not(.wordmark) { font-size:12px; }
+.marketing :is(a,button,summary):focus-visible { outline:3px solid #74846b; outline-offset:5px; border-radius:4px; }
+.marketing :is(.button-text,.login-link,.gallery-filters button) { min-height:44px; }
+.login-link { align-items:center; display:flex; }
+@media(max-width:1050px) { .benefits-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:760px) {
+ .mobile-nav { display:flex; justify-content:space-between; padding:0 22px; border-bottom:1px solid #dedfd6; gap:12px; font-size:12px; }
+ .mobile-nav a { display:flex; align-items:center; min-height:44px; }
+ .hero-copy h1 { font-size:clamp(39px,7.6vw,52px); letter-spacing:-1.8px; }
+ .hero-actions .button-dark { width:100%; gap:12px; }
+ .hero-checks { gap:14px; }
+ .pricing-grid { grid-template-columns:1fr; }
+ .price-card { padding:24px; }
+ .product-trust { margin-inline:25px; padding-inline:0; gap:15px; }
+ .product-trust h2 { font-size:26px; }
+ .closing-section h2 { font-size:36px; }
+ .auth-shell input { font-size:16px; }
+}
+@media(max-width:480px) {
+ .benefits-grid { grid-template-columns:1fr; gap:28px; }
+ .marketing-template-grid { grid-template-columns:1fr; }
+ .template-mat { height:390px; padding:24px 42px 0; }
+ .template-caption span { display:inline; font-size:10px; }
+ .login-link { display:flex; }
+ .header-actions { gap:12px; }
+ .button-dark.small { padding:12px; }
+ .hero-sheet-front,.hero-sheet-back { width:210px; }
+ .hero-sheet-front { right:12px; }
+ .hero-sheet-back { left:8px; }
+ .hero-visual { height:375px; }
+ .floating-label { left:0; padding:12px; }
+}
+
+@media(max-width:480px) { .site-header { padding-inline:16px; } .site-header .wordmark { font-size:24px; } .header-actions { gap:10px; white-space:nowrap; } .button-dark.small { gap:6px; padding-inline:10px; font-size:11px; } }
+
+@media(max-width:760px) { input.neo-input, select.neo-input { font-size:16px; } }

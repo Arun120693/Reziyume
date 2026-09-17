@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -5,6 +6,8 @@ import prisma from "@/lib/prisma";
 import { UserProvider } from "@/lib/context/UserContext";
 
 import { SidebarMainWrapper } from "./SidebarMainWrapper";
+
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function DashboardLayout({
   children,

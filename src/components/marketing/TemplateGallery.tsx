@@ -16,7 +16,7 @@ export function TemplateThumbnail({ template }: { template: TemplateConfig }) {
     observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
-  return <div ref={ref} className="template-sheet" aria-label={`${template.name} resume preview`}>
+  return <div ref={ref} className="template-sheet" role="img" aria-label={`${template.name} resume preview`}>
     <div aria-hidden="true" className="pointer-events-none origin-top-left" style={{ width: 794, transform: `scale(${scale})` }}>
       <CoreTemplate data={{ ...dummyResumeData, templateId: template.id, formatting: { ...dummyResumeData.formatting, accentColor: "" } }} config={template} />
     </div>
@@ -34,6 +34,6 @@ export function TemplateGallery() {
       <div className="template-caption"><h3>{t.name}</h3><span>{t.category}</span></div>
       <p>{t.recommendedFor?.join(" · ")}</p>
     </Link>)}</div>
-    <p className="gallery-note"><Check size={16} /> Switch templates in the editor without retyping your story.</p>
+    <div className="gallery-cta"><Link href="/dashboard/templates" className="button-text">Explore all templates <ArrowUpRight size={18}/></Link><span>All current templates included free · Fictional sample content</span></div><p className="gallery-note"><Check size={16} /> Switch templates in the editor without retyping your story.</p>
   </>;
 }

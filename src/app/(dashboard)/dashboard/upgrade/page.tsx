@@ -11,7 +11,7 @@ export default async function UpgradePage() {
           Upgrade to Reziyume Pro
         </h1>
         <p className="text-[17px] font-medium mt-3" style={{ color: "#6b6880" }}>
-          Unlock premium AI-powered resume building.
+          Import more resumes with less retyping. Your editing tools and PDF downloads stay free.
         </p>
       </div>
 

@@ -23,24 +23,11 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import Link from "next/link";
 import { UploadResumeModal } from "./UploadResumeModal";
 import { getTemplateConfig } from "./preview/templates/registry";
-import { captureResume } from "@/lib/export/captureResume";
-import jsPDF from "jspdf";
+
 
 export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
   const setInitialData = useResumeStore((s) => s.setInitialData);
   const data = useResumeStore((s) => s.data);
-
-  if (data) {
-    console.log("======================================================");
-    console.log("STAGE 5: ResumeStudio (Rendering with data from store)");
-    console.log("Summary:", !!data.summary);
-    console.log("Experience Length:", data.experience?.length || 0);
-    console.log("Education Length:", data.education?.length || 0);
-    console.log("Skills Length:", data.skills?.length || 0);
-    console.log("Projects Length:", data.projects?.length || 0);
-    console.log("CustomSections Length:", data.customSections?.length || 0);
-    console.log("======================================================");
-  }
 
   const updateSectionOrder = useResumeStore((s) => s.updateSectionOrder);
   const updateSectionVisibility = useResumeStore((s) => s.updateSectionVisibility);
@@ -76,6 +63,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
 
     let capturedElement: HTMLElement | null = null;
     let originalTransform = "";
+    let originalMinHeight = "";
     try {
       if (exportStyle === "text") {
         const [{ pdf }, { PdfDocument }] = await Promise.all([import("@react-pdf/renderer"), import("@/components/pdf/PdfDocument")]);
@@ -110,7 +98,9 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
       // Temporarily remove transform for accurate capture
       capturedElement = element;
       originalTransform = element.style.transform;
+      originalMinHeight = element.style.minHeight;
       element.style.transform = "none";
+      element.style.minHeight = "0";
 
       // CRITICAL: Wait for a few animation frames AFTER removing transform
       // to ensure the browser recalculates the layout and font metrics at scale=1
@@ -118,43 +108,20 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
       // html2canvas config
+      const [{ captureResume }, { createVisualPdf }] = await Promise.all([import("@/lib/export/captureResume"), import("@/lib/export/createVisualPdf")]);
       const canvas = await captureResume(element);
 
       // Restore transform
       element.style.transform = originalTransform;
+      element.style.minHeight = originalMinHeight;
 
-      // jsPDF generation
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: "a4",
-      });
-
-      const pdfWidth = 210; // A4 width in mm
-      const pdfHeight = 297; // A4 height in mm
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = pdfWidth / imgWidth;
-      const totalImgHeightInMm = imgHeight * ratio;
-
-      const imgData = canvas.toDataURL("image/png");
-
-      let heightLeft = totalImgHeightInMm;
-      let position = 0;
-
-      // Add first page
-      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, totalImgHeightInMm);
-      heightLeft -= pdfHeight;
-
-      // Add additional pages if content is taller than A4
-      while (heightLeft > 0) {
-        position = heightLeft - totalImgHeightInMm; // Shift image up
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, pdfWidth, totalImgHeightInMm);
-        heightLeft -= pdfHeight;
-      }
-
-      pdf.save(`${data.name || 'Resume'}.pdf`);
+      const blob = createVisualPdf(canvas);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${data.name || "Resume"}.pdf`;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
     } catch (error) {
       console.error("PDF generation failed:", error);
 
@@ -165,7 +132,10 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
 
       alert(error instanceof Error ? error.message : String(error));
     } finally {
-      if (capturedElement) capturedElement.style.transform = originalTransform;
+      if (capturedElement) {
+        capturedElement.style.transform = originalTransform;
+        capturedElement.style.minHeight = originalMinHeight;
+      }
       setIsDownloading(false);
     }
   };
@@ -313,6 +283,10 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
                 <div className="space-y-3">
                   {/* Personal Details card (always first, not draggable) */}
                   <div
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Edit personal details"
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setActiveForm("personalDetails"); } }}
                     onClick={() => setActiveForm("personalDetails")}
                     className="group flex items-center gap-3 p-4 rounded-2xl cursor-pointer relative transition-all duration-200"
                     style={{
@@ -389,7 +363,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
                                   >
                                     {/* Section header */}
                                     <div className="flex items-center gap-3 px-4 py-3.5">
-                                      <div {...provided.dragHandleProps} className="cursor-grab active:cursor-grabbing -ml-1" style={{ color: "#c8c6d6" }}>
+                                      <div {...provided.dragHandleProps} aria-label={`Reorder ${meta.label}`} className="cursor-grab active:cursor-grabbing -ml-1" style={{ color: "#c8c6d6" }}>
                                         <GripVertical className="h-4 w-4" />
                                       </div>
                                       <Icon className="w-4 h-4" style={{ color: "#111111" }} />
@@ -402,12 +376,15 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
                                       </span>
                                       <div className="flex flex-wrap items-center gap-1">
                                         <button
+                                          aria-label={`${isVisible ? "Hide" : "Show"} ${meta.label}`}
+                                          aria-pressed={isVisible}
                                           onClick={(e) => { e.stopPropagation(); updateSectionVisibility(sectionId, !isVisible); }}
                                           className="p-1.5 rounded-md hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
                                         >
                                           {isVisible ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                                         </button>
                                         <button
+                                          aria-label={`Edit ${meta.label}`}
                                           onClick={() => setActiveForm(sectionId)}
                                           className="p-1.5 rounded-md hover:bg-slate-100 text-slate-300 hover:text-slate-600 transition-colors"
                                         >
@@ -416,19 +393,16 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
                                       </div>
                                     </div>
 
-                                    {/* "+ Add Entry" footer row */}
-                                    <div
-                                      className="border-t border-slate-100 px-4 py-2.5 flex items-center justify-between cursor-pointer group/add"
+                                    {/* Keyboard-accessible entry action. */}
+                                    <button
+                                      type="button"
+                                      className="w-full border-t border-slate-100 px-4 py-3 flex items-center justify-between cursor-pointer text-slate-500"
+                                      aria-label={`Add or edit ${meta.label.toLowerCase()} entries`}
                                       onClick={() => setActiveForm(sectionId)}
                                     >
-                                      <div className="flex items-center gap-2 text-[12px] text-slate-400">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                        Add Entry / Edit
-                                      </div>
-                                      <button className="text-slate-300 hover:text-red-500 transition-colors">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-                                      </button>
-                                    </div>
+                                      <span className="flex items-center gap-2 text-[12px]"><Plus size={14}/>Add Entry / Edit</span>
+                                      <ChevronRight size={14}/>
+                                    </button>
                                   </div>
                                 )}
                               </Draggable>

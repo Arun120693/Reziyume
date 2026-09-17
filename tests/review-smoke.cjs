@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- CommonJS harness installs a TypeScript require hook. */
 /* Run with node tests/review-smoke.cjs. Uses the project's existing TypeScript runtime. */
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -25,8 +26,8 @@ assert.ok(templates.some(t => t.id === defaultResumeData.templateId));
 assert.equal(getTemplateConfig('legacy-unknown').id, 'onyx');
 for (const config of templates) {
   const html = renderToStaticMarkup(React.createElement(CoreTemplate, { config, data: {...dummyResumeData, templateId: config.id} }));
-  assert.ok(html.includes('James') && html.includes('Appleseed'), `${config.id} renders contact`);
-  assert.ok(html.includes('Barnes'), `${config.id} renders experience`);
+  assert.ok(dummyResumeData.contact.fullName.split(' ').every(part => html.includes(part)), `${config.id} renders contact`);
+  assert.ok(html.includes(dummyResumeData.experience[0].company), `${config.id} renders experience`);
   const empty = renderToStaticMarkup(React.createElement(CoreTemplate, { config, data: {...dummyResumeData, ...defaultResumeData, templateId: config.id} }));
   assert.ok(empty.length > 0, `${config.id} renders blank resume`);
 }

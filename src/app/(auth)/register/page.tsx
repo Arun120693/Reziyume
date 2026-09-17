@@ -51,7 +51,7 @@ export default function RegisterPage() {
 
   return (
     <div>
-      <h3 className="text-xl font-bold mb-6 text-center" style={{ color: "#111111" }}>Create your account</h3>
+      <h2 className="text-xl font-bold mb-6 text-center" style={{ color: "#111111" }}>Create your account</h2>
 
       <form className="space-y-5" onSubmit={handleSubmit}>
         <div>
@@ -100,7 +100,7 @@ export default function RegisterPage() {
         </div>
 
         {error && (
-          <div className="text-sm font-medium p-3 rounded-xl"
+          <div role="alert" className="text-sm font-medium p-3 rounded-xl"
             style={{
               color: "#e11d48",
               background: "rgba(225,29,72,0.08)",
@@ -131,9 +131,11 @@ export default function RegisterPage() {
 
       <button
         type="button"
-        onClick={() => {
+        onClick={async () => {
           setIsLoading(true);
-          signIn("google");
+          setError("");
+          try { await signIn("google", { callbackUrl: "/dashboard" }); }
+          catch { setError("Unable to start Google sign-in. Please try again."); setIsLoading(false); }
         }}
         disabled={isLoading}
         className="neo-input w-full flex justify-center items-center gap-3 py-3 px-4 text-sm font-semibold transition-colors disabled:opacity-60 disabled:cursor-not-allowed"

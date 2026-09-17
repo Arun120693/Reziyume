@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { FileText, ArrowLeft } from "lucide-react";
+
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return <div className="auth-shell min-h-screen bg-[#faf9f6] px-5 py-10 sm:py-16 flex flex-col items-center justify-center">
