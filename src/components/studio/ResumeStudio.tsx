@@ -45,6 +45,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
   const [showTour, setShowTour] = useState(false);
   const [showReadiness, setShowReadiness] = useState(false);
   const [showVersions, setShowVersions] = useState(false);
+  const [shareMessage, setShareMessage] = useState<string | null>(null);
   const [versions, setVersions] = useState<Array<{ id: string; label: string; savedAt: string; data: ResumeData }>>([]);
   const [history, setHistory] = useState<ResumeData[]>([]);
   const [future, setFuture] = useState<ResumeData[]>([]);
@@ -119,6 +120,17 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
     setVersions(next);
     window.localStorage.setItem(`reziyume-versions-${data.id}`, JSON.stringify(next));
     setShowVersions(true);
+  };
+
+  const shareResume = async () => {
+    if (!data) return;
+    const response = await fetch(`/api/resumes/${data.id}/share`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ public: true }) });
+    if (!response.ok) { setShareMessage("Could not create link"); return; }
+    const result = await response.json();
+    const url = `${window.location.origin}${result.url}`;
+    await navigator.clipboard?.writeText(url);
+    setShareMessage("Link copied");
+    window.setTimeout(() => setShareMessage(null), 2500);
   };
 
   const restoreVersion = (version: typeof versions[number]) => {
@@ -330,6 +342,8 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
           </div>
           <button onClick={saveVersion} className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-semibold text-slate-700 hover:border-pink-300 hover:text-pink-600">Save version</button>
           <button onClick={() => setShowVersions((open) => !open)} className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-semibold text-slate-700 hover:border-pink-300 hover:text-pink-600">History ({versions.length})</button>
+          <button onClick={shareResume} className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-semibold text-slate-700 hover:border-pink-300 hover:text-pink-600">Share</button>
+          {shareMessage && <span className="text-xs font-semibold text-emerald-600">{shareMessage}</span>}
           <input
             aria-label="Resume name"
             type="text"

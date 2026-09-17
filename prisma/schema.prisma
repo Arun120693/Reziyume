@@ -67,8 +67,23 @@ model Resume {
   sectionVisibility Json? // Object tracking visibility of sections
   formatting     Json?    // Object tracking fonts, colors, margins
   templateId     String   @default("modern")
+  shareToken     String?  @unique
+  isPublic       Boolean  @default(false)
 
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  versions       ResumeVersion[]
 
+  @@schema("resumeforge")
+}
+
+model ResumeVersion {
+  id        String   @id @default(uuid())
+  resumeId  String
+  label     String
+  snapshot  Json
+  createdAt DateTime @default(now())
+  resume    Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@index([resumeId, createdAt])
   @@schema("resumeforge")
 }

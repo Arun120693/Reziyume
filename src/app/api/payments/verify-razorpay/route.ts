@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
 
     try {
       const payment = await razorpay.payments.fetch(razorpay_payment_id);
-      const transaction = await prisma.paymentTransaction.create({ data: { provider: "Razorpay", externalId: razorpay_payment_id, amountMinor: payment.amount, currency: payment.currency || "INR", userId: user.id } });
+      const transaction = await prisma.paymentTransaction.create({ data: { provider: "Razorpay", externalId: razorpay_payment_id, amountMinor: Number(payment.amount), currency: payment.currency || "INR", userId: user.id } });
       notifyProPayment({ userId: user.id, email: user.email, externalId: transaction.externalId, amountMinor: transaction.amountMinor, currency: transaction.currency, provider: transaction.provider });
     } catch (error: unknown) {
       if (!(error && typeof error === "object" && "code" in error && error.code === "P2002")) console.error("Razorpay payment record failed:", error);
