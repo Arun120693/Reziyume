@@ -871,7 +871,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
                 style={{ border: '4px solid #ffffff' }}
               />
             ) : (
-              <div className="w-48 h-48 rounded-full flex flex-col items-center justify-center text-[12px] gap-2 bg-white/10" style={{ border: `4px dashed rgba(255,255,255,0.4)` }}>
+              <div className="w-48 h-48 rounded-full flex flex-col items-center justify-center text-[12px] gap-2" style={{ backgroundColor: 'rgba(255,255,255,0.1)', border: `4px dashed rgba(255,255,255,0.4)` }}>
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
                 <span>Add Photo</span>
               </div>
@@ -902,7 +902,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
           <div className="w-[55%] min-w-0 pb-10 pr-10 pl-6 flex flex-col gap-8 text-white">
             {hasContent(data.experience) && (
               <div className="mb-5">
-                <div className={`text-base font-bold mb-4 block bg-white/20 px-3 py-1 rounded-md inline-block ${fonts.heading}`}>Professional Experience:</div>
+                <div className={`text-base font-bold mb-4 block px-3 py-1 rounded-md inline-block ${fonts.heading}`} style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>Professional Experience:</div>
                 <div className={getSpacingClass()}>{
                   data.experience.map(exp => (
                     <div key={exp.id} className="mb-4">
@@ -1024,4 +1024,3 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
     </div>
   );
 }
-
