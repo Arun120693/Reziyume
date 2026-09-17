@@ -29,7 +29,7 @@ export function ResumeReadiness({ data, onClose }: { data: ResumeData; onClose: 
     <div className="fixed inset-0 z-[90] flex items-center justify-center bg-slate-950/40 p-4" role="dialog" aria-modal="true" aria-labelledby="readiness-title">
       <div className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl">
         <div className="flex items-start justify-between gap-4">
-          <div><p className="text-xs font-bold uppercase tracking-[0.18em] text-pink-500">Before you download</p><h2 id="readiness-title" className="mt-1 text-2xl font-extrabold text-slate-900">Resume readiness</h2><p className="mt-1 text-sm text-slate-500">{complete} of {checks.length} checks complete</p></div>
+          <div><p className="text-xs font-bold uppercase tracking-[0.18em] text-pink-500">ATS feedback</p><h2 id="readiness-title" className="mt-1 text-2xl font-extrabold text-slate-900">ATS Score & suggestions</h2><p className="mt-1 text-sm text-slate-500">Improve the highlighted items before you apply.</p></div>
           <button onClick={onClose} aria-label="Close readiness checklist" className="rounded-xl p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"><X className="h-5 w-5" /></button>
         </div>
         <div className="mt-5 grid grid-cols-2 gap-3"><div className="rounded-2xl bg-slate-50 p-3"><p className="text-xs font-semibold text-slate-500">Readiness</p><p className="mt-1 text-xl font-extrabold text-slate-900">{complete}/{checks.length}</p></div><div className="rounded-2xl bg-slate-50 p-3"><p className="text-xs font-semibold text-slate-500">ATS signal</p><p className="mt-1 text-xl font-extrabold text-slate-900">{atsScore}/100</p></div></div>

@@ -358,9 +358,10 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
           </select>
           <button
             onClick={() => setShowReadiness(true)}
-            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-semibold text-slate-700 hover:border-pink-300 hover:text-pink-600"
+            className="rounded-xl px-4 py-2.5 text-[13px] font-extrabold text-white shadow-md transition-transform hover:-translate-y-0.5"
+            style={{ background: "linear-gradient(135deg, #ec4899, #8b5cf6)", boxShadow: "0 5px 14px rgba(139,92,246,0.28)" }}
           >
-            Check resume
+            ATS Score
           </button>
           <button
             onClick={handleDownload}
