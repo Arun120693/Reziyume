@@ -23,6 +23,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import Link from "next/link";
 import { UploadResumeModal } from "./UploadResumeModal";
 import { getTemplateConfig } from "./preview/templates/registry";
+import { StudioTour } from "./StudioTour";
 
 
 export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
@@ -39,8 +40,15 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
   const [activeTab, setActiveTab] = useState<"content" | "customize">("content");
   const [isDownloading, setIsDownloading] = useState(false);
   const [exportStyle, setExportStyle] = useState("visual");
+  const [showTour, setShowTour] = useState(false);
 
   useEffect(() => { setInitialData(initialData); }, [initialData, setInitialData]);
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setShowTour(window.localStorage.getItem("reziyume-studio-tour-complete") !== "true");
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   if (!data) {
     return (
@@ -187,6 +195,15 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
     { id: "content",  label: "Content",  icon: "📄", pink: true },
     { id: "customize",label: "Customize",icon: "✏️" },
   ] as const;
+
+  const handleTourAction = (action?: string) => {
+    window.localStorage.setItem("reziyume-studio-tour-complete", "true");
+    setShowTour(false);
+    if (action === "Upload Resume") setIsUploadModalOpen(true);
+    if (action === "Open Content") { setActiveTab("content"); setActiveForm(null); }
+    if (action === "Open Photo details") { setActiveTab("content"); setActiveForm("personalDetails"); }
+    if (action === "Open Customize") { setActiveTab("customize"); setActiveForm(null); }
+  };
 
   return (
     <div className="min-h-screen lg:h-screen flex flex-col" style={{ background: "var(--bg-base)" }}>
@@ -477,6 +494,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
         isOpen={isUploadModalOpen}
         onClose={() => setIsUploadModalOpen(false)}
       />
+      {showTour && <StudioTour onAction={handleTourAction} onClose={() => setShowTour(false)} />}
     </div>
   );
 }
