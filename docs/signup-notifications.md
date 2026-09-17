@@ -27,6 +27,14 @@ Notifications are disabled unless explicitly enabled. No production credentials
 are included. After activation, create one new account and check the support inbox;
 sign out and sign in again to confirm there is no second notification.
 
+## Pro payment notifications
+
+Successful Stripe invoices and Razorpay subscription charges are recorded in the
+`PaymentTransaction` table. A single email is sent to the same support inbox with
+the subscriber email, provider, current payment, successful transaction count, and
+cumulative amount paid. The migration must be applied with `npx prisma migrate deploy`
+before payment webhooks are enabled in production.
+
 Delivery runs after the response using Next.js `after`. Mail failures do not block
 signup. This is best-effort delivery with no automatic retries or durable queue;
 an outage can lose a notification. There is no historical-account backfill.

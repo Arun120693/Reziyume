@@ -29,7 +29,22 @@ model User {
   monthlyParseCount Int       @default(0)
   lastMonthlyReset  DateTime?
   resumes           Resume[]
+  paymentTransactions PaymentTransaction[]
 
+  @@schema("resumeforge")
+}
+
+model PaymentTransaction {
+  id         String   @id @default(uuid())
+  provider   String
+  externalId String   @unique
+  amountMinor Int
+  currency   String
+  createdAt  DateTime @default(now())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
   @@schema("resumeforge")
 }
 

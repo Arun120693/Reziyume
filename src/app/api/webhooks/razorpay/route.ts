@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import prisma from "@/lib/prisma";
+import { notifyProPayment } from "@/lib/paymentNotification";
 
 export async function POST(req: NextRequest) {
   console.log("========================================");
@@ -81,6 +82,16 @@ export async function POST(req: NextRequest) {
                 ...(isActivating ? { monthlyParseCount: 0 } : {}),
               },
             });
+
+            const payment = event.payload.payment?.entity;
+            if (payment?.id) {
+              try {
+                const transaction = await prisma.paymentTransaction.create({ data: { provider: "Razorpay", externalId: payment.id, amountMinor: payment.amount || 0, currency: payment.currency || "INR", userId: user.id } });
+                notifyProPayment({ userId: user.id, email: user.email, externalId: transaction.externalId, amountMinor: transaction.amountMinor, currency: transaction.currency, provider: transaction.provider });
+              } catch (error: unknown) {
+                if (!(error && typeof error === "object" && "code" in error && error.code === "P2002")) console.error("Razorpay payment record failed:", error);
+              }
+            }
 
             console.log("✅ User upgraded to PRO");
           }
