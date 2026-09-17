@@ -5,7 +5,7 @@ const A4_WIDTH_MM = 210;
 const A4_HEIGHT_MM = 297;
 
 /** Keep the preview design while fitting the last page to the actual content. */
-export function createVisualPdf(source: HTMLCanvasElement, requestedBreaks: number[] = []): Blob {
+export function createVisualPdf(source: HTMLCanvasElement): Blob {
   // JPEG avoids embedding the large, lossless PNG repeatedly. Reduce resolution
   // only when necessary to meet the download limit, including photos.
   for (const width of [source.width, 1200, 1000, 800, 640]) {
@@ -23,16 +23,15 @@ export function createVisualPdf(source: HTMLCanvasElement, requestedBreaks: numb
     for (const quality of [0.78, 0.65, 0.52, 0.4, 0.3, 0.2]) {
       const image = canvas.toDataURL("image/jpeg", quality);
       const imageHeightMm = exportHeight * A4_WIDTH_MM / exportWidth;
-      const scale = exportWidth / source.width;
-      const boundaries = [0, ...requestedBreaks.map((point) => point * scale).filter((point) => point > 0 && point < exportHeight), exportHeight]
-        .sort((a, b) => a - b)
-        .filter((point, index, values) => index === 0 || point - values[index - 1] > 2);
-      const pageCount = Math.max(1, boundaries.length - 1);
+      const pageCount = Math.max(1, Math.ceil((imageHeightMm - 0.01) / A4_HEIGHT_MM));
       const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
 
       for (let page = 0; page < pageCount; page++) {
-        const usedHeight = boundaries[page] * A4_WIDTH_MM / exportWidth;
-        const pageHeight = Math.min(A4_HEIGHT_MM, Math.max((boundaries[page + 1] - boundaries[page]) * A4_WIDTH_MM / exportWidth, 25));
+        const usedHeight = page * A4_HEIGHT_MM;
+        const remainingHeight = imageHeightMm - usedHeight;
+        const pageHeight = page === pageCount - 1
+          ? Math.min(A4_HEIGHT_MM, Math.max(remainingHeight, 25))
+          : A4_HEIGHT_MM;
         const orientation = pageHeight < A4_WIDTH_MM ? "landscape" : "portrait";
         if (page > 0) pdf.addPage([A4_WIDTH_MM, pageHeight], orientation);
         else if (pageCount === 1 && pageHeight < A4_HEIGHT_MM) {
