@@ -44,12 +44,20 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
   const [exportStyle, setExportStyle] = useState("visual");
   const [showTour, setShowTour] = useState(false);
   const [showReadiness, setShowReadiness] = useState(false);
+  const [showVersions, setShowVersions] = useState(false);
+  const [versions, setVersions] = useState<Array<{ id: string; label: string; savedAt: string; data: ResumeData }>>([]);
   const [history, setHistory] = useState<ResumeData[]>([]);
   const [future, setFuture] = useState<ResumeData[]>([]);
   const previousData = useRef<ResumeData | null>(null);
   const restoringHistory = useRef(false);
 
   useEffect(() => { setInitialData(initialData); }, [initialData, setInitialData]);
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(`reziyume-versions-${initialData.id}`);
+      if (stored) setVersions(JSON.parse(stored));
+    } catch { /* Ignore malformed local drafts. */ }
+  }, [initialData.id]);
   useEffect(() => {
     if (!data) return;
     if (restoringHistory.current) {
@@ -102,6 +110,22 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
     setFuture((items) => items.slice(0, -1));
     setHistory((items) => [...items, data]);
     replaceData(next);
+  };
+
+  const saveVersion = () => {
+    if (!data) return;
+    const version = { id: crypto.randomUUID(), label: data.name || "Resume snapshot", savedAt: new Date().toISOString(), data };
+    const next = [version, ...versions].slice(0, 20);
+    setVersions(next);
+    window.localStorage.setItem(`reziyume-versions-${data.id}`, JSON.stringify(next));
+    setShowVersions(true);
+  };
+
+  const restoreVersion = (version: typeof versions[number]) => {
+    if (!data) return;
+    setFuture([]);
+    replaceData(version.data);
+    setShowVersions(false);
   };
 
   const handleDownload = async () => {
@@ -304,6 +328,8 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
             <button onClick={undo} disabled={history.length === 0} aria-label="Undo last change" title="Undo" className="rounded-lg px-2 py-1 text-sm font-bold text-slate-600 disabled:opacity-30">↶</button>
             <button onClick={redo} disabled={future.length === 0} aria-label="Redo last change" title="Redo" className="rounded-lg px-2 py-1 text-sm font-bold text-slate-600 disabled:opacity-30">↷</button>
           </div>
+          <button onClick={saveVersion} className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-semibold text-slate-700 hover:border-pink-300 hover:text-pink-600">Save version</button>
+          <button onClick={() => setShowVersions((open) => !open)} className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-semibold text-slate-700 hover:border-pink-300 hover:text-pink-600">History ({versions.length})</button>
           <input
             aria-label="Resume name"
             type="text"
@@ -532,6 +558,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
       />
       {showTour && <StudioTour onAction={handleTourAction} onClose={() => setShowTour(false)} />}
       {showReadiness && <ResumeReadiness data={data} onClose={() => setShowReadiness(false)} />}
+      {showVersions && <div className="fixed inset-0 z-[85] flex items-center justify-center bg-slate-950/35 p-4" role="dialog" aria-modal="true" aria-label="Resume version history"><div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl"><div className="flex items-center justify-between"><div><p className="text-xs font-bold uppercase tracking-wider text-pink-500">Draft safety</p><h2 className="text-2xl font-extrabold text-slate-900">Version history</h2></div><button onClick={() => setShowVersions(false)} className="text-sm font-semibold text-slate-500">Close</button></div>{versions.length === 0 ? <p className="py-8 text-sm text-slate-500">No saved versions yet. Save a snapshot before making a major change.</p> : <div className="mt-5 max-h-80 space-y-2 overflow-y-auto">{versions.map((version) => <div key={version.id} className="flex items-center justify-between gap-3 rounded-2xl border border-slate-100 p-3"><div><p className="text-sm font-bold text-slate-800">{version.label}</p><p className="text-xs text-slate-500">{new Date(version.savedAt).toLocaleString()}</p></div><button onClick={() => restoreVersion(version)} className="rounded-xl bg-slate-900 px-3 py-2 text-xs font-bold text-white">Restore</button></div>)}</div>}</div></div>}
     </div>
   );
 }
