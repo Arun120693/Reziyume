@@ -193,7 +193,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
         ) : (
           <div className={getSpacingClass()}>
             {data.experience.map((exp) => (
-              <div key={exp.id}>
+              <div key={exp.id} data-resume-experience-item="true">
                 <div className="flex justify-between items-start mb-0.5">
                   <div>
                     <h4 className={`font-semibold text-[14px] ${fonts.heading}`} style={{ color: activeColors.text }}>{exp.position}</h4>
@@ -905,7 +905,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
                 <div className={`text-base font-bold mb-4 block px-3 py-1 rounded-md inline-block ${fonts.heading}`} style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>Professional Experience:</div>
                 <div className={getSpacingClass()}>{
                   data.experience.map(exp => (
-                    <div key={exp.id} className="mb-4">
+                    <div key={exp.id} data-resume-experience-item="true" className="mb-4">
                       <h4 className="font-bold text-[14px]">{exp.position}</h4>
                       <div className="text-[12px] opacity-90 mb-1">{exp.startDate} - {exp.current ? 'Present' : exp.endDate} | {exp.company}</div>
                       <div className="text-[12px] opacity-80 pl-4 prose-ul:list-disc" dangerouslySetInnerHTML={{ __html: cleanDescription(exp.description) }} />
@@ -983,7 +983,7 @@ export function CoreTemplate({ data, config }: { data: ResumeData; config: Templ
                  <h3 className={`text-xl font-bold mb-4 ${fonts.heading}`}>Experience</h3>
                  <div className={getSpacingClass()}>{
                    data.experience.map(exp => (
-                     <div key={exp.id} className="mb-4">
+                     <div key={exp.id} data-resume-experience-item="true" className="mb-4">
                        <div className="font-bold text-[14px] text-white">{exp.position} <span className="font-normal opacity-80">– {exp.company}</span></div>
                        <div className="text-[11px] text-white/60 mb-1.5">{exp.current ? 'Remote | ' : ''}{exp.startDate} - {exp.current ? 'Present' : exp.endDate}</div>
                        <div className="text-[12px] text-white/70 pl-4 prose-ul:list-disc" dangerouslySetInnerHTML={{ __html: cleanDescription(exp.description) }} />

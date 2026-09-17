@@ -96,7 +96,7 @@ export function ModernTemplate({ data }: TemplateProps) {
         </h3>
         <div className="space-y-4">
           {experience.map((exp) => (
-            <div key={exp.id}>
+            <div key={exp.id} data-resume-experience-item="true">
               <div className="flex justify-between items-start mb-1">
                 <h4 className="text-[13px] font-bold text-slate-800">{exp.position || "Position Title"}</h4>
                 <span className="text-[11px] text-slate-500 font-medium italic mt-[2px]">

@@ -107,9 +107,27 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
       // Without this, html2canvas captures stale computed styles, causing alignment regressions
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
+      // Keep an experience heading with the beginning of its details when the
+      // visual PDF is sliced into A4 pages. The browser preview remains unchanged.
+      const pageHeight = element.getBoundingClientRect().width * 297 / 210;
+      const movedItems: Array<{ element: HTMLElement; marginTop: string }> = [];
+      for (const item of Array.from(element.querySelectorAll<HTMLElement>('[data-resume-experience-item="true"]'))) {
+        const rect = item.getBoundingClientRect();
+        const rootRect = element.getBoundingClientRect();
+        const top = rect.top - rootRect.top;
+        const bottom = rect.bottom - rootRect.top;
+        const nextPage = Math.ceil((top + 1) / pageHeight) * pageHeight;
+        if (top < nextPage && bottom > nextPage && rect.height < pageHeight * 0.9) {
+          movedItems.push({ element: item, marginTop: item.style.marginTop });
+          item.style.marginTop = `${(parseFloat(getComputedStyle(item).marginTop) || 0) + nextPage - top + 4}px`;
+        }
+      }
+
       // html2canvas config
       const [{ captureResume }, { createVisualPdf }] = await Promise.all([import("@/lib/export/captureResume"), import("@/lib/export/createVisualPdf")]);
       const canvas = await captureResume(element);
+
+      for (const moved of movedItems) moved.element.style.marginTop = moved.marginTop;
 
       // Restore transform
       element.style.transform = originalTransform;
