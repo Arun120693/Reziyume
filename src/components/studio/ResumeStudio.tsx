@@ -345,6 +345,10 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
               </div>
             ) : (
               <div className="flex-1 overflow-y-auto p-5">
+                <div className="mb-4 rounded-2xl border border-pink-100 bg-pink-50/70 px-4 py-3">
+                  <p className="text-xs font-bold uppercase tracking-wider text-pink-600">Build tip</p>
+                  <p className="mt-1 text-xs leading-5 text-slate-600">Start with Personal Details, then add your most recent experience. Use short bullets that begin with an action verb and include a measurable result when possible.</p>
+                </div>
                 <div className="space-y-3">
                   {/* Personal Details card (always first, not draggable) */}
                   <div
