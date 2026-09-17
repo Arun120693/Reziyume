@@ -24,6 +24,7 @@ import Link from "next/link";
 import { UploadResumeModal } from "./UploadResumeModal";
 import { getTemplateConfig } from "./preview/templates/registry";
 import { StudioTour } from "./StudioTour";
+import { ResumeReadiness } from "./ResumeReadiness";
 
 
 export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
@@ -41,6 +42,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
   const [isDownloading, setIsDownloading] = useState(false);
   const [exportStyle, setExportStyle] = useState("visual");
   const [showTour, setShowTour] = useState(false);
+  const [showReadiness, setShowReadiness] = useState(false);
 
   useEffect(() => { setInitialData(initialData); }, [initialData, setInitialData]);
   useEffect(() => {
@@ -275,6 +277,12 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
             <option value="visual">PDF matching preview</option><option value="text">Text PDF · single column</option>
           </select>
           <button
+            onClick={() => setShowReadiness(true)}
+            className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-semibold text-slate-700 hover:border-pink-300 hover:text-pink-600"
+          >
+            Check resume
+          </button>
+          <button
             onClick={handleDownload}
             disabled={isDownloading}
             className="accent-btn flex items-center gap-2 px-4 py-2 text-[13px] font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
@@ -479,6 +487,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
         onClose={() => setIsUploadModalOpen(false)}
       />
       {showTour && <StudioTour onAction={handleTourAction} onClose={() => setShowTour(false)} />}
+      {showReadiness && <ResumeReadiness data={data} onClose={() => setShowReadiness(false)} />}
     </div>
   );
 }
