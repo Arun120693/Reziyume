@@ -8,6 +8,7 @@ interface ResumeStore {
   
   // Initialization
   setInitialData: (data: ResumeData) => void;
+  replaceData: (data: ResumeData) => void;
   setSaving: (isSaving: boolean) => void;
   markSaved: () => void;
 
@@ -65,6 +66,7 @@ export const useResumeStore = create<ResumeStore>((set) => ({
     console.log("======================================================");
     set({ data, hasUnsavedChanges: false });
   },
+  replaceData: (data) => set({ data, hasUnsavedChanges: true }),
   setSaving: (isSaving) => set({ isSaving }),
   markSaved: () => set({ hasUnsavedChanges: false }),
 

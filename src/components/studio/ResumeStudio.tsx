@@ -2,7 +2,7 @@
 "use client";
 
 import { SaveStatus } from "./SaveStatus";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useResumeStore } from "@/lib/store/useResumeStore";
 import { ResumeData } from "@/lib/types/resume";
 import { PersonalDetailsForm } from "./forms/PersonalDetailsForm";
@@ -30,6 +30,7 @@ import { ResumeReadiness } from "./ResumeReadiness";
 export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
   const setInitialData = useResumeStore((s) => s.setInitialData);
   const data = useResumeStore((s) => s.data);
+  const replaceData = useResumeStore((s) => s.replaceData);
 
   const updateSectionOrder = useResumeStore((s) => s.updateSectionOrder);
   const updateSectionVisibility = useResumeStore((s) => s.updateSectionVisibility);
@@ -43,8 +44,25 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
   const [exportStyle, setExportStyle] = useState("visual");
   const [showTour, setShowTour] = useState(false);
   const [showReadiness, setShowReadiness] = useState(false);
+  const [history, setHistory] = useState<ResumeData[]>([]);
+  const [future, setFuture] = useState<ResumeData[]>([]);
+  const previousData = useRef<ResumeData | null>(null);
+  const restoringHistory = useRef(false);
 
   useEffect(() => { setInitialData(initialData); }, [initialData, setInitialData]);
+  useEffect(() => {
+    if (!data) return;
+    if (restoringHistory.current) {
+      restoringHistory.current = false;
+      previousData.current = data;
+      return;
+    }
+    if (previousData.current && previousData.current !== data) {
+      setHistory((items) => [...items.slice(-39), previousData.current as ResumeData]);
+      setFuture([]);
+    }
+    previousData.current = data;
+  }, [data]);
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setShowTour(window.localStorage.getItem("reziyume-studio-tour-complete") !== "true");
@@ -66,6 +84,24 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
     const [moved] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, moved);
     updateSectionOrder(items);
+  };
+
+  const undo = () => {
+    const previous = history[history.length - 1];
+    if (!previous || !data) return;
+    restoringHistory.current = true;
+    setHistory((items) => items.slice(0, -1));
+    setFuture((items) => [...items, data]);
+    replaceData(previous);
+  };
+
+  const redo = () => {
+    const next = future[future.length - 1];
+    if (!next || !data) return;
+    restoringHistory.current = true;
+    setFuture((items) => items.slice(0, -1));
+    setHistory((items) => [...items, data]);
+    replaceData(next);
   };
 
   const handleDownload = async () => {
@@ -264,6 +300,10 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
         {/* Right: resume name + download */}
         <div className="flex flex-wrap items-center gap-2">
           <SaveStatus />
+          <div className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-1 py-1">
+            <button onClick={undo} disabled={history.length === 0} aria-label="Undo last change" title="Undo" className="rounded-lg px-2 py-1 text-sm font-bold text-slate-600 disabled:opacity-30">↶</button>
+            <button onClick={redo} disabled={future.length === 0} aria-label="Redo last change" title="Redo" className="rounded-lg px-2 py-1 text-sm font-bold text-slate-600 disabled:opacity-30">↷</button>
+          </div>
           <input
             aria-label="Resume name"
             type="text"
