@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
+import { notifyNewUser } from "@/lib/newUserNotification";
 
 // Input validation schema
 const registerSchema = z.object({
@@ -42,15 +43,17 @@ export async function POST(req: Request) {
       }
     });
 
+    notifyNewUser(newUser, "Email/password");
     return NextResponse.json(
       { message: "User created successfully", user: newUser },
       { status: 201 }
     );
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof z.ZodError) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return NextResponse.json({ message: (error as any).errors[0].message }, { status: 400 });
+      return NextResponse.json({ message: error.issues[0].message }, { status: 400 });
+    }
+    if (error && typeof error === "object" && "code" in error && error.code === "P2002") {
+      return NextResponse.json({ message: "User with this email already exists" }, { status: 409 });
     }
     console.error("Registration error:", error);
     return NextResponse.json(
