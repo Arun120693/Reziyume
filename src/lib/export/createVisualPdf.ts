@@ -1,49 +1,32 @@
 import jsPDF from "jspdf";
+import { Band, planPages } from "./pagination";
 
-const MAX_PDF_BYTES = 600_000;
-const A4_WIDTH_MM = 210;
-const A4_HEIGHT_MM = 297;
-
-/** Keep the preview design while fitting the last page to the actual content. */
-export function createVisualPdf(source: HTMLCanvasElement): Blob {
-  // JPEG avoids embedding the large, lossless PNG repeatedly. Reduce resolution
-  // only when necessary to meet the download limit, including photos.
-  for (const width of [source.width, 1200, 1000, 800, 640]) {
-    const exportWidth = Math.min(width, source.width);
-    const exportHeight = Math.max(1, Math.round(source.height * exportWidth / source.width));
+export type ExportOptions = { pageSize?: "a4" | "letter"; fit?: boolean; bands?: Band[]; measuredWidth?: number };
+/** Crop disjoint source regions, rather than shifting a full image across pages. */
+export function createVisualPdf(source: HTMLCanvasElement, options: ExportOptions = {}): Blob {
+  const format = options.pageSize || "a4";
+  const width = format === "a4" ? 210 : 215.9;
+  const height = format === "a4" ? 297 : 279.4;
+  const margin = 8;
+  const usableWidth = width - 2 * margin;
+  const usableHeight = height - 2 * margin;
+  const scale = source.width / (options.measuredWidth || source.width);
+  const capacity = source.width * usableHeight / usableWidth;
+  const bands = (options.bands || []).map(b => ({ top: b.top * scale, bottom: b.bottom * scale }));
+  const cuts = options.fit ? [0, source.height] : planPages(source.height, capacity, bands);
+  const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format, compress: true });
+  for (let i = 0; i < cuts.length - 1; i++) {
+    if (i) pdf.addPage(format);
+    const sliceHeight = cuts[i + 1] - cuts[i];
     const canvas = document.createElement("canvas");
-    canvas.width = exportWidth;
-    canvas.height = exportHeight;
-    const context = canvas.getContext("2d");
-    if (!context) throw new Error("Could not prepare the PDF image");
-    context.fillStyle = "#ffffff";
-    context.fillRect(0, 0, exportWidth, exportHeight);
-    context.drawImage(source, 0, 0, exportWidth, exportHeight);
-
-    for (const quality of [0.78, 0.65, 0.52, 0.4, 0.3, 0.2]) {
-      const image = canvas.toDataURL("image/jpeg", quality);
-      const imageHeightMm = exportHeight * A4_WIDTH_MM / exportWidth;
-      const pageCount = Math.max(1, Math.ceil((imageHeightMm - 0.01) / A4_HEIGHT_MM));
-      const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
-
-      for (let page = 0; page < pageCount; page++) {
-        const usedHeight = page * A4_HEIGHT_MM;
-        const remainingHeight = imageHeightMm - usedHeight;
-        const pageHeight = page === pageCount - 1
-          ? Math.min(A4_HEIGHT_MM, Math.max(remainingHeight, 25))
-          : A4_HEIGHT_MM;
-        const orientation = pageHeight < A4_WIDTH_MM ? "landscape" : "portrait";
-        if (page > 0) pdf.addPage([A4_WIDTH_MM, pageHeight], orientation);
-        else if (pageCount === 1 && pageHeight < A4_HEIGHT_MM) {
-          pdf.deletePage(1);
-          pdf.addPage([A4_WIDTH_MM, pageHeight], orientation);
-        }
-        pdf.addImage(image, "JPEG", 0, -usedHeight, A4_WIDTH_MM, imageHeightMm, undefined, "FAST");
-      }
-
-      const blob = pdf.output("blob");
-      if (blob.size <= MAX_PDF_BYTES) return blob;
-    }
+    canvas.width = source.width; canvas.height = sliceHeight;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("Could not prepare PDF page");
+    ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(source, 0, cuts[i], source.width, sliceHeight, 0, 0, source.width, sliceHeight);
+    const ratio = Math.min(usableWidth / source.width, usableHeight / sliceHeight);
+    const imageWidth = source.width * ratio;
+    pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", (width - imageWidth) / 2, margin, imageWidth, sliceHeight * ratio, undefined, "FAST");
   }
-  throw new Error("This resume could not be exported under 600 KB. Try a smaller profile photo.");
+  return pdf.output("blob");
 }

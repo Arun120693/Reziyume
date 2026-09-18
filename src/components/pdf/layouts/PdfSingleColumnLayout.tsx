@@ -9,14 +9,15 @@ import { PdfMainContent } from './PdfMainContent';
 interface PdfSingleColumnLayoutProps {
   data: ResumeData;
   config: TemplateConfig;
+  pageSize?: "A4" | "LETTER";
 }
 
-export const PdfSingleColumnLayout = ({ data, config }: PdfSingleColumnLayoutProps) => {
+export const PdfSingleColumnLayout = ({ data, config, pageSize = "A4" }: PdfSingleColumnLayoutProps) => {
   const styles = createPdfStyles(config, data.formatting);
   const isCentered = config.layout === 'centered';
 
   return (
-    <Page size="A4" style={styles.page}>
+    <Page size={pageSize} style={styles.page}>
       <PdfHeader data={data} config={config} align={isCentered ? 'center' : 'left'} showPhoto={hasProfilePhoto(data)} />
       {isCentered ? <View style={styles.headerDivider} /> : <View style={{ height: 24 }} />}
       <PdfMainContent data={data} config={config} />

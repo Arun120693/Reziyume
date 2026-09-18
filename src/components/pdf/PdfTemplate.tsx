@@ -9,30 +9,31 @@ import { PdfHeaderLayout } from './layouts/PdfHeaderLayout';
 interface PdfTemplateProps {
   data: ResumeData;
   config: TemplateConfig;
+  pageSize?: "A4" | "LETTER";
 }
 
-export const PdfTemplate = ({ data, config }: PdfTemplateProps) => {
+export const PdfTemplate = ({ data, config, pageSize = "A4" }: PdfTemplateProps) => {
   const { layout } = config;
 
   // Route to the generic layout primitive
   switch (layout) {
     case 'two-column-left':
     case 'two-column-right':
-      return <PdfTwoColumnLayout data={data} config={config} />;
+      return <PdfTwoColumnLayout data={data} config={config} pageSize={pageSize} />;
       
     case 'photo-sidebar':
-      return <PdfSidebarLayout data={data} config={config} />;
+      return <PdfSidebarLayout data={data} config={config} pageSize={pageSize} />;
       
     case 'split-header':
     case 'photo-banner':
     case 'photo-top-right':
     case 'photo-card':
     case 'photo-elegant':
-      return <PdfHeaderLayout data={data} config={config} />;
+      return <PdfHeaderLayout data={data} config={config} pageSize={pageSize} />;
       
     case 'single-column':
     case 'centered':
     default:
-      return <PdfSingleColumnLayout data={data} config={config} />;
+      return <PdfSingleColumnLayout data={data} config={config} pageSize={pageSize} />;
   }
 };

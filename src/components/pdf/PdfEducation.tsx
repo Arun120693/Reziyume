@@ -21,8 +21,8 @@ export const PdfEducation = ({ education, config, formatting }: PdfEducationProp
     <View style={styles.section}>
       <PdfSectionHeading title="Education" config={config} formatting={formatting} />
       {education.map((edu) => (
-        <View key={edu.id} style={styles.itemContainer} wrap={false}>
-          <View style={styles.itemHeader}>
+        <View key={edu.id} style={styles.itemContainer}>
+          <View style={styles.itemHeader} wrap={false} minPresenceAhead={32}>
             <View>
               <Text style={styles.itemTitle}>
                 {edu.degree} {edu.fieldOfStudy && `in ${edu.fieldOfStudy}`}

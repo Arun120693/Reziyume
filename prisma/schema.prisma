@@ -30,7 +30,34 @@ model User {
   lastMonthlyReset  DateTime?
   resumes           Resume[]
   paymentTransactions PaymentTransaction[]
+  jobApplications JobApplication[]
+  writingUsage WritingUsage[]
 
+  @@schema("resumeforge")
+}
+
+model JobApplication {
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company String
+  role String
+  url String @default("")
+  status String @default("Saved")
+  notes String @default("") @db.Text
+  appliedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId, updatedAt])
+  @@schema("resumeforge")
+}
+
+model WritingUsage {
+  userId String
+  day String
+  count Int @default(0)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([userId, day])
   @@schema("resumeforge")
 }
 
@@ -69,6 +96,7 @@ model Resume {
   templateId     String   @default("modern")
   shareToken     String?  @unique
   isPublic       Boolean  @default(false)
+  shareExpiresAt DateTime?
 
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   versions       ResumeVersion[]

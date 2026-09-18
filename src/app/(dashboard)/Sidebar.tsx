@@ -40,7 +40,7 @@ export function Sidebar({ email }: { email: string }) {
       <div className="hidden md:block mx-5 mb-4" style={{ height: "1px", background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent)" }} />
 
       {/* Navigation */}
-      <nav className="flex-1 flex md:block items-center justify-between px-2 py-2 md:space-y-1">
+      <nav className="flex-1 flex flex-wrap md:block items-center justify-between px-2 py-2 md:space-y-1">
         <Link
           href="/dashboard"
           className="flex items-center gap-1 md:gap-3 px-2 md:px-4 py-2.5 rounded-xl text-[12px] md:text-[14px] font-semibold transition-all"
@@ -63,6 +63,8 @@ export function Sidebar({ email }: { email: string }) {
 
         <Link href="/dashboard/templates" className="block px-2 md:px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold text-stone-600 hover:bg-white">Templates</Link>
         {/* Upgrade to Pro */}
+        <Link href="/dashboard/jobs" className="block rounded-xl px-2 py-2.5 text-xs font-semibold text-stone-600 hover:bg-white md:px-4 md:text-sm">Job tracker</Link>
+        <Link href="/dashboard/examples" className="block rounded-xl px-2 py-2.5 text-xs font-semibold text-stone-600 hover:bg-white md:px-4 md:text-sm">Examples</Link>
         <Link
           href="/dashboard/upgrade"
           className="flex items-center gap-1 md:gap-3 px-2 md:px-4 py-2.5 rounded-xl text-[12px] md:text-[14px] font-semibold transition-all group"

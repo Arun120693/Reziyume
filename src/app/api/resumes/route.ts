@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { defaultResumeData } from "@/lib/types/resume";
 import { Prisma } from "@prisma/client";
+import { exampleResume } from "@/lib/resumeExamples";
+import { resumeSnapshotSchema } from "@/lib/resumeSnapshot";
 
 export async function POST(req: Request) {
   try {
@@ -14,8 +16,13 @@ export async function POST(req: Request) {
     }
 
     let templateId = defaultResumeData.templateId;
+    let example = null;
     try {
       const body = await req.json();
+      if (body.exampleId) {
+        example = exampleResume(body.exampleId);
+        if (!example) return NextResponse.json({ message: "Example not found" }, { status: 400 });
+      }
       if (body.templateId) {
         templateId = body.templateId;
       }
@@ -39,6 +46,7 @@ export async function POST(req: Request) {
         sectionOrder: defaultResumeData.sectionOrder as unknown as Prisma.InputJsonValue,
         sectionVisibility: defaultResumeData.sectionVisibility as unknown as Prisma.InputJsonValue,
         formatting: defaultResumeData.formatting as unknown as Prisma.InputJsonValue,
+        ...(example ? resumeSnapshotSchema.parse(example) : {}),
       },
     });
 
@@ -46,7 +54,7 @@ export async function POST(req: Request) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error("Failed to create resume:", error);
-    return NextResponse.json({ message: "Error: " + (error.message || String(error)) }, { status: 500 });
+    return NextResponse.json({ message: "Could not create your resume. Please retry or contact support@reziyume.com." }, { status: 500 });
   }
 }
 

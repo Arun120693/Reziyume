@@ -26,8 +26,8 @@ export const PdfCustomSections = ({ customSections, config, formatting }: PdfCus
           <View key={section.id} style={styles.section}>
             <PdfSectionHeading title={section.title} config={config} formatting={formatting} />
             {section.items.map(item => (
-              <View key={item.id} style={styles.itemContainer} wrap={false}>
-                <View style={styles.itemHeader}>
+              <View key={item.id} style={styles.itemContainer}>
+                <View style={styles.itemHeader} wrap={false} minPresenceAhead={32}>
                   <View>
                     <Text style={styles.itemTitle}>{item.name}</Text>
                     {item.subtitle && <Text style={styles.itemSubtitle}>{item.subtitle}</Text>}

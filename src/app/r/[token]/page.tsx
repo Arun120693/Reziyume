@@ -6,7 +6,7 @@ import { ResumeData } from "@/lib/types/resume";
 
 export default async function SharedResume({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
-  const resume = await prisma.resume.findFirst({ where: { shareToken: token, isPublic: true } });
+  const resume = await prisma.resume.findFirst({ where: { shareToken: token, isPublic: true, OR: [{ shareExpiresAt: null }, { shareExpiresAt: { gt: new Date() } }] } });
   if (!resume) notFound();
   const data = { ...resume, contact: resume.contact, summary: resume.summary, experience: resume.experience, education: resume.education, skills: resume.skills, projects: resume.projects, customSections: resume.customSections, sectionOrder: resume.sectionOrder, sectionVisibility: resume.sectionVisibility, formatting: resume.formatting } as unknown as ResumeData;
   const config = getTemplateConfig(data.templateId);

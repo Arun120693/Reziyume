@@ -21,8 +21,8 @@ export const PdfProjects = ({ projects, config, formatting }: PdfProjectsProps) 
     <View style={styles.section}>
       <PdfSectionHeading title="Projects" config={config} formatting={formatting} />
       {projects.map((proj) => (
-        <View key={proj.id} style={styles.itemContainer} wrap={false}>
-          <View style={styles.itemHeader}>
+        <View key={proj.id} style={styles.itemContainer}>
+          <View style={styles.itemHeader} wrap={false} minPresenceAhead={32}>
             <View>
               <Text style={styles.itemTitle}>{proj.name}</Text>
               {proj.url && <Text style={styles.itemSubtitle}>{proj.url}</Text>}

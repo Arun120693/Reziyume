@@ -9,9 +9,10 @@ import { PdfMainContent } from './PdfMainContent';
 interface PdfTwoColumnLayoutProps {
   data: ResumeData;
   config: TemplateConfig;
+  pageSize?: "A4" | "LETTER";
 }
 
-export const PdfTwoColumnLayout = ({ data, config }: PdfTwoColumnLayoutProps) => {
+export const PdfTwoColumnLayout = ({ data, config, pageSize = "A4" }: PdfTwoColumnLayoutProps) => {
   const styles = createPdfStyles(config, data.formatting);
   const isRight = config.layout === 'two-column-right';
 
@@ -28,7 +29,7 @@ export const PdfTwoColumnLayout = ({ data, config }: PdfTwoColumnLayoutProps) =>
   );
 
   return (
-    <Page size="A4" style={[styles.page, { padding: 0, flexDirection: 'row' }]}>
+    <Page size={pageSize} style={[styles.page, { padding: 0, flexDirection: 'row' }]}>
       {isRight ? (
         <>
           {Main()}

@@ -2,16 +2,16 @@
 CREATE SCHEMA IF NOT EXISTS "resumeforge";
 
 -- CreateEnum
-CREATE TYPE "Plan" AS ENUM ('FREE', 'PRO');
+CREATE TYPE "resumeforge"."Plan" AS ENUM ('FREE', 'PRO');
 
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE "resumeforge"."User" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "passwordHash" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "plan" "Plan" NOT NULL DEFAULT 'FREE',
+    "plan" "resumeforge"."Plan" NOT NULL DEFAULT 'FREE',
     "planExpiresAt" TIMESTAMP(3),
     "stripeCustomerId" TEXT,
     "stripeSubscriptionId" TEXT,
@@ -24,7 +24,7 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "Resume" (
+CREATE TABLE "resumeforge"."Resume" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE "Resume" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "User_email_key" ON "resumeforge"."User"("email");
 
 -- AddForeignKey
-ALTER TABLE "Resume" ADD CONSTRAINT "Resume_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "resumeforge"."Resume" ADD CONSTRAINT "Resume_userId_fkey" FOREIGN KEY ("userId") REFERENCES "resumeforge"."User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

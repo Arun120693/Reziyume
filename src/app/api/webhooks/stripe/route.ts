@@ -1,110 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import prisma from "@/lib/prisma";
-import { notifyProPayment } from "@/lib/paymentNotification";
+import { recordPayment } from "@/lib/recordPayment";
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
   const signature = req.headers.get("Stripe-Signature");
-
-  if (!signature) {
-    return NextResponse.json({ error: "No signature" }, { status: 400 });
-  }
-
+  if (!signature) return NextResponse.json({ error: "No signature" }, { status: 400 });
+  if (!process.env.STRIPE_WEBHOOK_SECRET) return NextResponse.json({ error: "Webhook unavailable" }, { status: 503 });
   let event;
-
+  try { event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET); }
+  catch { return NextResponse.json({ error: "Verification failed" }, { status: 400 }); }
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET as string
-    );
-  } catch (err: unknown) {
-    console.error("Stripe webhook verification failed:", err);
-    return NextResponse.json({ error: "Verification failed" }, { status: 400 });
-  }
-
-  try {
-    switch (event.type) {
-      case "checkout.session.completed":
-      case "invoice.payment_succeeded": {
-        // Activation / Renewal
-        const data = event.data.object as unknown as {
-          subscription?: string;
-          metadata?: { userId?: string };
-          subscription_details?: { metadata?: { userId?: string } };
-        };
-        const subscriptionId = data.subscription;
-        
-        let userId = data.metadata?.userId;
-        if (!userId && data.subscription_details?.metadata?.userId) {
-           userId = data.subscription_details.metadata.userId;
-        }
-
-        if (subscriptionId) {
-          const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-          // Only fetch user id from subscription if not available in current object
-          if (!userId && subscription.metadata?.userId) {
-            userId = subscription.metadata.userId;
-          }
-
-          if (userId) {
-            const currentPeriodEnd = new Date(((subscription as unknown) as { current_period_end: number }).current_period_end * 1000);
-            
-            // Check state for idempotency: if user is FREE -> reset monthlyParseCount
-            const user = await prisma.user.findUnique({ where: { id: userId } });
-            if (user) {
-              const isActivating = user.plan === "FREE";
-              
-              await prisma.user.update({
-                where: { id: userId },
-                data: {
-                  plan: "PRO",
-                  stripeSubscriptionId: subscriptionId,
-                  planExpiresAt: currentPeriodEnd,
-                  ...(isActivating ? { monthlyParseCount: 0 } : {}),
-                },
-              });
-              if (event.type === "invoice.payment_succeeded") {
-                const invoice = data as unknown as { amount_paid?: number; currency?: string };
-                try {
-                  const transaction = await prisma.paymentTransaction.create({ data: { provider: "Stripe", externalId: event.id, amountMinor: invoice.amount_paid || 0, currency: (invoice.currency || "USD").toUpperCase(), userId: user.id } });
-                  notifyProPayment({ userId: user.id, email: user.email, externalId: transaction.externalId, amountMinor: transaction.amountMinor, currency: transaction.currency, provider: transaction.provider });
-                } catch (error: unknown) {
-                  if (!(error && typeof error === "object" && "code" in error && error.code === "P2002")) console.error("Stripe payment record failed:", error);
-                }
-              }
-            }
-          }
-        }
-        break;
+    if (event.type === "invoice.payment_succeeded") {
+      const invoice = event.data.object;
+      const reference = invoice.parent?.subscription_details?.subscription;
+      const subscriptionId = typeof reference === "string" ? reference : reference?.id;
+      if (subscriptionId && invoice.status === "paid" && invoice.amount_paid > 0) {
+        const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+        const userId = subscription.metadata.userId;
+        if (!userId) throw new Error("Missing subscription owner");
+        const ends = subscription.items.data.map(item => item.current_period_end);
+        await recordPayment({ userId, provider: "Stripe", externalId: invoice.id, amountMinor: invoice.amount_paid, currency: invoice.currency.toUpperCase(), subscriptionId, expiresAt: new Date(Math.max(...ends) * 1000) });
       }
-      
-      case "customer.subscription.deleted": {
-        // Expiration / Cancellation
-        const data = event.data.object as unknown as {
-          subscription?: string;
-          id?: string;
-          metadata?: { userId?: string };
-        };
-        const userId = data.metadata?.userId;
-        
-        if (userId) {
-          await prisma.user.update({
-            where: { id: userId },
-            data: {
-              plan: "FREE",
-              // We do not clear planExpiresAt. They keep access until JIT expiration catches them.
-            },
-          });
-        }
-        break;
-      }
+    } else if (event.type === "customer.subscription.deleted") {
+      const subscription = event.data.object;
+      if (subscription.metadata.userId) await prisma.user.updateMany({ where: { id: subscription.metadata.userId, stripeSubscriptionId: subscription.id, planExpiresAt: { lte: new Date() } }, data: { plan: "FREE" } });
     }
-  } catch (err) {
-    console.error("Webhook processing error:", err);
-    return NextResponse.json({ error: "Internal Error" }, { status: 500 });
+    // Checkout completion alone is not proof that an invoice was paid.
+    return NextResponse.json({ received: true });
+  } catch {
+    console.error("Stripe webhook processing failed; provider should retry.");
+    return NextResponse.json({ error: "Processing failed" }, { status: 500 });
   }
-
-  return NextResponse.json({ received: true });
 }

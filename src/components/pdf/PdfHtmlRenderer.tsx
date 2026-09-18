@@ -99,7 +99,7 @@ export const PdfHtmlRenderer = ({ html, baseStyle }: PdfHtmlRendererProps) => {
                 return (
                   <View key={iIdx} style={styles.liContainer}>
                     <Text style={styles.bullet}>•</Text>
-                    <Text style={styles.liContent}>{text}</Text>
+                    <Text orphans={2} widows={2} style={styles.liContent}>{text}</Text>
                   </View>
                 );
               })}
@@ -112,7 +112,7 @@ export const PdfHtmlRenderer = ({ html, baseStyle }: PdfHtmlRendererProps) => {
         if (!text) return null;
         return (
           <View key={blockObj.id} style={styles.p}>
-            <Text>{text}</Text>
+            <Text orphans={2} widows={2}>{text}</Text>
           </View>
         );
       })}

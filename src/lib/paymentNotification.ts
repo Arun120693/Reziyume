@@ -10,14 +10,16 @@ export function notifyProPayment(input: { userId: string; email: string; externa
         const username = process.env.SMTP_USER;
         const password = process.env.SMTP_PASSWORD;
         if (!username || !password) return;
-        const total = await prisma.paymentTransaction.aggregate({ _count: { _all: true }, _sum: { amountMinor: true } });
+        const total = await prisma.paymentTransaction.aggregate({ where: { currency: input.currency.toUpperCase() }, _count: { _all: true }, _sum: { amountMinor: true } });
+        const transactions = await prisma.paymentTransaction.count();
+        const users = await prisma.paymentTransaction.groupBy({ by: ["userId"] });
         const amount = (input.amountMinor / 100).toFixed(2);
         const totalPaid = ((total._sum.amountMinor || 0) / 100).toFixed(2);
         const transport = nodemailer.createTransport({ host: process.env.SMTP_HOST || "smtpout.secureserver.net", port: 465, secure: true, auth: { user: username, pass: password }, connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000, disableFileAccess: true, disableUrlAccess: true });
         await transport.sendMail({
           from: { name: "Reziyume", address: username }, to: "support@reziyume.com",
-          subject: `User ${input.email} - Subscribed for Pro plan`,
-          text: [`A Pro plan payment was completed.`, ``, `User email: ${input.email}`, `Provider: ${input.provider}`, `Current payment: ${input.currency} ${amount}`, `Successful transactions so far (including this payment): ${total._count._all}`, `Total paid so far: ${input.currency} ${totalPaid}`].join("\n"),
+          subject: `${input.email} - Subscribed for Pro plan`,
+          text: [`A Pro plan payment was completed.`, ``, `User email: ${input.email}`, `Provider: ${input.provider}`, `Current payment: ${input.currency} ${amount}`, `Paying users recorded so far: ${users.length}`, `Successful transactions recorded so far (including this payment): ${transactions}`, `Total paid recorded in ${input.currency}: ${totalPaid}`, `Totals cover payments recorded since transaction tracking was enabled; currencies are counted separately.`].join("\n"),
         });
       } catch { console.error("[Payment notification] Delivery failed; payment is unaffected."); }
     });

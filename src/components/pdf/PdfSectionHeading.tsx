@@ -16,25 +16,25 @@ export const PdfSectionHeading = ({ title, config, formatting }: PdfSectionHeadi
 
   if (headingStyle === 'solid-bg') {
     return (
-      <View style={styles.sectionHeadingSolid}>
-        <Text style={styles.sectionHeadingSolidText}>{title}</Text>
+      <View wrap={false} minPresenceAhead={40} style={styles.sectionHeadingSolid}>
+        <Text minPresenceAhead={40} style={styles.sectionHeadingSolidText}>{title}</Text>
       </View>
     );
   }
 
   if (headingStyle === 'underlined') {
     return (
-      <Text style={styles.sectionHeadingUnderlined}>{title}</Text>
+      <Text minPresenceAhead={40} style={styles.sectionHeadingUnderlined}>{title}</Text>
     );
   }
 
   if (headingStyle === 'uppercase') {
     return (
-      <Text style={styles.sectionHeadingUppercase}>{title}</Text>
+      <Text minPresenceAhead={40} style={styles.sectionHeadingUppercase}>{title}</Text>
     );
   }
 
   return (
-    <Text style={styles.sectionHeadingDefault}>{title}</Text>
+    <Text minPresenceAhead={40} style={styles.sectionHeadingDefault}>{title}</Text>
   );
 };

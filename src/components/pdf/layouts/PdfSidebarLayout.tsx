@@ -9,13 +9,14 @@ import { PdfMainContent } from './PdfMainContent';
 interface PdfSidebarLayoutProps {
   data: ResumeData;
   config: TemplateConfig;
+  pageSize?: "A4" | "LETTER";
 }
 
-export const PdfSidebarLayout = ({ data, config }: PdfSidebarLayoutProps) => {
+export const PdfSidebarLayout = ({ data, config, pageSize = "A4" }: PdfSidebarLayoutProps) => {
   const styles = createPdfStyles(config, data.formatting);
   
   return (
-    <Page size="A4" style={[styles.page, { padding: 0, flexDirection: 'row' }]}>
+    <Page size={pageSize} style={[styles.page, { padding: 0, flexDirection: 'row' }]}>
       {/* Sidebar: 35% width, primary background */}
       <View style={[styles.columnSidebar, { width: '35%', backgroundColor: config.colors.primary, paddingTop: 40 }]}>
         <PdfHeader data={data} config={config} align="center" showPhoto={hasProfilePhoto(data)} lightText={true} />

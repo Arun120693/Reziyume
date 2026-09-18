@@ -9,9 +9,10 @@ import { PdfHeader } from './PdfHeader';
 interface PdfHeaderLayoutProps {
   data: ResumeData;
   config: TemplateConfig;
+  pageSize?: "A4" | "LETTER";
 }
 
-export const PdfHeaderLayout = ({ data, config }: PdfHeaderLayoutProps) => {
+export const PdfHeaderLayout = ({ data, config, pageSize = "A4" }: PdfHeaderLayoutProps) => {
   const styles = createPdfStyles(config, data.formatting);
   const { layout } = config;
   
@@ -65,7 +66,7 @@ export const PdfHeaderLayout = ({ data, config }: PdfHeaderLayoutProps) => {
   };
 
   return (
-    <Page size="A4" style={[styles.page, { padding: 0 }]}>
+    <Page size={pageSize} style={[styles.page, { padding: 0 }]}>
       {renderCustomHeader()}
       {isSplitHeader && <View style={[styles.headerDivider, { marginHorizontal: 40, marginTop: 0 }]} />}
       {isPhotoElegant && <View style={[styles.headerDivider, { marginHorizontal: 40, marginTop: 10, alignSelf: 'center', width: '80%' }]} />}

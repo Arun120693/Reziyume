@@ -5,6 +5,7 @@ import { TemplateConfig } from '../studio/preview/templates/registry';
 import { createPdfStyles } from './PdfShared';
 import { PdfSectionHeading } from './PdfSectionHeading';
 import { PdfHtmlRenderer } from './PdfHtmlRenderer';
+import { splitLead } from '@/lib/export/splitLead';
 
 interface PdfExperienceProps {
   experience: ResumeData['experience'];
@@ -20,9 +21,12 @@ export const PdfExperience = ({ experience, config, formatting }: PdfExperienceP
   return (
     <View style={styles.section}>
       <PdfSectionHeading title="Experience" config={config} formatting={formatting} />
-      {experience.map((exp) => (
-        <View key={exp.id} style={styles.itemContainer} wrap={false}>
-          <View style={styles.itemHeader}>
+      {experience.map((exp) => {
+        const [lead, rest] = splitLead(exp.description);
+        return (
+        <View key={exp.id} style={styles.itemContainer}>
+          <View wrap={lead.length > 1200}>
+          <View style={styles.itemHeader} wrap={false} minPresenceAhead={32}>
             <View>
               <Text style={styles.itemTitle}>{exp.position}</Text>
               <Text style={styles.itemSubtitle}>
@@ -33,11 +37,11 @@ export const PdfExperience = ({ experience, config, formatting }: PdfExperienceP
               {exp.startDate} - {exp.current ? "Present" : exp.endDate}
             </Text>
           </View>
-          {exp.description && (
-            <PdfHtmlRenderer html={exp.description} baseStyle={styles.itemDescription} />
-          )}
+          {lead && <PdfHtmlRenderer html={lead} baseStyle={styles.itemDescription} />}
+          </View>
+          {rest && <PdfHtmlRenderer html={rest} baseStyle={styles.itemDescription} />}
         </View>
-      ))}
+      ); })}
     </View>
   );
 };

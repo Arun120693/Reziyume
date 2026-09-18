@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import crypto from "crypto";
 import Razorpay from "razorpay";
-import { notifyProPayment } from "@/lib/paymentNotification";
+import { recordPayment } from "@/lib/recordPayment";
 
 export async function POST(req: NextRequest) {
   try {
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       .update(`${razorpay_payment_id}|${razorpay_subscription_id}`)
       .digest("hex");
 
-    if (generatedSignature !== razorpay_signature) {
+    if (typeof razorpay_signature !== "string" || !/^[a-f0-9]{64}$/i.test(razorpay_signature) || !crypto.timingSafeEqual(Buffer.from(generatedSignature, "hex"), Buffer.from(razorpay_signature, "hex"))) {
       console.error("❌ Razorpay signature verification failed");
       return NextResponse.json({ error: "Invalid payment signature" }, { status: 400 });
     }
@@ -80,29 +80,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Update user to PRO
-    const isActivating = user.plan === "FREE";
-    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days approx. Webhook will sync exactly if it arrives.
-
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        plan: "PRO",
-        razorpaySubscriptionId: razorpay_subscription_id,
-        planExpiresAt: expiresAt,
-        ...(isActivating ? { monthlyParseCount: 0 } : {}),
-      },
-    });
-
-    try {
-      const payment = await razorpay.payments.fetch(razorpay_payment_id);
-      const transaction = await prisma.paymentTransaction.create({ data: { provider: "Razorpay", externalId: razorpay_payment_id, amountMinor: Number(payment.amount), currency: payment.currency || "INR", userId: user.id } });
-      notifyProPayment({ userId: user.id, email: user.email, externalId: transaction.externalId, amountMinor: transaction.amountMinor, currency: transaction.currency, provider: transaction.provider });
-    } catch (error: unknown) {
-      if (!(error && typeof error === "object" && "code" in error && error.code === "P2002")) console.error("Razorpay payment record failed:", error);
+    const payment = await razorpay.payments.fetch(razorpay_payment_id);
+    if (payment.status !== "captured" || !payment.invoice_id || !subscription.current_end) {
+      return NextResponse.json({ error: "Payment is still processing. Your plan will update after capture." }, { status: 409 });
     }
-
-    console.log("✅ Synchronous verification successful. User upgraded to PRO.");
+    const invoices = await razorpay.invoices.all({ subscription_id: subscription.id, payment_id: payment.id });
+    if (!invoices.items.some(invoice => invoice.id === payment.invoice_id && invoice.payment_id === payment.id)) return NextResponse.json({ error: "Payment does not match subscription" }, { status: 403 });
+    await recordPayment({ userId: user.id, provider: "Razorpay", externalId: payment.id, amountMinor: Number(payment.amount), currency: payment.currency, subscriptionId: subscription.id, expiresAt: new Date(subscription.current_end * 1000) });
 
     return NextResponse.json({ success: true });
 

@@ -304,3 +304,15 @@ body {
 @media(max-width:480px) { .site-header { padding-inline:16px; } .site-header .wordmark { font-size:24px; } .header-actions { gap:10px; white-space:nowrap; } .button-dark.small { gap:6px; padding-inline:10px; font-size:11px; } }
 
 @media(max-width:760px) { input.neo-input, select.neo-input { font-size:16px; } }
+@media(max-width:900px) {
+ .site-header { padding-inline:22px; }
+ .desktop-nav { display:none; }
+ .header-actions { white-space:nowrap; }
+ .mobile-nav { display:flex; justify-content:space-between; padding:0 22px; border-bottom:1px solid #dedfd6; gap:12px; font-size:12px; }
+ .mobile-nav a { display:flex; align-items:center; min-height:44px; }
+}
+@media(max-width:480px) {
+ .site-header { padding-inline:16px; gap:12px; }
+ .site-header .wordmark { font-size:22px; }
+ .site-header .button-dark.small svg { display:none; }
+}

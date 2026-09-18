@@ -12,6 +12,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   if (!resume) return NextResponse.json({ error: "Resume not found" }, { status: 404 });
   const body = await req.json().catch(() => ({}));
   const isPublic = body.public !== false;
-  const updated = await prisma.resume.update({ where: { id }, data: { isPublic, shareToken: isPublic ? (resume.shareToken || crypto.randomBytes(18).toString("base64url")) : resume.shareToken }, select: { shareToken: true, isPublic: true } });
+  const expiresAt = typeof body.expiresAt === "string" && !Number.isNaN(Date.parse(body.expiresAt)) ? new Date(body.expiresAt) : null;
+  const updated = await prisma.resume.update({ where: { id }, data: { isPublic, shareExpiresAt: isPublic ? expiresAt : resume.shareExpiresAt, shareToken: isPublic ? (resume.shareToken || crypto.randomBytes(18).toString("base64url")) : resume.shareToken }, select: { shareToken: true, isPublic: true, shareExpiresAt: true } });
   return NextResponse.json({ ...updated, url: updated.isPublic && updated.shareToken ? `/r/${updated.shareToken}` : null });
 }

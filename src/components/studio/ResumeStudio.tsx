@@ -1,6 +1,8 @@
 
 "use client";
 
+import { VersionHistory } from "./VersionHistory";
+import { WritingAssistant } from "./WritingAssistant";
 import { SaveStatus } from "./SaveStatus";
 import { useEffect, useRef, useState } from "react";
 import { useResumeStore } from "@/lib/store/useResumeStore";
@@ -42,23 +44,19 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
   const [activeTab, setActiveTab] = useState<"content" | "customize">("content");
   const [isDownloading, setIsDownloading] = useState(false);
   const [exportStyle, setExportStyle] = useState("visual");
+  const [pageSize, setPageSize] = useState<"a4" | "letter">("a4");
+  const [fitPage, setFitPage] = useState(false);
   const [showTour, setShowTour] = useState(false);
   const [showReadiness, setShowReadiness] = useState(false);
   const [showVersions, setShowVersions] = useState(false);
+  const [showWriting, setShowWriting] = useState(false);
   const [shareMessage, setShareMessage] = useState<string | null>(null);
-  const [versions, setVersions] = useState<Array<{ id: string; label: string; savedAt: string; data: ResumeData }>>([]);
   const [history, setHistory] = useState<ResumeData[]>([]);
   const [future, setFuture] = useState<ResumeData[]>([]);
   const previousData = useRef<ResumeData | null>(null);
   const restoringHistory = useRef(false);
 
   useEffect(() => { setInitialData(initialData); }, [initialData, setInitialData]);
-  useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(`reziyume-versions-${initialData.id}`);
-      if (stored) setVersions(JSON.parse(stored));
-    } catch { /* Ignore malformed local drafts. */ }
-  }, [initialData.id]);
   useEffect(() => {
     if (!data) return;
     if (restoringHistory.current) {
@@ -67,7 +65,8 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
       return;
     }
     if (previousData.current && previousData.current !== data) {
-      setHistory((items) => [...items.slice(-39), previousData.current as ResumeData]);
+      const previous = previousData.current;
+      setHistory((items) => [...items.slice(-39), previous]);
       setFuture([]);
     }
     previousData.current = data;
@@ -113,15 +112,6 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
     replaceData(next);
   };
 
-  const saveVersion = () => {
-    if (!data) return;
-    const version = { id: crypto.randomUUID(), label: data.name || "Resume snapshot", savedAt: new Date().toISOString(), data };
-    const next = [version, ...versions].slice(0, 20);
-    setVersions(next);
-    window.localStorage.setItem(`reziyume-versions-${data.id}`, JSON.stringify(next));
-    setShowVersions(true);
-  };
-
   const shareResume = async () => {
     if (!data) return;
     const response = await fetch(`/api/resumes/${data.id}/share`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ public: true }) });
@@ -131,13 +121,6 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
     await navigator.clipboard?.writeText(url);
     setShareMessage("Link copied");
     window.setTimeout(() => setShareMessage(null), 2500);
-  };
-
-  const restoreVersion = (version: typeof versions[number]) => {
-    if (!data) return;
-    setFuture([]);
-    replaceData(version.data);
-    setShowVersions(false);
   };
 
   const handleDownload = async () => {
@@ -150,7 +133,7 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
       if (exportStyle === "text") {
         const [{ pdf }, { PdfDocument }] = await Promise.all([import("@react-pdf/renderer"), import("@/components/pdf/PdfDocument")]);
         const config = getTemplateConfig(data.templateId);
-        const blob = await pdf(<PdfDocument data={{ ...data, contact: { ...data.contact, photoBase64: "" } }} config={{ ...config, layout: "single-column", colors: { ...config.colors, background: "#ffffff", text: "#242b30", secondaryText: "#52606a" } }} />).toBlob();
+        const blob = await pdf(<PdfDocument pageSize={pageSize === "letter" ? "LETTER" : "A4"} data={{ ...data, contact: { ...data.contact, photoBase64: "" } }} config={{ ...config, layout: "single-column", colors: { ...config.colors, background: "#ffffff", text: "#242b30", secondaryText: "#52606a" } }} />).toBlob();
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
@@ -191,13 +174,16 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
 
       // html2canvas config
       const [{ captureResume }, { createVisualPdf }] = await Promise.all([import("@/lib/export/captureResume"), import("@/lib/export/createVisualPdf")]);
+      const { measureProtectedBands } = await import("@/lib/export/pagination");
+      const bands = measureProtectedBands(element);
+      const measuredWidth = element.getBoundingClientRect().width;
       const canvas = await captureResume(element);
 
       // Restore transform
       element.style.transform = originalTransform;
       element.style.minHeight = originalMinHeight;
 
-      const blob = createVisualPdf(canvas);
+      const blob = createVisualPdf(canvas, { pageSize, fit: fitPage, bands, measuredWidth });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -336,12 +322,15 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
         {/* Right: resume name + download */}
         <div className="flex flex-wrap items-center gap-2">
           <SaveStatus />
+          <select aria-label="PDF page size" value={pageSize} onChange={e => setPageSize(e.target.value as "a4" | "letter")} className="rounded-xl border bg-white px-3 py-3 text-sm"><option value="a4">A4 paper</option><option value="letter">US Letter</option></select>
+          {exportStyle === "visual" && <label className="flex items-center gap-2 text-xs"><input type="checkbox" checked={fitPage} onChange={e => setFitPage(e.target.checked)}/>Fit one page (shrinks text)</label>}
+          <button onClick={() => setShowWriting(true)} className="rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm font-semibold text-indigo-800">AI writer</button>
           <div className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-1 py-1">
             <button onClick={undo} disabled={history.length === 0} aria-label="Undo last change" title="Undo" className="rounded-lg px-2 py-1 text-sm font-bold text-slate-600 disabled:opacity-30">↶</button>
             <button onClick={redo} disabled={future.length === 0} aria-label="Redo last change" title="Redo" className="rounded-lg px-2 py-1 text-sm font-bold text-slate-600 disabled:opacity-30">↷</button>
           </div>
-          <button onClick={saveVersion} className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-semibold text-slate-700 hover:border-pink-300 hover:text-pink-600">Save version</button>
-          <button onClick={() => setShowVersions((open) => !open)} className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-semibold text-slate-700 hover:border-pink-300 hover:text-pink-600">History ({versions.length})</button>
+          <button onClick={() => setShowVersions(true)} className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-semibold text-slate-700 hover:border-pink-300 hover:text-pink-600">Save version</button>
+          <button onClick={() => setShowVersions((open) => !open)} className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-semibold text-slate-700 hover:border-pink-300 hover:text-pink-600">History</button>
           <button onClick={shareResume} className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-[12px] font-semibold text-slate-700 hover:border-pink-300 hover:text-pink-600">Share</button>
           {shareMessage && <span className="text-xs font-semibold text-emerald-600">{shareMessage}</span>}
           <input
@@ -573,7 +562,8 @@ export function ResumeStudio({ initialData }: { initialData: ResumeData }) {
       />
       {showTour && <StudioTour onAction={handleTourAction} onClose={() => setShowTour(false)} />}
       {showReadiness && <ResumeReadiness data={data} onClose={() => setShowReadiness(false)} />}
-      {showVersions && <div className="fixed inset-0 z-[85] flex items-center justify-center bg-slate-950/35 p-4" role="dialog" aria-modal="true" aria-label="Resume version history"><div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl"><div className="flex items-center justify-between"><div><p className="text-xs font-bold uppercase tracking-wider text-pink-500">Draft safety</p><h2 className="text-2xl font-extrabold text-slate-900">Version history</h2></div><button onClick={() => setShowVersions(false)} className="text-sm font-semibold text-slate-500">Close</button></div>{versions.length === 0 ? <p className="py-8 text-sm text-slate-500">No saved versions yet. Save a snapshot before making a major change.</p> : <div className="mt-5 max-h-80 space-y-2 overflow-y-auto">{versions.map((version) => <div key={version.id} className="flex items-center justify-between gap-3 rounded-2xl border border-slate-100 p-3"><div><p className="text-sm font-bold text-slate-800">{version.label}</p><p className="text-xs text-slate-500">{new Date(version.savedAt).toLocaleString()}</p></div><button onClick={() => restoreVersion(version)} className="rounded-xl bg-slate-900 px-3 py-2 text-xs font-bold text-white">Restore</button></div>)}</div>}</div></div>}
+      {showVersions && <VersionHistory onClose={() => setShowVersions(false)} />}
+      {showWriting && <WritingAssistant onClose={() => setShowWriting(false)} />}
     </div>
   );
 }
